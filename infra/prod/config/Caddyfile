@@ -1,0 +1,51 @@
+{
+    email admin@example.com
+}
+
+# API routing - single port, path-based (when all on one server)
+# Or use subdomain-based routing when DNS is configured
+:80 {
+    # Huffaz API - huffaz.example.com or /huffaz/api/*
+    handle /huffaz/api/* {
+        uri strip_prefix /huffaz
+        reverse_proxy huffaz-api:8001 {
+            health_uri /health
+            health_interval 30s
+        }
+    }
+    handle /huffaz/health {
+        reverse_proxy huffaz-api:8001
+    }
+
+    # Secondary API - secondary.example.com or /secondary/api/*
+    handle /secondary/api/* {
+        uri strip_prefix /secondary
+        reverse_proxy secondary-api:8002 {
+            health_uri /health
+            health_interval 30s
+        }
+    }
+    handle /secondary/health {
+        reverse_proxy secondary-api:8002
+    }
+
+    # Default /health for load balancer
+    handle /health {
+        respond "OK" 200
+    }
+
+    handle {
+        respond "Not Found" 404
+    }
+
+    encode gzip zstd
+    header {
+        X-Frame-Options "DENY"
+        X-Content-Type-Options "nosniff"
+        -Server
+    }
+    log {
+        output file /var/log/caddy/backend.log
+        format json
+    }
+}

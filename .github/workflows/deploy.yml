@@ -1,0 +1,85 @@
+name: Deploy to EC2
+
+on:
+  workflow_run:
+    workflows: ["Build Docker Images"]
+    types:
+      - completed
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: 'Deployment environment'
+        required: true
+        default: 'production'
+        type: choice
+        options:
+          - production
+          - staging
+      image-tag:
+        description: 'Docker image tag (defaults to latest)'
+        required: false
+        type: string
+
+env:
+  REGISTRY: ghcr.io
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    if: ${{ github.event.workflow_run.conclusion == 'success' || github.event_name == 'workflow_dispatch' }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set env for multi-image deploy
+        run: |
+          echo "IMAGE_NAME_LOWER=${GITHUB_REPOSITORY,,}" >> $GITHUB_ENV
+          echo "REGISTRY=${{ env.REGISTRY }}" >> $GITHUB_ENV
+
+      - name: Prepare deployment directory
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.EC2_HOST }}
+          username: ${{ secrets.EC2_USERNAME }}
+          key: ${{ secrets.EC2_SSH_KEY }}
+          port: 22
+          script: |
+            sudo mkdir -p /home/${{ secrets.EC2_USERNAME }}/arabiaaislamia-secportal
+            sudo chown -R ${{ secrets.EC2_USERNAME }}:${{ secrets.EC2_USERNAME }} /home/${{ secrets.EC2_USERNAME }}/arabiaaislamia-secportal
+            chmod -R 755 /home/${{ secrets.EC2_USERNAME }}/arabiaaislamia-secportal
+
+      - name: Copy deployment files
+        uses: appleboy/scp-action@v0.1.7
+        with:
+          host: ${{ secrets.EC2_HOST }}
+          username: ${{ secrets.EC2_USERNAME }}
+          key: ${{ secrets.EC2_SSH_KEY }}
+          source: "infra/prod/docker-compose.prod.yml,infra/prod/init-databases.sh,infra/prod/config/Caddyfile"
+          target: "/home/${{ secrets.EC2_USERNAME }}/arabiaaislamia-secportal"
+          strip_components: 2
+
+      - name: Deploy
+        uses: appleboy/ssh-action@v1.0.3
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          host: ${{ secrets.EC2_HOST }}
+          username: ${{ secrets.EC2_USERNAME }}
+          key: ${{ secrets.EC2_SSH_KEY }}
+          port: 22
+          envs: REGISTRY,IMAGE_NAME_LOWER,GITHUB_TOKEN
+          script: |
+            set -e
+            cd /home/${{ secrets.EC2_USERNAME }}/arabiaaislamia-secportal
+
+            echo "$GITHUB_TOKEN" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
+
+            IMAGE_TAG="${{ github.event.inputs.image-tag || 'latest' }}"
+
+            docker pull "$REGISTRY/$IMAGE_NAME_LOWER-huffaz-api:$IMAGE_TAG"
+            docker pull "$REGISTRY/$IMAGE_NAME_LOWER-secondary-api:$IMAGE_TAG"
+
+            docker compose -f docker-compose.prod.yml up -d --remove-orphans
+
+            docker image prune -f
+            docker logout ghcr.io
+            echo "✅ Deployment completed"

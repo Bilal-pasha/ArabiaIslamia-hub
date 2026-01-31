@@ -1,0 +1,18 @@
+{
+  "name": "arabiaaislamia-secportal",
+  "private": true,
+  "scripts": {
+    "build": "turbo run build",
+    "dev": "turbo run dev --parallel",
+    "lint": "turbo run lint",
+    "db:migrate:huffaz": "pnpm --filter @arabiaaislamia/database run migrate:huffaz",
+    "db:migrate:secondary": "pnpm --filter @arabiaaislamia/database run migrate:secondary"
+  },
+  "devDependencies": {
+    "turbo": "^2.3.0"
+  },
+  "packageManager": "pnpm@9.14.2",
+  "engines": {
+    "node": ">=20"
+  }
+}
