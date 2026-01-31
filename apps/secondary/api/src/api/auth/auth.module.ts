@@ -16,7 +16,10 @@ import { JwtStrategy } from './strategies/jwt.strategy';
       imports: [ConfigModule],
       useFactory: (config: ConfigService) => ({
         secret: config.get<string>('JWT_SECRET', 'your-secret-key'),
-        signOptions: { expiresIn: config.get<string>('JWT_EXPIRES_IN', '1h') },
+        signOptions: {
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          expiresIn: config.get<string>('JWT_EXPIRES_IN', '1h') as any,
+        },
       }),
       inject: [ConfigService],
     }),

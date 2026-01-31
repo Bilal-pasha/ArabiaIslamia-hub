@@ -7,7 +7,7 @@ import {
 import { ConfigService } from '@nestjs/config';
 import { SwaggerModule } from '@nestjs/swagger';
 import { Logger } from 'nestjs-pino';
-import cookieParser from 'cookie-parser';
+import * as cookieParser from 'cookie-parser';
 import { AppModule } from './app.module';
 import { swaggerConfig } from './config/swagger.config';
 
