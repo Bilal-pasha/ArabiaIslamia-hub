@@ -2,10 +2,10 @@
     email admin@example.com
 }
 
-# API routing - single port, path-based (when all on one server)
-# Or use subdomain-based routing when DNS is configured
+# Path-based routing (single domain)
+# For subdomain routing, replace :80 with your domain and add host matchers
 :80 {
-    # Huffaz API - huffaz.example.com or /huffaz/api/*
+    # --- APIs ---
     handle /huffaz/api/* {
         uri strip_prefix /huffaz
         reverse_proxy huffaz-api:8001 {
@@ -17,7 +17,6 @@
         reverse_proxy huffaz-api:8001
     }
 
-    # Secondary API - secondary.example.com or /secondary/api/*
     handle /secondary/api/* {
         uri strip_prefix /secondary
         reverse_proxy secondary-api:8002 {
@@ -29,13 +28,36 @@
         reverse_proxy secondary-api:8002
     }
 
-    # Default /health for load balancer
     handle /health {
         respond "OK" 200
     }
 
+    # --- Frontends (Next.js apps use basePath, pass full path) ---
+    handle /huffaz/registration* {
+        reverse_proxy huffaz-registration:3002
+    }
+    handle /huffaz/fees* {
+        reverse_proxy huffaz-fees:3003
+    }
+    handle /huffaz/attendance* {
+        reverse_proxy huffaz-attendance:3004
+    }
+    handle /huffaz* {
+        reverse_proxy huffaz-hub:3001
+    }
+
+    handle /secondary/registration* {
+        reverse_proxy secondary-registration:3012
+    }
+    handle /secondary/attendance* {
+        reverse_proxy secondary-attendance:3014
+    }
+    handle /secondary* {
+        reverse_proxy secondary-hub:3011
+    }
+
     handle {
-        respond "Not Found" 404
+        reverse_proxy main-website:3000
     }
 
     encode gzip zstd

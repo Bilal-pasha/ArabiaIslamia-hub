@@ -1,0 +1,14 @@
+FROM node:20-alpine
+WORKDIR /app
+RUN corepack enable && corepack prepare pnpm@9.14.2 --activate
+
+COPY pnpm-workspace.yaml package.json pnpm-lock.yaml* ./
+COPY apps/huffaz/fees/web/package.json ./apps/huffaz/fees/web/
+
+RUN pnpm install --frozen-lockfile || pnpm install
+
+COPY apps/huffaz/fees/web ./apps/huffaz/fees/web
+
+WORKDIR /app/apps/huffaz/fees/web
+EXPOSE 3003
+CMD ["pnpm", "run", "dev"]

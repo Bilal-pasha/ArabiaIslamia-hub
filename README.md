@@ -49,7 +49,7 @@ cd infra/dev
 docker compose up -d
 ```
 
-This starts PostgreSQL (with `huffaz_db_dev` and `secondary_db_dev`), `huffaz-api`, `secondary-api`, and pgAdmin.
+This starts PostgreSQL, both APIs, all frontend apps, and pgAdmin.
 
 ### 3. Run migrations
 
@@ -58,11 +58,25 @@ DB_HOST=localhost POSTGRES_USER=postgres POSTGRES_PASSWORD=postgres pnpm db:migr
 DB_HOST=localhost POSTGRES_USER=postgres POSTGRES_PASSWORD=postgres pnpm db:migrate:secondary
 ```
 
-### 4. APIs
+### 4. URLs (dev)
 
+**APIs**
 - Huffaz API: http://localhost:8001
 - Secondary API: http://localhost:8002
 - Swagger: http://localhost:8001/api, http://localhost:8002/api
+
+**Frontends**
+- Main website: http://localhost:3000
+- Huffaz hub: http://localhost:3001/huffaz
+- Huffaz registration: http://localhost:3002/huffaz/registration
+- Huffaz fees: http://localhost:3003/huffaz/fees
+- Huffaz attendance: http://localhost:3004/huffaz/attendance
+- Secondary hub: http://localhost:3011/secondary
+- Secondary registration: http://localhost:3012/secondary/registration
+- Secondary attendance: http://localhost:3014/secondary/attendance
+
+**Tools**
+- pgAdmin: http://localhost:5050
 
 ## Commands
 

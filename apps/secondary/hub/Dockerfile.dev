@@ -1,0 +1,14 @@
+FROM node:20-alpine
+WORKDIR /app
+RUN corepack enable && corepack prepare pnpm@9.14.2 --activate
+
+COPY pnpm-workspace.yaml package.json pnpm-lock.yaml* ./
+COPY apps/secondary/hub/package.json ./apps/secondary/hub/
+
+RUN pnpm install --frozen-lockfile || pnpm install
+
+COPY apps/secondary/hub ./apps/secondary/hub
+
+WORKDIR /app/apps/secondary/hub
+EXPOSE 3011
+CMD ["pnpm", "run", "dev"]

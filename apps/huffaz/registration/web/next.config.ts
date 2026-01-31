@@ -1,7 +1,7 @@
 import type { NextConfig } from 'next';
 
-const nextConfig: NextConfig = {
+export default {
   reactStrictMode: true,
-};
-
-export default nextConfig;
+  basePath: '/huffaz/registration',
+  assetPrefix: '/huffaz/registration',
+} satisfies NextConfig;

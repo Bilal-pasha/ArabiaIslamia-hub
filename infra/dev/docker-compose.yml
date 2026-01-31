@@ -96,6 +96,111 @@ services:
         condition: service_healthy
     command: pnpm run start:dev
 
+  # --- Frontend (UI) containers ---
+  main-website:
+    build:
+      context: ../..
+      dockerfile: apps/main-website/Dockerfile.dev
+    container_name: main-website-dev
+    restart: unless-stopped
+    ports:
+      - "3000:3000"
+    volumes:
+      - ../../apps/main-website:/app/apps/main-website
+    networks:
+      - app-network-dev
+
+  huffaz-hub:
+    build:
+      context: ../..
+      dockerfile: apps/huffaz/hub/Dockerfile.dev
+    container_name: huffaz-hub-dev
+    restart: unless-stopped
+    ports:
+      - "3001:3001"
+    volumes:
+      - ../../apps/huffaz/hub:/app/apps/huffaz/hub
+    networks:
+      - app-network-dev
+
+  huffaz-registration:
+    build:
+      context: ../..
+      dockerfile: apps/huffaz/registration/web/Dockerfile.dev
+    container_name: huffaz-registration-dev
+    restart: unless-stopped
+    ports:
+      - "3002:3002"
+    volumes:
+      - ../../apps/huffaz/registration/web:/app/apps/huffaz/registration/web
+    networks:
+      - app-network-dev
+
+  huffaz-fees:
+    build:
+      context: ../..
+      dockerfile: apps/huffaz/fees/web/Dockerfile.dev
+    container_name: huffaz-fees-dev
+    restart: unless-stopped
+    ports:
+      - "3003:3003"
+    volumes:
+      - ../../apps/huffaz/fees/web:/app/apps/huffaz/fees/web
+    networks:
+      - app-network-dev
+
+  huffaz-attendance:
+    build:
+      context: ../..
+      dockerfile: apps/huffaz/attendance/web/Dockerfile.dev
+    container_name: huffaz-attendance-dev
+    restart: unless-stopped
+    ports:
+      - "3004:3004"
+    volumes:
+      - ../../apps/huffaz/attendance/web:/app/apps/huffaz/attendance/web
+    networks:
+      - app-network-dev
+
+  secondary-hub:
+    build:
+      context: ../..
+      dockerfile: apps/secondary/hub/Dockerfile.dev
+    container_name: secondary-hub-dev
+    restart: unless-stopped
+    ports:
+      - "3011:3011"
+    volumes:
+      - ../../apps/secondary/hub:/app/apps/secondary/hub
+    networks:
+      - app-network-dev
+
+  secondary-registration:
+    build:
+      context: ../..
+      dockerfile: apps/secondary/registration/web/Dockerfile.dev
+    container_name: secondary-registration-dev
+    restart: unless-stopped
+    ports:
+      - "3012:3012"
+    volumes:
+      - ../../apps/secondary/registration/web:/app/apps/secondary/registration/web
+    networks:
+      - app-network-dev
+
+  secondary-attendance:
+    build:
+      context: ../..
+      dockerfile: apps/secondary/attendance/web/Dockerfile.dev
+    container_name: secondary-attendance-dev
+    restart: unless-stopped
+    ports:
+      - "3014:3014"
+    volumes:
+      - ../../apps/secondary/attendance/web:/app/apps/secondary/attendance/web
+    networks:
+      - app-network-dev
+
 networks:
   app-network-dev:
     driver: bridge

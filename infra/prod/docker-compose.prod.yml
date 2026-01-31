@@ -75,6 +75,103 @@ services:
       postgres:
         condition: service_healthy
 
+  # --- Frontend (UI) containers ---
+  main-website:
+    build:
+      context: ../..
+      dockerfile: apps/main-website/Dockerfile
+    image: ${REGISTRY}/${IMAGE_NAME_LOWER}-main-website:latest
+    container_name: arabiaaislamia-main-website
+    restart: unless-stopped
+    environment:
+      NODE_ENV: production
+    networks:
+      - app-network
+
+  huffaz-hub:
+    build:
+      context: ../..
+      dockerfile: apps/huffaz/hub/Dockerfile
+    image: ${REGISTRY}/${IMAGE_NAME_LOWER}-huffaz-hub:latest
+    container_name: arabiaaislamia-huffaz-hub
+    restart: unless-stopped
+    environment:
+      NODE_ENV: production
+    networks:
+      - app-network
+
+  huffaz-registration:
+    build:
+      context: ../..
+      dockerfile: apps/huffaz/registration/web/Dockerfile
+    image: ${REGISTRY}/${IMAGE_NAME_LOWER}-huffaz-registration:latest
+    container_name: arabiaaislamia-huffaz-registration
+    restart: unless-stopped
+    environment:
+      NODE_ENV: production
+    networks:
+      - app-network
+
+  huffaz-fees:
+    build:
+      context: ../..
+      dockerfile: apps/huffaz/fees/web/Dockerfile
+    image: ${REGISTRY}/${IMAGE_NAME_LOWER}-huffaz-fees:latest
+    container_name: arabiaaislamia-huffaz-fees
+    restart: unless-stopped
+    environment:
+      NODE_ENV: production
+    networks:
+      - app-network
+
+  huffaz-attendance:
+    build:
+      context: ../..
+      dockerfile: apps/huffaz/attendance/web/Dockerfile
+    image: ${REGISTRY}/${IMAGE_NAME_LOWER}-huffaz-attendance:latest
+    container_name: arabiaaislamia-huffaz-attendance
+    restart: unless-stopped
+    environment:
+      NODE_ENV: production
+    networks:
+      - app-network
+
+  secondary-hub:
+    build:
+      context: ../..
+      dockerfile: apps/secondary/hub/Dockerfile
+    image: ${REGISTRY}/${IMAGE_NAME_LOWER}-secondary-hub:latest
+    container_name: arabiaaislamia-secondary-hub
+    restart: unless-stopped
+    environment:
+      NODE_ENV: production
+    networks:
+      - app-network
+
+  secondary-registration:
+    build:
+      context: ../..
+      dockerfile: apps/secondary/registration/web/Dockerfile
+    image: ${REGISTRY}/${IMAGE_NAME_LOWER}-secondary-registration:latest
+    container_name: arabiaaislamia-secondary-registration
+    restart: unless-stopped
+    environment:
+      NODE_ENV: production
+    networks:
+      - app-network
+
+  secondary-attendance:
+    build:
+      context: ../..
+      dockerfile: apps/secondary/attendance/web/Dockerfile
+    image: ${REGISTRY}/${IMAGE_NAME_LOWER}-secondary-attendance:latest
+    container_name: arabiaaislamia-secondary-attendance
+    restart: unless-stopped
+    environment:
+      NODE_ENV: production
+    networks:
+      - app-network
+
   caddy:
     image: caddy:2-alpine
     container_name: arabiaaislamia-caddy
@@ -94,6 +191,14 @@ services:
     depends_on:
       - huffaz-api
       - secondary-api
+      - main-website
+      - huffaz-hub
+      - huffaz-registration
+      - huffaz-fees
+      - huffaz-attendance
+      - secondary-hub
+      - secondary-registration
+      - secondary-attendance
 
 networks:
   app-network:
