@@ -16,7 +16,7 @@ export default function AdmissionStatusPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-slate-50 to-slate-100 flex items-center justify-center p-6">
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-accent/30 to-slate-100 flex items-center justify-center p-6">
       <div className="w-full max-w-md">
         <Button variant="ghost" size="sm" asChild>
           <Link href="/" className="gap-2 inline-flex items-center mb-8">
