@@ -7,7 +7,7 @@ import { publicRoutes, privateRoutes } from '@/constants/route';
 export function AdmissionHeader() {
   return (
     <header className="sticky top-0 z-40 border-b border-border/50 bg-card/95 backdrop-blur supports-[backdrop-filter]:bg-card/80 shadow-sm">
-      <div className="mx-auto max-w-4xl px-4 sm:px-6 py-4">
+      <div className="container mx-auto px-4 sm:px-6 py-4">
         <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
           <div className="flex items-center gap-4">
             <div className="flex size-14 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-[#0f2744] to-[#1e4a6f] p-1.5 shadow-md">
