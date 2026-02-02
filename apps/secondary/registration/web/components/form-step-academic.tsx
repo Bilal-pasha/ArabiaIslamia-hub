@@ -2,7 +2,7 @@
 
 import { Input, Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@arabiaaislamia/ui';
 import { FormField } from './form-field';
-import { DEPARTMENTS, CLASSES, MADHABS } from '../lib/admission-constants';
+import { CLASSES, MADHABS } from '../lib/admission-constants';
 import type { AdmissionFormData } from '../lib/admission-schema';
 
 interface FormStepAcademicProps {
@@ -14,20 +14,6 @@ interface FormStepAcademicProps {
 export function FormStepAcademic({ data, errors, onUpdate }: FormStepAcademicProps) {
   return (
     <div className="grid gap-5 sm:grid-cols-2">
-      <FormField label="Department" required error={errors.department}>
-        <Select value={data.department} onValueChange={(v) => onUpdate('department', v)}>
-          <SelectTrigger className={`h-10 ${errors.department ? 'border-destructive' : ''}`}>
-            <SelectValue placeholder="Select" />
-          </SelectTrigger>
-          <SelectContent>
-            {DEPARTMENTS.map((d) => (
-              <SelectItem key={d} value={d}>
-                {d}
-              </SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
-      </FormField>
       <FormField label="Required Class" required error={errors.requiredClass}>
         <Select value={data.requiredClass} onValueChange={(v) => onUpdate('requiredClass', v)}>
           <SelectTrigger className={`h-10 ${errors.requiredClass ? 'border-destructive' : ''}`}>

@@ -2,6 +2,5 @@ import type { NextConfig } from 'next';
 
 export default {
   reactStrictMode: true,
-  basePath: '/secondary',
-  assetPrefix: '/secondary',
+  transpilePackages: ['@arabiaaislamia/ui', '@arabiaaislamia/animations'],
 } satisfies NextConfig;

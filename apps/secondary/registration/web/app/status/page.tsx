@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
+import { publicRoutes } from '../../constants/route';
 import { SecondaryLogo, Button, Input, Label, Card, CardHeader, CardTitle, CardContent } from '@arabiaaislamia/ui';
 
 export default function AdmissionStatusPage() {
@@ -19,7 +20,7 @@ export default function AdmissionStatusPage() {
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-accent/30 to-slate-100 flex items-center justify-center p-6">
       <div className="w-full max-w-md">
         <Button variant="ghost" size="sm" asChild>
-          <Link href="/" className="gap-2 inline-flex items-center mb-8">
+          <Link href={publicRoutes.form} className="gap-2 inline-flex items-center mb-8">
             <svg className="size-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
             </svg>

@@ -18,10 +18,11 @@ export const personalInfoSchema = z.object({
     .string()
     .min(1, 'Date of birth is required')
     .refine((val) => {
-      const date = new Date(val);
-      const min = new Date('1920-01-01');
-      const max = new Date();
-      return date >= min && date <= max;
+      const parsed = new Date(val + 'T12:00:00');
+      if (isNaN(parsed.getTime())) return false;
+      const year = parsed.getFullYear();
+      const currentYear = new Date().getFullYear();
+      return year >= 1920 && year <= currentYear;
     }, 'Please enter a valid date of birth'),
   gender: z.enum(['male', 'female'], { required_error: 'Please select gender' }),
   phone: z
@@ -65,9 +66,8 @@ export const guardianInfoSchema = z.object({
   guardianAddress: z.string().max(500).optional().or(z.literal('')),
 });
 
-// Step 3: Academic Information
+// Step 3: Academic Information (department = Secondary, implied by form context)
 export const academicInfoSchema = z.object({
-  department: z.string().min(1, 'Please select department'),
   requiredClass: z.string().min(1, 'Please select required class'),
   previousSchool: z.string().optional().or(z.literal('')),
   previousClass: z.string().optional().or(z.literal('')),

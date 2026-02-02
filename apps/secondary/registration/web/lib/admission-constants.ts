@@ -7,14 +7,6 @@ export const STEPS = [
   { id: 4, title: 'Documents', icon: '4', subtitle: 'Attach files' },
 ] as const;
 
-export const DEPARTMENTS = [
-  'Arabic Dars-e-Nizami',
-  'Secondary Education System',
-  'Darul Quran',
-  'Huffaz Courses',
-  'Primary',
-];
-
 export const CLASSES = [
   'Primary Level',
   'Level One',
@@ -82,7 +74,6 @@ export const INITIAL_FORM_DATA: AdmissionFormData = {
   guardianEmail: '',
   guardianOccupation: '',
   guardianAddress: '',
-  department: '',
   requiredClass: '',
   previousSchool: '',
   previousClass: '',

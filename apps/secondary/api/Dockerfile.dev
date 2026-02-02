@@ -4,6 +4,7 @@ RUN corepack enable && corepack prepare pnpm@9.14.2 --activate
 
 COPY pnpm-workspace.yaml package.json pnpm-lock.yaml* ./
 COPY packages/database/package.json ./packages/database/
+COPY packages/storage ./packages/storage
 COPY apps/secondary/api/package.json ./apps/secondary/api/
 
 RUN pnpm install --frozen-lockfile || pnpm install

@@ -5,8 +5,8 @@
 
 /* Arabia Secondary theme - from logo: navy, light blue, orange, maroon */
 @theme inline {
-  --font-sans: 'Plus Jakarta Sans', ui-sans-serif, system-ui, sans-serif;
-  --font-serif: 'Instrument Serif', ui-serif, Georgia, serif;
+  --font-sans: 'Poppins', ui-sans-serif, system-ui, sans-serif;
+  --font-serif: 'Poppins', ui-serif, Georgia, serif;
   --color-ases-navy: #0f2744;
   --color-ases-blue: #1e4a6f;
   --color-ases-sky: #4da3c7;
