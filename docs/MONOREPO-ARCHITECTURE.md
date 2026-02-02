@@ -53,28 +53,16 @@ ArabiaIslamia-SecPortal/
 │   ├── main-website/         # example.com
 │   ├── huffaz/               # Huffaz project
 │   │   ├── api/              # Huffaz backend (NestJS, port 8001)
-│   │   ├── hub/              # huffaz.example.com frontend
-│   │   ├── registration/
-│   │   │   └── web/          # registration.huffaz.example.com
-│   │   ├── fees/
-│   │   │   └── web/          # fees.huffaz.example.com
-│   │   └── attendance/
-│   │       └── web/          # attendance.huffaz.example.com
+│   │   └── app/              # Huffaz frontend (Next.js, port 3001) — hub, registration, fees, attendance
 │   └── secondary/            # Secondary project
 │       ├── api/              # Secondary backend (NestJS, port 8002)
-│       ├── hub/              # secondary.example.com frontend
-│       ├── registration/
-│       │   └── web/
-│       ├── fees/
-│       │   └── web/
-│       └── attendance/
-│           └── web/
+│       └── app/              # Secondary frontend (Next.js, port 3011) — hub, registration, fees, attendance
 ├── packages/
 │   └── database/             # Shared entities, migrations, config
 ├── infra/
 │   ├── dev/
 │   │   ├── docker-compose.yml
-│   │   └── init-databases.sh
+│   │   └── init-databases.sql
 │   └── prod/
 │       ├── docker-compose.prod.yml
 │       ├── init-databases.sh
@@ -85,6 +73,8 @@ ArabiaIslamia-SecPortal/
 ├── turbo.json
 └── docs/
 ```
+
+Each school has **one API** and **one app** (unified Next.js with routes for hub, registration, fees, attendance). Caddy routes `/huffaz*` and `/secondary*` to the single app per school.
 
 ---
 
@@ -165,10 +155,14 @@ pnpm db:migrate:secondary
    - Copy `apps/huffaz/api` to `apps/<project>/api`
    - Update `typeorm-config.ts` to use `createDataSourceOptions('<project>')`
    - Update `package.json` name
-   - Add service in `infra/dev/docker-compose.yml` and `infra/prod/docker-compose.prod.yml`
+   - Add API service in `infra/dev/docker-compose.yml` and `infra/prod/docker-compose.prod.yml`
 
-3. **Caddy**
-   - Add routes in `infra/prod/config/Caddyfile`
+3. **App (frontend)**
+   - Copy `apps/huffaz/app` to `apps/<project>/app` (or create unified Next.js app with basePath)
+   - Add `secondary-app` / `huffaz-app`-style service in Docker Compose and GitHub Actions
+
+4. **Caddy**
+   - Add API and app routes in `infra/prod/config/Caddyfile`
 
 ---
 
@@ -184,8 +178,8 @@ docker compose up -d
 Creates:
 
 - PostgreSQL with `huffaz_db_dev` and `secondary_db_dev`
-- `huffaz-api` on 8001
-- `secondary-api` on 8002
+- `huffaz-api` on 8001, `huffaz-app` on 3001
+- `secondary-api` on 8002, `secondary-app` on 3011
 - pgAdmin on 5050
 
 ### Run migrations
@@ -210,9 +204,9 @@ pnpm --filter secondary-api run start:dev
 
 ## 8. Deployment
 
-- **Docker images**: build `huffaz-api` and `secondary-api`
+- **Docker images**: build `huffaz-api`, `huffaz-app`, `secondary-api`, `secondary-app`
 - **Postgres**: use `init-databases.sh` to create DBs
-- **Caddy**: path-based or subdomain routing
+- **Caddy**: path-based routing — `/huffaz*` → huffaz-app, `/secondary*` → secondary-app
 - **Env vars**: `HUFFAZ_DB_NAME`, `SECONDARY_DB_NAME`, JWT secrets, etc.
 
 See `docs/GITHUB_ACTIONS_DEPLOYMENT.md` for CI/CD.

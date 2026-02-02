@@ -1,0 +1,52 @@
+@import 'tailwindcss';
+
+/* Scan UI package so Tailwind doesn't purge shadcn component classes */
+@source "../../../../packages/ui/src";
+
+@theme inline {
+  --font-sans: 'Poppins', ui-sans-serif, system-ui, sans-serif;
+  --color-ases-navy: #0f2744;
+  --color-ases-blue: #1e4a6f;
+  --color-ases-sky: #4da3c7;
+  --color-ases-orange: #e85d2c;
+  /* shadcn theme colors (referenced by UI package components) */
+  --color-background: hsl(0 0% 100%);
+  --color-foreground: hsl(var(--ases-navy));
+  --color-primary: hsl(var(--ases-orange));
+  --color-primary-foreground: hsl(0 0% 100%);
+  --color-secondary: hsl(var(--ases-sky));
+  --color-secondary-foreground: hsl(0 0% 100%);
+  --color-muted: hsl(200 20% 96%);
+  --color-muted-foreground: hsl(214 20% 45%);
+  --color-border: hsl(214 20% 90%);
+  --color-input: hsl(214 20% 90%);
+  --color-ring: hsl(var(--ases-orange));
+  --color-accent: hsl(200 20% 96%);
+  --color-accent-foreground: hsl(var(--ases-navy));
+  --color-destructive: hsl(0 84% 60%);
+  --color-destructive-foreground: hsl(0 0% 100%);
+}
+
+:root {
+  --ases-navy: 214 42% 18%;
+  --ases-blue: 207 57% 27%;
+  --ases-sky: 197 51% 54%;
+  --ases-orange: 17 81% 54%;
+  --background: hsl(0 0% 100%);
+  --foreground: hsl(var(--ases-navy));
+  --primary: hsl(var(--ases-orange));
+  --primary-foreground: hsl(0 0% 100%);
+  --secondary: hsl(var(--ases-sky));
+  --secondary-foreground: hsl(0 0% 100%);
+  --muted: hsl(200 20% 96%);
+  --muted-foreground: hsl(214 20% 45%);
+  --border: hsl(214 20% 90%);
+  --input: hsl(214 20% 90%);
+  --ring: hsl(var(--ases-orange));
+  --ring-offset: hsl(0 0% 100%);
+  --accent: hsl(200 20% 96%);
+  --accent-foreground: hsl(var(--ases-navy));
+  --destructive: hsl(0 84% 60%);
+  --destructive-foreground: hsl(0 0% 100%);
+  --radius: 0.5rem;
+}

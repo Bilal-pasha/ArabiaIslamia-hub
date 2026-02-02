@@ -3,18 +3,15 @@ alwaysApply: true
 ---
 # Project Structure and Entry Points
 
-This repo is a monorepo with `backend/` (NestJS) and `frontend/` (Next.js App Router).
+This repo is a monorepo with **one API + one app per school** under `apps/<school>/`.
 
-- Frontend entry: `frontend/src/app/layout.tsx` and route files under `frontend/src/app/`
-- Backend entry: `backend/src/main.ts`, root module `backend/src/app.module.ts`
+- **API** (NestJS): `apps/secondary/api/`, `apps/huffaz/api/` — entry `src/main.ts`, root module `src/app.module.ts`
+- **App** (Next.js App Router): `apps/secondary/app/`, `apps/huffaz/app/` — entry `app/layout.tsx` and route files under `app/`
 
-Important frontend directories:
-- UI building blocks: `frontend/src/components/ui/`
-- App UI patterns: `frontend/src/components/app-ui/` (e.g., `page-header`, `page-wrapper`, `confirmation-modal`, `pagination`)
-- Feature pages: `frontend/src/components/pages/**`
-- Services and hooks: `frontend/src/services/**`
-- Constants and URLs: `frontend/src/constants/**`
-- Hooks: `frontend/src/hooks/**`
+Important app directories (per school, e.g. `apps/secondary/app/`):
+- UI building blocks: shared `packages/ui/`
+- App routes: `app/` (e.g. `/`, `/registration`, `/attendance`, `/fees`)
+- Components, lib, services, constants: `components/`, `lib/`, `services/`, `constants/`
 
 API docs live at [api-doc.md](mdc:api-doc.md) at repo root and are the source of truth for service types and endpoints.
 

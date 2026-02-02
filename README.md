@@ -18,16 +18,10 @@ See **[docs/MONOREPO-ARCHITECTURE.md](./docs/MONOREPO-ARCHITECTURE.md)** for ful
 │   ├── main-website/
 │   ├── huffaz/
 │   │   ├── api/              # Huffaz backend (port 8001)
-│   │   ├── hub/
-│   │   ├── registration/web/
-│   │   ├── fees/web/
-│   │   └── attendance/web/
+│   │   └── app/              # Huffaz frontend — hub, registration, fees, attendance (port 3001)
 │   └── secondary/
 │       ├── api/              # Secondary backend (port 8002)
-│       ├── hub/
-│       ├── registration/web/
-│       ├── fees/web/
-│       └── attendance/web/
+│       └── app/              # Secondary frontend — hub, registration, fees, attendance (port 3011)
 ├── packages/
 │   └── database/             # Shared entities, migrations
 ├── infra/                    # Docker, Caddy configs
@@ -67,13 +61,8 @@ DB_HOST=localhost POSTGRES_USER=postgres POSTGRES_PASSWORD=postgres pnpm db:migr
 
 **Frontends**
 - Main website: http://localhost:3000
-- Huffaz hub: http://localhost:3001/huffaz
-- Huffaz registration: http://localhost:3002/huffaz/registration
-- Huffaz fees: http://localhost:3003/huffaz/fees
-- Huffaz attendance: http://localhost:3004/huffaz/attendance
-- Secondary hub: http://localhost:3011/secondary
-- Secondary registration: http://localhost:3012/secondary/registration
-- Secondary attendance: http://localhost:3014/secondary/attendance
+- Huffaz app (hub, registration, fees, attendance): http://localhost:3001/huffaz
+- Secondary app (hub, registration, fees, attendance): http://localhost:3011/secondary
 
 **Tools**
 - pgAdmin: http://localhost:5050

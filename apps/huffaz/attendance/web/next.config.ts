@@ -1,7 +1,0 @@
-import type { NextConfig } from 'next';
-
-export default {
-  reactStrictMode: true,
-  basePath: '/huffaz/attendance',
-  assetPrefix: '/huffaz/attendance',
-} satisfies NextConfig;

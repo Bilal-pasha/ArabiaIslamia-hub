@@ -32,28 +32,13 @@
         respond "OK" 200
     }
 
-    # --- Frontends (Next.js apps use basePath, pass full path) ---
-    handle /huffaz/registration* {
-        reverse_proxy huffaz-registration:3002
-    }
-    handle /huffaz/fees* {
-        reverse_proxy huffaz-fees:3003
-    }
-    handle /huffaz/attendance* {
-        reverse_proxy huffaz-attendance:3004
-    }
+    # --- Frontends (single app per school with basePath) ---
     handle /huffaz* {
-        reverse_proxy huffaz-hub:3001
+        reverse_proxy huffaz-app:3001
     }
 
-    handle /secondary/registration* {
-        reverse_proxy secondary-registration:3012
-    }
-    handle /secondary/attendance* {
-        reverse_proxy secondary-attendance:3014
-    }
     handle /secondary* {
-        reverse_proxy secondary-hub:3011
+        reverse_proxy secondary-app:3011
     }
 
     handle {

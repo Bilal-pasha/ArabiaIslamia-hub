@@ -116,111 +116,35 @@ services:
   #     - app-network-dev
   #   command: sh -c "cd /app && pnpm install && cd apps/main-website && pnpm run dev"
 
-  # huffaz-hub:
+  # huffaz-app:
   #   build:
   #     context: ../..
-  #     dockerfile: apps/huffaz/hub/Dockerfile.dev
-  #   container_name: huffaz-hub-dev
+  #     dockerfile: apps/huffaz/client/Dockerfile.dev
+  #   container_name: huffaz-app-dev
   #   restart: unless-stopped
   #   ports:
   #     - "3001:3001"
   #   volumes:
-  #     - ../../apps/huffaz/hub:/app/apps/huffaz/hub
-  #     - huffaz-hub-node_modules:/app/apps/huffaz/hub/node_modules
+  #     - ../../apps/huffaz/client:/app/apps/huffaz/client
+  #     - huffaz-app-node_modules:/app/apps/huffaz/client/node_modules
   #   networks:
   #     - app-network-dev
-  #   command: sh -c "cd /app && pnpm install && cd apps/huffaz/hub && pnpm run dev"
+  #   command: sh -c "cd /app && pnpm install && cd apps/huffaz/client && pnpm run dev"
 
-  # huffaz-registration:
-  #   build:
-  #     context: ../..
-  #     dockerfile: apps/huffaz/registration/web/Dockerfile.dev
-  #   container_name: huffaz-registration-dev
-  #   restart: unless-stopped
-  #   ports:
-  #     - "3002:3002"
-  #   volumes:
-  #     - ../../apps/huffaz/registration/web:/app/apps/huffaz/registration/web
-  #     - huffaz-registration-node_modules:/app/apps/huffaz/registration/web/node_modules
-  #   networks:
-  #     - app-network-dev
-  #   command: sh -c "cd /app && pnpm install && cd apps/huffaz/registration/web && pnpm run dev"
-
-  # huffaz-fees:
-  #   build:
-  #     context: ../..
-  #     dockerfile: apps/huffaz/fees/web/Dockerfile.dev
-  #   container_name: huffaz-fees-dev
-  #   restart: unless-stopped
-  #   ports:
-  #     - "3003:3003"
-  #   volumes:
-  #     - ../../apps/huffaz/fees/web:/app/apps/huffaz/fees/web
-  #     - huffaz-fees-node_modules:/app/apps/huffaz/fees/web/node_modules
-  #   networks:
-  #     - app-network-dev
-  #   command: sh -c "cd /app && pnpm install && cd apps/huffaz/fees/web && pnpm run dev"
-
-  # huffaz-attendance:
-  #   build:
-  #     context: ../..
-  #     dockerfile: apps/huffaz/attendance/web/Dockerfile.dev
-  #   container_name: huffaz-attendance-dev
-  #   restart: unless-stopped
-  #   ports:
-  #     - "3004:3004"
-  #   volumes:
-  #     - ../../apps/huffaz/attendance/web:/app/apps/huffaz/attendance/web
-  #     - huffaz-attendance-node_modules:/app/apps/huffaz/attendance/web/node_modules
-  #   networks:
-  #     - app-network-dev
-  #   command: sh -c "cd /app && pnpm install && cd apps/huffaz/attendance/web && pnpm run dev"
-
-  secondary-hub:
+  secondary-app:
     build:
       context: ../..
-      dockerfile: apps/secondary/hub/Dockerfile.dev
-      network: host
-    container_name: secondary-hub-dev
+      dockerfile: apps/secondary/client/Dockerfile.dev
+    container_name: secondary-app-dev
     restart: unless-stopped
     ports:
       - "3011:3011"
     volumes:
-      - ../../apps/secondary/hub:/app/apps/secondary/hub
-      - secondary-hub-node_modules:/app/apps/secondary/hub/node_modules
+      - ../../apps/secondary/client:/app/apps/secondary/client
+      - secondary-app-node_modules:/app/apps/secondary/client/node_modules
     networks:
       - app-network-dev
-    command: sh -c "cd /app && pnpm install && cd apps/secondary/hub && pnpm run dev"
-
-  secondary-registration:
-    build:
-      context: ../..
-      dockerfile: apps/secondary/registration/web/Dockerfile.dev
-      network: host
-    container_name: secondary-registration-dev
-    restart: unless-stopped
-    ports:
-      - "3012:3012"
-    volumes:
-      - ../../apps/secondary/registration/web:/app/apps/secondary/registration/web
-      - secondary-registration-node_modules:/app/apps/secondary/registration/web/node_modules
-    networks:
-      - app-network-dev
-    command: sh -c "cd /app && pnpm install && cd apps/secondary/registration/web && pnpm run dev"
-  # secondary-attendance:
-  #   build:
-  #     context: ../..
-  #     dockerfile: apps/secondary/attendance/web/Dockerfile.dev
-  #   container_name: secondary-attendance-dev
-  #   restart: unless-stopped
-  #   ports:
-  #     - "3014:3014"
-  #   volumes:
-  #     - ../../apps/secondary/attendance/web:/app/apps/secondary/attendance/web
-  #     - secondary-attendance-node_modules:/app/apps/secondary/attendance/web/node_modules
-  #   networks:
-  #     - app-network-dev
-  #   command: sh -c "cd /app && pnpm install && cd apps/secondary/attendance/web && pnpm run dev"
+    command: sh -c "cd /app && pnpm install && cd apps/secondary/client && pnpm run dev"
 
 networks:
   app-network-dev:
@@ -233,21 +157,11 @@ volumes:
     driver: local
   secondary-api-node_modules:
     driver: local
-  secondary-registration-node_modules:
-    driver: local
-  secondary-hub-node_modules:
-    driver: local
-  secondary-attendance-node_modules:
+  secondary-app-node_modules:
     driver: local
   secondary-database-node_modules:
     driver: local
+  huffaz-app-node_modules:
+    driver: local
   main-website-node_modules:
-    driver: local
-  huffaz-hub-node_modules:
-    driver: local
-  huffaz-registration-node_modules:
-    driver: local
-  huffaz-fees-node_modules:
-    driver: local
-  huffaz-attendance-node_modules:
     driver: local
