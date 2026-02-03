@@ -3,8 +3,6 @@ services:
     image: postgres:16-alpine
     container_name: arabiaaislamia-postgres
     restart: unless-stopped
-    ports:
-      - "127.0.0.1:5432:5432"
     env_file:
       - .env
     volumes:
@@ -22,8 +20,6 @@ services:
     image: redis:7-alpine
     container_name: arabiaaislamia-redis
     restart: unless-stopped
-    ports:
-      - "127.0.0.1:6379:6379"
     env_file:
       - .env
     volumes:
@@ -37,24 +33,24 @@ services:
       timeout: 3s
       retries: 5
 
-  huffaz-api:
-    image: ${REGISTRY}/${IMAGE_NAME_LOWER}-huffaz-api:latest
-    container_name: arabiaaislamia-huffaz-api
-    restart: unless-stopped
-    env_file:
-      - .env
-    environment:
-      NODE_ENV: production
-      SERVER_PORT: 8001
-      DB_HOST: postgres
-      POSTGRES_USER: ${POSTGRES_USER}
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
-      HUFFAZ_DB_NAME: huffaz_db
-    networks:
-      - app-network
-    depends_on:
-      postgres:
-        condition: service_healthy
+  # huffaz-api:
+  #   image: ${REGISTRY}/${IMAGE_NAME_LOWER}-huffaz-api:latest
+  #   container_name: arabiaaislamia-huffaz-api
+  #   restart: unless-stopped
+  #   env_file:
+  #     - .env
+  #   environment:
+  #     NODE_ENV: production
+  #     SERVER_PORT: 8001
+  #     DB_HOST: postgres
+  #     POSTGRES_USER: ${POSTGRES_USER}
+  #     POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+  #     HUFFAZ_DB_NAME: huffaz_db
+  #   networks:
+  #     - app-network
+  #   depends_on:
+  #     postgres:
+  #       condition: service_healthy
 
   secondary-api:
     image: ${REGISTRY}/${IMAGE_NAME_LOWER}-secondary-api:latest
@@ -88,14 +84,14 @@ services:
     networks:
       - app-network
 
-  huffaz-app:
-    image: ${REGISTRY}/${IMAGE_NAME_LOWER}-huffaz-app:latest
-    container_name: arabiaaislamia-huffaz-client
-    restart: unless-stopped
-    environment:
-      NODE_ENV: production
-    networks:
-      - app-network
+  # huffaz-app:
+  #   image: ${REGISTRY}/${IMAGE_NAME_LOWER}-huffaz-app:latest
+  #   container_name: arabiaaislamia-huffaz-client
+  #   restart: unless-stopped
+  #   environment:
+  #     NODE_ENV: production
+  #   networks:
+  #     - app-network
 
   secondary-app:
     image: ${REGISTRY}/${IMAGE_NAME_LOWER}-secondary-app:latest
@@ -123,10 +119,10 @@ services:
     networks:
       - app-network
     depends_on:
-      - huffaz-api
+      # - huffaz-api
       - secondary-api
       - main-website
-      - huffaz-app
+      # - huffaz-app
       - secondary-app
 
 networks:

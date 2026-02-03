@@ -6,8 +6,6 @@ services:
     environment:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres
-    ports:
-      - "5432:5432"
     volumes:
       - postgres_dev_data:/var/lib/postgresql/data
       - ./init-databases.sql:/docker-entrypoint-initdb.d/init-databases.sql
@@ -26,8 +24,6 @@ services:
     environment:
       PGADMIN_DEFAULT_EMAIL: admin@admin.com
       PGADMIN_DEFAULT_PASSWORD: admin
-    ports:
-      - "5050:80"
     volumes:
       - pgadmin_dev_data:/var/lib/pgadmin
     networks:
@@ -54,8 +50,6 @@ services:
   #     JWT_EXPIRES_IN: 1h
   #     JWT_REFRESH_SECRET: dev-refresh-secret
   #     JWT_REFRESH_EXPIRES_IN: 7d
-  #   ports:
-  #     - "8001:8001"
   #   volumes:
   #     - ../../packages/database:/app/packages/database
   #     - ../../apps/huffaz/api:/app/apps/huffaz/api
@@ -86,8 +80,6 @@ services:
       JWT_EXPIRES_IN: 1h
       JWT_REFRESH_SECRET: dev-refresh-secret
       JWT_REFRESH_EXPIRES_IN: 7d
-    ports:
-      - "8002:8002"
     volumes:
       - ../../packages/database:/app/packages/database
       - ../../apps/secondary/api:/app/apps/secondary/api
@@ -101,20 +93,18 @@ services:
     command: sh -c "cd /app && pnpm install && pnpm --filter @arabiaaislamia/database run build && pnpm --filter @arabiaaislamia/storage run build && cd apps/secondary/api && pnpm run start:dev"
 
   # --- Frontend (UI) containers ---
-  # main-website:
-  #   build:
-  #     context: ../..
-  #     dockerfile: apps/main-website/Dockerfile.dev
-  #   container_name: main-website-dev
-  #   restart: unless-stopped
-  #   ports:
-  #     - "3000:3000"
-  #   volumes:
-  #     - ../../apps/main-website:/app/apps/main-website
-  #     - main-website-node_modules:/app/apps/main-website/node_modules
-  #   networks:
-  #     - app-network-dev
-  #   command: sh -c "cd /app && pnpm install && cd apps/main-website && pnpm run dev"
+  main-website:
+    build:
+      context: ../..
+      dockerfile: apps/main-website/Dockerfile.dev
+    container_name: main-website-dev
+    restart: unless-stopped
+    volumes:
+      - ../../apps/main-website:/app/apps/main-website
+      - main-website-node_modules:/app/apps/main-website/node_modules
+    networks:
+      - app-network-dev
+    command: sh -c "cd /app && pnpm install && cd apps/main-website && pnpm run dev"
 
   # huffaz-app:
   #   build:
@@ -122,8 +112,6 @@ services:
   #     dockerfile: apps/huffaz/client/Dockerfile.dev
   #   container_name: huffaz-app-dev
   #   restart: unless-stopped
-  #   ports:
-  #     - "3001:3001"
   #   volumes:
   #     - ../../apps/huffaz/client:/app/apps/huffaz/client
   #     - huffaz-app-node_modules:/app/apps/huffaz/client/node_modules
@@ -137,8 +125,6 @@ services:
       dockerfile: apps/secondary/client/Dockerfile.dev
     container_name: secondary-app-dev
     restart: unless-stopped
-    ports:
-      - "3011:3011"
     volumes:
       - ../../apps/secondary/client:/app/apps/secondary/client
       - secondary-app-node_modules:/app/apps/secondary/client/node_modules
