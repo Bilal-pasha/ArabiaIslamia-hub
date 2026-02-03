@@ -3,23 +3,23 @@
 }
 
 # Main website API: https://api.jamiaarabiaislamia.com (backend for main site)
-# Add main-website-api service to docker-compose.prod.yml when you have a backend
-api.jamiaarabiaislamia.com {
-    reverse_proxy main-website-api:8000 {
-        health_uri /health
-        health_interval 30s
-    }
-    encode gzip zstd
-    header {
-        X-Frame-Options "DENY"
-        X-Content-Type-Options "nosniff"
-        -Server
-    }
-    log {
-        output file /var/log/caddy/api-main.log
-        format json
-    }
-}
+# Uncomment when main-website-api is added to docker-compose.prod.yml
+# api.jamiaarabiaislamia.com {
+#     reverse_proxy main-website-api:8000 {
+#         health_uri /health
+#         health_interval 30s
+#     }
+#     encode gzip zstd
+#     header {
+#         X-Frame-Options "DENY"
+#         X-Content-Type-Options "nosniff"
+#         -Server
+#     }
+#     log {
+#         output file /var/log/caddy/api-main.log
+#         format json
+#     }
+# }
 
 # Main website: https://jamiaarabiaislamia.com
 jamiaarabiaislamia.com {
@@ -37,37 +37,39 @@ jamiaarabiaislamia.com {
 }
 
 # Huffaz API: https://api.huffaz.jamiaarabiaislamia.com
-api.huffaz.jamiaarabiaislamia.com {
-    reverse_proxy huffaz-api:8001 {
-        health_uri /health
-        health_interval 30s
-    }
-    encode gzip zstd
-    header {
-        X-Frame-Options "DENY"
-        X-Content-Type-Options "nosniff"
-        -Server
-    }
-    log {
-        output file /var/log/caddy/api-huffaz.log
-        format json
-    }
-}
+# Uncomment when huffaz-api is added to docker-compose.prod.yml
+# api.huffaz.jamiaarabiaislamia.com {
+#     reverse_proxy huffaz-api:8001 {
+#         health_uri /health
+#         health_interval 30s
+#     }
+#     encode gzip zstd
+#     header {
+#         X-Frame-Options "DENY"
+#         X-Content-Type-Options "nosniff"
+#         -Server
+#     }
+#     log {
+#         output file /var/log/caddy/api-huffaz.log
+#         format json
+#     }
+# }
 
 # Huffaz UI: https://huffaz.jamiaarabiaislamia.com
-huffaz.jamiaarabiaislamia.com {
-    reverse_proxy huffaz-app:3001
-    encode gzip zstd
-    header {
-        X-Frame-Options "DENY"
-        X-Content-Type-Options "nosniff"
-        -Server
-    }
-    log {
-        output file /var/log/caddy/huffaz.log
-        format json
-    }
-}
+# Uncomment when huffaz-app is added to docker-compose.prod.yml
+# huffaz.jamiaarabiaislamia.com {
+#     reverse_proxy huffaz-app:3001
+#     encode gzip zstd
+#     header {
+#         X-Frame-Options "DENY"
+#         X-Content-Type-Options "nosniff"
+#         -Server
+#     }
+#     log {
+#         output file /var/log/caddy/huffaz.log
+#         format json
+#     }
+# }
 
 # Secondary API: https://api.secondary.jamiaarabiaislamia.com
 api.secondary.jamiaarabiaislamia.com {
