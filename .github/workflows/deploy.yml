@@ -53,7 +53,7 @@ jobs:
           host: ${{ secrets.EC2_HOST }}
           username: ${{ secrets.EC2_USERNAME }}
           key: ${{ secrets.EC2_SSH_KEY }}
-          source: "infra/prod/docker-compose.prod.yml,infra/prod/init-databases.sh,infra/prod/config/Caddyfile"
+          source: "infra/prod/docker-compose.prod.yml,infra/prod/init-databases.sql,infra/prod/.env,infra/prod/config/Caddyfile"
           target: "/home/${{ secrets.EC2_USERNAME }}/arabiaaislamia-hub"
           strip_components: 2
 
