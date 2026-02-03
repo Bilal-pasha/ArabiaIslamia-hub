@@ -1,50 +1,14 @@
 {
-    email admin@example.com
+    email admin@jamiaarabiaislamia.com
 }
 
-# Path-based routing (single domain)
-# For subdomain routing, replace :80 with your domain and add host matchers
-:80 {
-    # --- APIs ---
-    handle /huffaz/api/* {
-        uri strip_prefix /huffaz
-        reverse_proxy huffaz-api:8001 {
-            health_uri /health
-            health_interval 30s
-        }
+# Main website API: https://api.jamiaarabiaislamia.com (backend for main site)
+# Add main-website-api service to docker-compose.prod.yml when you have a backend
+api.jamiaarabiaislamia.com {
+    reverse_proxy main-website-api:8000 {
+        health_uri /health
+        health_interval 30s
     }
-    handle /huffaz/health {
-        reverse_proxy huffaz-api:8001
-    }
-
-    handle /secondary/api/* {
-        uri strip_prefix /secondary
-        reverse_proxy secondary-api:8002 {
-            health_uri /health
-            health_interval 30s
-        }
-    }
-    handle /secondary/health {
-        reverse_proxy secondary-api:8002
-    }
-
-    handle /health {
-        respond "OK" 200
-    }
-
-    # --- Frontends (single app per school with basePath) ---
-    handle /huffaz* {
-        reverse_proxy huffaz-app:3001
-    }
-
-    handle /secondary* {
-        reverse_proxy secondary-app:3011
-    }
-
-    handle {
-        reverse_proxy main-website:3000
-    }
-
     encode gzip zstd
     header {
         X-Frame-Options "DENY"
@@ -52,7 +16,88 @@
         -Server
     }
     log {
-        output file /var/log/caddy/backend.log
+        output file /var/log/caddy/api-main.log
+        format json
+    }
+}
+
+# Main website: https://jamiaarabiaislamia.com
+jamiaarabiaislamia.com {
+    reverse_proxy main-website:3000
+    encode gzip zstd
+    header {
+        X-Frame-Options "DENY"
+        X-Content-Type-Options "nosniff"
+        -Server
+    }
+    log {
+        output file /var/log/caddy/main.log
+        format json
+    }
+}
+
+# Huffaz API: https://api.huffaz.jamiaarabiaislamia.com
+api.huffaz.jamiaarabiaislamia.com {
+    reverse_proxy huffaz-api:8001 {
+        health_uri /health
+        health_interval 30s
+    }
+    encode gzip zstd
+    header {
+        X-Frame-Options "DENY"
+        X-Content-Type-Options "nosniff"
+        -Server
+    }
+    log {
+        output file /var/log/caddy/api-huffaz.log
+        format json
+    }
+}
+
+# Huffaz UI: https://huffaz.jamiaarabiaislamia.com
+huffaz.jamiaarabiaislamia.com {
+    reverse_proxy huffaz-app:3001
+    encode gzip zstd
+    header {
+        X-Frame-Options "DENY"
+        X-Content-Type-Options "nosniff"
+        -Server
+    }
+    log {
+        output file /var/log/caddy/huffaz.log
+        format json
+    }
+}
+
+# Secondary API: https://api.secondary.jamiaarabiaislamia.com
+api.secondary.jamiaarabiaislamia.com {
+    reverse_proxy secondary-api:8002 {
+        health_uri /health
+        health_interval 30s
+    }
+    encode gzip zstd
+    header {
+        X-Frame-Options "DENY"
+        X-Content-Type-Options "nosniff"
+        -Server
+    }
+    log {
+        output file /var/log/caddy/api-secondary.log
+        format json
+    }
+}
+
+# Secondary UI: https://secondary.jamiaarabiaislamia.com
+secondary.jamiaarabiaislamia.com {
+    reverse_proxy secondary-app:3011
+    encode gzip zstd
+    header {
+        X-Frame-Options "DENY"
+        X-Content-Type-Options "nosniff"
+        -Server
+    }
+    log {
+        output file /var/log/caddy/secondary.log
         format json
     }
 }

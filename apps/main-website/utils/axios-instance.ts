@@ -1,6 +1,7 @@
 import axios from 'axios';
 
-const API_BASE = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8002';
+const API_BASE =
+  process.env.NEXT_PUBLIC_MAIN_WEBSITE_API_URL || 'http://localhost:8000';
 
 export const apiClient = axios.create({
   baseURL: API_BASE,
@@ -14,14 +15,6 @@ export const apiClient = axios.create({
 apiClient.interceptors.response.use(
   (response) => response,
   (error) => {
-    if (typeof window !== 'undefined' && error.response?.status === 401) {
-      const path = window.location.pathname + window.location.search;
-      if (!path.includes('/registration/admin/signin')) {
-        const redirect = encodeURIComponent(path);
-        window.location.href = `/registration/admin/signin?redirect=${redirect}`;
-      }
-      return Promise.reject(new Error('Unauthorized'));
-    }
     const message =
       error.response?.data?.message ||
       (typeof error.response?.data === 'string' ? error.response.data : null) ||

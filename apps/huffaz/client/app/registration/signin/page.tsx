@@ -2,27 +2,28 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
+import { apiClient } from '@/utils/axios-instance';
 
 export default function SignInPage() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8001';
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    const res = await fetch(`${apiUrl}/auth/login`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ email, password }),
-      credentials: 'include',
-    });
-    const data = await res.json();
-    if (data.accessToken) window.location.href = '/';
-    else alert(data.message || 'Login failed');
+    try {
+      const { data } = await apiClient.post<{ accessToken?: string; message?: string }>(
+        '/api/auth/login',
+        { email, password }
+      );
+      if (data.accessToken) window.location.href = '/';
+      else alert(data.message || 'Login failed');
+    } catch (err) {
+      alert(err instanceof Error ? err.message : 'Login failed');
+    }
   };
 
   return (
-    <main className="min-h-screen flex items-center justify-center p-8">
+    <main className="min-h-screen flex flex-col items-center justify-center p-8">
       <div className="w-full max-w-md">
         <h1 className="text-2xl font-bold mb-6">Sign In — Huffaz</h1>
         <form onSubmit={handleSubmit} className="space-y-4">

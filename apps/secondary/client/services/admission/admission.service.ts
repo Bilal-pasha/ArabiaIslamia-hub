@@ -1,4 +1,4 @@
-import { apiClient } from '@/lib/axios-instance';
+import { apiClient } from '@/utils/axios-instance';
 
 export interface AdmissionApplication {
   id: string;

@@ -1,4 +1,4 @@
-name: Deploy to EC2
+name: Deploy to AWS EC2
 
 on:
   workflow_run:
@@ -16,7 +16,7 @@ on:
           - production
           - staging
       image-tag:
-        description: 'Docker image tag (defaults to latest)'
+        description: 'Docker image tag to deploy (defaults to latest)'
         required: false
         type: string
 
@@ -28,12 +28,12 @@ jobs:
     runs-on: ubuntu-latest
     if: ${{ github.event.workflow_run.conclusion == 'success' || github.event_name == 'workflow_dispatch' }}
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout repository
+        uses: actions/checkout@v4
 
-      - name: Set env for multi-image deploy
+      - name: Lowercase image name
         run: |
           echo "IMAGE_NAME_LOWER=${GITHUB_REPOSITORY,,}" >> $GITHUB_ENV
-          echo "REGISTRY=${{ env.REGISTRY }}" >> $GITHUB_ENV
 
       - name: Prepare deployment directory
         uses: appleboy/ssh-action@v1.0.3
@@ -43,21 +43,21 @@ jobs:
           key: ${{ secrets.EC2_SSH_KEY }}
           port: 22
           script: |
-            sudo mkdir -p /home/${{ secrets.EC2_USERNAME }}/arabiaaislamia-secportal
-            sudo chown -R ${{ secrets.EC2_USERNAME }}:${{ secrets.EC2_USERNAME }} /home/${{ secrets.EC2_USERNAME }}/arabiaaislamia-secportal
-            chmod -R 755 /home/${{ secrets.EC2_USERNAME }}/arabiaaislamia-secportal
+            sudo mkdir -p /home/${{ secrets.EC2_USERNAME }}/arabiaaislamia-hub
+            sudo chown -R ${{ secrets.EC2_USERNAME }}:${{ secrets.EC2_USERNAME }} /home/${{ secrets.EC2_USERNAME }}/arabiaaislamia-hub
+            chmod -R 755 /home/${{ secrets.EC2_USERNAME }}/arabiaaislamia-hub
 
-      - name: Copy deployment files
+      - name: Copy Docker Compose and config
         uses: appleboy/scp-action@v0.1.7
         with:
           host: ${{ secrets.EC2_HOST }}
           username: ${{ secrets.EC2_USERNAME }}
           key: ${{ secrets.EC2_SSH_KEY }}
           source: "infra/prod/docker-compose.prod.yml,infra/prod/init-databases.sh,infra/prod/config/Caddyfile"
-          target: "/home/${{ secrets.EC2_USERNAME }}/arabiaaislamia-secportal"
+          target: "/home/${{ secrets.EC2_USERNAME }}/arabiaaislamia-hub"
           strip_components: 2
 
-      - name: Deploy
+      - name: Deploy application
         uses: appleboy/ssh-action@v1.0.3
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -69,19 +69,23 @@ jobs:
           envs: REGISTRY,IMAGE_NAME_LOWER,GITHUB_TOKEN
           script: |
             set -e
-            cd /home/${{ secrets.EC2_USERNAME }}/arabiaaislamia-secportal
+            cd /home/${{ secrets.EC2_USERNAME }}/arabiaaislamia-hub
 
+            # Login to GHCR
             echo "$GITHUB_TOKEN" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
 
+            # Determine tag
             IMAGE_TAG="${{ github.event.inputs.image-tag || 'latest' }}"
 
-            docker pull "$REGISTRY/$IMAGE_NAME_LOWER-huffaz-api:$IMAGE_TAG"
-            docker pull "$REGISTRY/$IMAGE_NAME_LOWER-huffaz-app:$IMAGE_TAG"
+            echo "📥 Pulling Docker images (tag: $IMAGE_TAG)"
+            docker pull "$REGISTRY/$IMAGE_NAME_LOWER-main-website:$IMAGE_TAG"
             docker pull "$REGISTRY/$IMAGE_NAME_LOWER-secondary-api:$IMAGE_TAG"
             docker pull "$REGISTRY/$IMAGE_NAME_LOWER-secondary-app:$IMAGE_TAG"
 
+            echo "♻️ Updating containers"
             docker compose -f docker-compose.prod.yml up -d --remove-orphans
 
+            echo "🧹 Cleaning up"
             docker image prune -f
             docker logout ghcr.io
-            echo "✅ Deployment completed"
+            echo "✅ Deployment completed successfully"

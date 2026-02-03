@@ -8,6 +8,44 @@ The deployment workflow:
 1. **Build**: Builds the Docker image for the server and pushes it to GitHub Container Registry (GHCR)
 2. **Deploy**: SSHs into the GCE instance and updates the running containers
 
+## Domain and DNS (jamiaarabiaislamia.com)
+
+The production Caddyfile uses dedicated API subdomains:
+
+| URL | Service |
+|-----|---------|
+| **https://jamiaarabiaislamia.com** | Main website |
+| **https://api.jamiaarabiaislamia.com** | Main website API (backend) |
+| **https://huffaz.jamiaarabiaislamia.com** | Huffaz UI |
+| **https://api.huffaz.jamiaarabiaislamia.com** | Huffaz API (backend) |
+| **https://secondary.jamiaarabiaislamia.com** | Secondary UI |
+| **https://api.secondary.jamiaarabiaislamia.com** | Secondary API (backend) |
+
+**DNS (e.g. Hostinger):** Add A records pointing to your server public IP:
+
+- `jamiaarabiaislamia.com`
+- `api.jamiaarabiaislamia.com`
+- `huffaz.jamiaarabiaislamia.com`
+- `api.huffaz.jamiaarabiaislamia.com`
+- `secondary.jamiaarabiaislamia.com`
+- `api.secondary.jamiaarabiaislamia.com`
+
+Remove any "parked domain" or parking page so traffic goes to your server. Caddy will obtain TLS certificates from Let's Encrypt automatically.
+
+**Backend API URLs (server .env):**
+
+- `MAIN_WEBSITE_API_URL=https://api.jamiaarabiaislamia.com`
+- `SECONDARY_API_URL=https://api.secondary.jamiaarabiaislamia.com`
+- `HUFFAZ_API_URL=https://api.huffaz.jamiaarabiaislamia.com`
+
+**Frontend API base URL (build-time for Next.js apps):**
+
+- Main website: `NEXT_PUBLIC_MAIN_WEBSITE_API_URL=https://api.jamiaarabiaislamia.com` (when the main site calls a backend)
+- Secondary UI: `NEXT_PUBLIC_API_URL=https://api.secondary.jamiaarabiaislamia.com`
+- Huffaz UI: `NEXT_PUBLIC_API_URL=https://api.huffaz.jamiaarabiaislamia.com` (paths use `/api/...`)
+
+---
+
 ## Prerequisites
 
 1. **Google Cloud Project** with billing enabled
@@ -52,7 +90,7 @@ No additional setup needed! The workflow uses GitHub Container Registry (GHCR) w
 
 ```bash
 # Create instance
-gcloud compute instances create arabiaaislamia-secportal-instance \
+gcloud compute instances create arabiaaislamia-hub-instance \
     --zone=us-central1-a \
     --machine-type=e2-micro \
     --boot-disk-size=20GB \
@@ -88,8 +126,8 @@ sudo curl -L "https://github.com/docker/compose/releases/latest/download/docker-
 sudo chmod +x /usr/local/bin/docker-compose
 
 # Create application directory
-sudo mkdir -p /opt/arabiaaislamia-secportal/config
-sudo chown -R $USER:$USER /opt/arabiaaislamia-secportal
+sudo mkdir -p /opt/arabiaaislamia-hub/config
+sudo chown -R $USER:$USER /opt/arabiaaislamia-hub
 ```
 
 ### 5. Configure GitHub Secrets
@@ -102,7 +140,7 @@ Add the following secrets:
 |------------|-------------|---------|
 | `GCP_PROJECT_ID` | Your GCP project ID | `my-project-12345` |
 | `GCP_SA_KEY` | Service account JSON key (full content) | `{"type":"service_account",...}` |
-| `GCE_INSTANCE_NAME` | GCE instance name | `arabiaaislamia-secportal-instance` |
+| `GCE_INSTANCE_NAME` | GCE instance name | `arabiaaislamia-hub-instance` |
 | `GCE_INSTANCE_ZONE` | GCE instance zone | `us-central1-a` |
 | `GCE_SSH_USER` | SSH username for GCE | `ubuntu` or `your-username` |
 | `GCE_INSTANCE_URL` | (Optional) Public URL of your instance | `https://your-domain.com` |
@@ -193,12 +231,12 @@ export IMAGE_URL="ghcr.io/YOUR_ORG/YOUR_REPO/server:latest"
 export GITHUB_TOKEN="your_github_token"
 
 # Copy files to server
-scp infra/prod/docker-compose.yml user@instance:/opt/arabiaaislamia-secportal/
-scp infra/prod/config/Caddyfile user@instance:/opt/arabiaaislamia-secportal/config/
+scp infra/prod/docker-compose.yml user@instance:/opt/arabiaaislamia-hub/
+scp infra/prod/config/Caddyfile user@instance:/opt/arabiaaislamia-hub/config/
 
 # SSH and deploy
 ssh user@instance
-cd /opt/arabiaaislamia-secportal
+cd /opt/arabiaaislamia-hub
 
 # Authenticate to GHCR
 echo "$GITHUB_TOKEN" | docker login ghcr.io -u YOUR_GITHUB_USERNAME --password-stdin
@@ -216,7 +254,7 @@ docker-compose up -d
 Check deployment logs:
 ```bash
 # On GCE instance
-cd /opt/arabiaaislamia-secportal
+cd /opt/arabiaaislamia-hub
 docker-compose logs -f server
 tail -f deployment.log
 ```
@@ -244,5 +282,5 @@ For issues, check:
 1. GitHub Actions logs
 2. GCE instance logs: `journalctl -u docker`
 3. Docker logs: `docker-compose logs`
-4. Deployment log: `/opt/arabiaaislamia-secportal/deployment.log`
+4. Deployment log: `/opt/arabiaaislamia-hub/deployment.log`
 

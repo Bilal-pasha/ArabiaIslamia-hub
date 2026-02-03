@@ -1,5 +1,5 @@
 {
-  "name": "arabiaaislamia-secportal",
+  "name": "arabiaaislamia-hub",
   "private": true,
   "scripts": {
     "build": "turbo run build",

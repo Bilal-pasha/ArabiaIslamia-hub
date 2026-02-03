@@ -73,9 +73,6 @@ services:
 
   # --- Frontend (UI) containers ---
   main-website:
-    build:
-      context: ../..
-      dockerfile: apps/main-website/Dockerfile
     image: ${REGISTRY}/${IMAGE_NAME_LOWER}-main-website:latest
     container_name: arabiaaislamia-main-website
     restart: unless-stopped

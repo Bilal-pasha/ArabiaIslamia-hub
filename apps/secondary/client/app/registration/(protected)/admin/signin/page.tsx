@@ -7,7 +7,7 @@ import { Card, CardContent, CardTitle } from '@arabiaaislamia/ui';
 import { Button, Input, Label } from '@arabiaaislamia/ui';
 import { SecondaryLogo } from '@arabiaaislamia/ui';
 import { publicRoutes, privateRoutes } from '@/constants/route';
-import { apiClient } from '@/lib/axios-instance';
+import { apiClient } from '@/utils/axios-instance';
 
 export default function AdminSigninPage() {
   const router = useRouter();

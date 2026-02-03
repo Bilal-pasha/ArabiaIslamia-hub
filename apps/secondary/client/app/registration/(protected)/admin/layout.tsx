@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { usePathname, useRouter } from 'next/navigation';
-import { apiClient } from '@/lib/axios-instance';
+import { apiClient } from '@/utils/axios-instance';
 import { privateRoutes } from '@/constants/route';
 
 function isSigninPath(pathname: string) {

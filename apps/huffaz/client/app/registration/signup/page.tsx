@@ -2,28 +2,29 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
+import { apiClient } from '@/utils/axios-instance';
 
 export default function SignUpPage() {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8001';
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    const res = await fetch(`${apiUrl}/auth/register`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ name, email, password }),
-      credentials: 'include',
-    });
-    const data = await res.json();
-    if (data.user || data.accessToken) window.location.href = '/';
-    else alert(data.message || 'Registration failed');
+    try {
+      const { data } = await apiClient.post<{ user?: unknown; accessToken?: string; message?: string }>(
+        '/api/auth/register',
+        { name, email, password }
+      );
+      if (data.user ?? data.accessToken) window.location.href = '/';
+      else alert(data.message || 'Registration failed');
+    } catch (err) {
+      alert(err instanceof Error ? err.message : 'Registration failed');
+    }
   };
 
   return (
-    <main className="min-h-screen flex items-center justify-center p-8">
+    <main className="min-h-screen flex flex-col items-center justify-center p-8">
       <div className="w-full max-w-md">
         <h1 className="text-2xl font-bold mb-6">Sign Up — Huffaz</h1>
         <form onSubmit={handleSubmit} className="space-y-4">
