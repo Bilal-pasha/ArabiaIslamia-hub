@@ -1,0 +1,93 @@
+@import 'tailwindcss';
+
+/* Scan UI package so Tailwind doesn't purge shadcn component classes */
+@source "../../../packages/ui/src";
+
+@theme inline {
+  --font-sans: 'Poppins', 'Noto Nastaliq Urdu', ui-sans-serif, system-ui, sans-serif;
+  /* Main website: Jamia Arabia Islamia – green & amber */
+  --color-background: hsl(0 0% 100%);
+  --color-foreground: hsl(140 30% 15%);
+  --color-primary: hsl(142 76% 26%);
+  --color-primary-foreground: hsl(0 0% 100%);
+  --color-secondary: hsl(45 93% 47%);
+  --color-secondary-foreground: hsl(140 30% 15%);
+  --color-muted: hsl(45 30% 96%);
+  --color-muted-foreground: hsl(140 15% 45%);
+  --color-border: hsl(45 20% 90%);
+  --color-input: hsl(45 20% 90%);
+  --color-ring: hsl(142 76% 26%);
+  --color-accent: hsl(45 93% 95%);
+  --color-accent-foreground: hsl(140 30% 15%);
+  --color-destructive: hsl(0 84% 60%);
+  --color-destructive-foreground: hsl(0 0% 100%);
+  --color-card: hsl(0 0% 100%);
+  --color-card-foreground: hsl(140 30% 15%);
+}
+
+:root {
+  --background: hsl(0 0% 100%);
+  --foreground: hsl(140 30% 15%);
+  --primary: 142 76% 26%;
+  --primary-foreground: 0 0% 100%;
+  --secondary: 45 93% 47%;
+  --secondary-foreground: 140 30% 15%;
+  --muted: 45 30% 96%;
+  --muted-foreground: 140 15% 45%;
+  --border: 45 20% 90%;
+  --input: 45 20% 90%;
+  --ring: 142 76% 26%;
+  --radius: 0.5rem;
+  --card: 0 0% 100%;
+  --card-foreground: 140 30% 15%;
+  --destructive: 0 84% 60%;
+  --destructive-foreground: 0 0% 100%;
+  --accent: 45 93% 95%;
+  --accent-foreground: 140 30% 15%;
+}
+
+body {
+  font-family: 'Poppins', ui-sans-serif, system-ui, sans-serif;
+  background-color: hsl(var(--background));
+  color: hsl(var(--foreground));
+}
+
+.urdutext {
+  font-family: 'Noto Nastaliq Urdu', serif;
+}
+
+/* Section backgrounds */
+.section-hero-desktop {
+  background-image: url('/images/background.jpg');
+  background-size: cover;
+  background-position: center;
+  background-color: rgba(49, 48, 48, 0.42);
+  background-blend-mode: darken;
+}
+
+.section-hero-mobile {
+  background-image: url('/images/slider-image-1.jpg');
+  background-size: cover;
+  background-position: center;
+  background-color: rgba(0, 0, 0, 0.3);
+  background-blend-mode: darken;
+}
+
+.section-statistics {
+  background-image: url('/images/StatisticSectionImage.png');
+  background-size: cover;
+  background-position: center;
+  background-attachment: fixed;
+}
+
+.section-about-hero {
+  background-image: url('/images/AboutBackGroundImage.jpg');
+  background-size: cover;
+  background-position: center;
+  background-color: rgba(49, 48, 48, 0.42);
+  background-blend-mode: darken;
+}
+
+.bg-pattern-lite {
+  background-image: url('/images/background-lite-image.png');
+}

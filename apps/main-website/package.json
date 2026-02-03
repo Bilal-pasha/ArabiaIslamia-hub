@@ -9,14 +9,25 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@arabiaaislamia/ui": "workspace:*",
+    "@arabiaaislamia/animations": "workspace:*",
+    "framer-motion": "^11.11.0",
+    "lucide-react": "^0.468.0",
     "next": "16.1.6",
     "react": "19.2.3",
-    "react-dom": "19.2.3"
+    "react-dom": "19.2.3",
+    "@hookform/resolvers": "^3.9.0",
+    "react-hook-form": "^7.53.0",
+    "zod": "^3.24.0",
+    "clsx": "^2.1.1",
+    "tailwind-merge": "^2.6.0"
   },
   "devDependencies": {
+    "@tailwindcss/postcss": "^4",
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
+    "tailwindcss": "^4",
     "typescript": "^5"
   }
 }
