@@ -16,22 +16,21 @@ services:
       timeout: 5s
       retries: 5
 
-  # redis:
-  #   image: redis:7-alpine
-  #   container_name: arabiaaislamia-redis
-  #   restart: unless-stopped
-  #   env_file:
-  #     - ./.env
-  #   volumes:
-  #     - redis_data:/data
-  #   networks:
-  #     - app-network
-  #   command: redis-server --appendonly yes --requirepass ${REDIS_PASSWORD} --port ${REDIS_PORT}
-  #   healthcheck:
-  #     test: [ "CMD", "redis-cli", "--raw", "incr", "ping" ]
-  #     interval: 10s
-  #     timeout: 3s
-  #     retries: 5
+  redis:
+    image: redis:7-alpine
+    container_name: arabiaaislamia-redis
+    restart: unless-stopped
+    env_file:
+      - ./.env
+    volumes:
+      - redis_data:/data
+    networks:
+      - app-network
+    healthcheck:
+      test: [ "CMD", "redis-cli", "--raw", "incr", "ping" ]
+      interval: 10s
+      timeout: 3s
+      retries: 5
 
   # huffaz-api:
   #   image: ${REGISTRY}/${IMAGE_NAME_LOWER}-huffaz-api:latest
@@ -53,21 +52,11 @@ services:
   #       condition: service_healthy
 
   secondary-api:
-    build:
-      context: ../..
-      dockerfile: apps/secondary/api/Dockerfile
-    # image: ${REGISTRY}/${IMAGE_NAME_LOWER}-secondary-api:latest
+    image: ${REGISTRY}/${IMAGE_NAME_LOWER}-secondary-api:latest
     container_name: arabiaaislamia-secondary-api
     restart: unless-stopped
     env_file:
       - ./.env
-    environment:
-      NODE_ENV: production
-      SERVER_PORT: 8002
-      DB_HOST: postgres
-      POSTGRES_USER: ${POSTGRES_USER}
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
-      SECONDARY_DB_NAME: secondary_db
     networks:
       - app-network
     depends_on:
@@ -76,12 +65,11 @@ services:
 
   # --- Frontend (UI) containers ---
   main-website:
-    build:
-      context: ../..
-      dockerfile: apps/main-website/Dockerfile
-    # image: ${REGISTRY}/${IMAGE_NAME_LOWER}-main-website:latest
+    image: ${REGISTRY}/${IMAGE_NAME_LOWER}-main-website:latest
     container_name: arabiaaislamia-main-website
     restart: unless-stopped
+    env_file:
+      - ./.env
     environment:
       NODE_ENV: production
     networks:
@@ -97,38 +85,37 @@ services:
   #     - app-network
 
   secondary-app:
-    build:
-      context: ../..
-      dockerfile: apps/secondary/client/Dockerfile
-    # image: ${REGISTRY}/${IMAGE_NAME_LOWER}-secondary-app:latest 
+    image: ${REGISTRY}/${IMAGE_NAME_LOWER}-secondary-app:latest
     container_name: arabiaaislamia-secondary-client
     restart: unless-stopped
+    env_file:
+      - ./.env
     environment:
       NODE_ENV: production
     networks:
       - app-network
-  # caddy:
-  #   image: caddy:2-alpine
-  #   container_name: arabiaaislamia-caddy
-  #   restart: unless-stopped
-  #   env_file:
-  #     - ./.env
-  #   ports:
-  #     - "${HTTP_PORT}:80"
-  #     - "${HTTPS_PORT}:443"
-  #   volumes:
-  #     - ./config/Caddyfile:/etc/caddy/Caddyfile
-  #     - caddy_data:/data
-  #     - caddy_config:/config
-  #     - caddy_logs:/var/log/caddy
-  #   networks:
-  #     - app-network
-  #   depends_on:
-  #     # - huffaz-api
-  #     - secondary-api
-  #     - main-website
-  #     # - huffaz-app
-  #     - secondary-app
+  caddy:
+    image: caddy:2-alpine
+    container_name: arabiaaislamia-caddy
+    restart: unless-stopped
+    env_file:
+      - ./.env
+    ports:
+      - "${HTTP_PORT}:80"
+      - "${HTTPS_PORT}:443"
+    volumes:
+      - ./config/Caddyfile:/etc/caddy/Caddyfile
+      - caddy_data:/data
+      - caddy_config:/config
+      - caddy_logs:/var/log/caddy
+    networks:
+      - app-network
+    depends_on:
+      # - huffaz-api
+      - secondary-api
+      - main-website
+      # - huffaz-app
+      - secondary-app
 
 networks:
   app-network:
