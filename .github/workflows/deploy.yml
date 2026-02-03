@@ -71,7 +71,6 @@ jobs:
             set -e
             cd /home/${{ secrets.EC2_USERNAME }}/arabiaaislamia-hub
 
-            # Login to GHCR
             echo "$GITHUB_TOKEN" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
 
             # Determine tag
@@ -81,7 +80,11 @@ jobs:
             docker pull "$REGISTRY/$IMAGE_NAME_LOWER-main-website:$IMAGE_TAG"
             docker pull "$REGISTRY/$IMAGE_NAME_LOWER-secondary-api:$IMAGE_TAG"
             docker pull "$REGISTRY/$IMAGE_NAME_LOWER-secondary-app:$IMAGE_TAG"
+            
+            echo "🛑 Stopping all containers"
+            docker compose -f docker-compose.prod.yml down
 
+            # Login to GHCR
             echo "♻️ Updating containers"
             docker compose -f docker-compose.prod.yml up -d --remove-orphans
 
