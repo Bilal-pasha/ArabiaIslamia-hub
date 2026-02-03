@@ -1,10 +1,13 @@
+# Use repo root .env (same as dev) when running from infra/prod:
+#   docker compose -f docker-compose.prod.yml up --build
+# Or set env_file path: docker compose -f docker-compose.prod.yml --env-file ../../.env up
 services:
   postgres:
     image: postgres:16-alpine
     container_name: arabiaaislamia-postgres
     restart: unless-stopped
     env_file:
-      - .env
+      - ../../.env
     volumes:
       - postgres_data:/var/lib/postgresql/data
       - ./init-databases.sh:/docker-entrypoint-initdb.d/init-databases.sh
@@ -21,7 +24,7 @@ services:
     container_name: arabiaaislamia-redis
     restart: unless-stopped
     env_file:
-      - .env
+      - ../../.env
     volumes:
       - redis_data:/data
     networks:
@@ -57,7 +60,7 @@ services:
     container_name: arabiaaislamia-secondary-api
     restart: unless-stopped
     env_file:
-      - .env
+      - ../../.env
     environment:
       NODE_ENV: production
       SERVER_PORT: 8002
@@ -104,7 +107,7 @@ services:
     container_name: arabiaaislamia-caddy
     restart: unless-stopped
     env_file:
-      - .env
+      - ../../.env
     ports:
       - "${HTTP_PORT}:80"
       - "${HTTPS_PORT}:443"
