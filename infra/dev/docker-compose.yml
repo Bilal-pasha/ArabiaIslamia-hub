@@ -3,9 +3,8 @@ services:
     image: postgres:16-alpine
     container_name: arabiaaislamia-postgres-dev
     restart: unless-stopped
-    environment:
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: postgres
+    env_file:
+      - ./.env
     volumes:
       - postgres_dev_data:/var/lib/postgresql/data
       - ./init-databases.sql:/docker-entrypoint-initdb.d/init-databases.sql
@@ -21,9 +20,8 @@ services:
     image: dpage/pgadmin4:latest
     container_name: arabiaaislamia-pgadmin-dev
     restart: unless-stopped
-    environment:
-      PGADMIN_DEFAULT_EMAIL: admin@admin.com
-      PGADMIN_DEFAULT_PASSWORD: admin
+    env_file:
+      - ./.env
     volumes:
       - pgadmin_dev_data:/var/lib/pgadmin
     networks:
@@ -67,19 +65,7 @@ services:
     container_name: secondary-api-dev
     restart: unless-stopped
     env_file:
-      - ../../.env
-    environment:
-      NODE_ENV: development
-      SERVER_PORT: 8002
-      DB_HOST: postgres
-      DB_PORT: 5432
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: postgres
-      SECONDARY_DB_NAME: secondary_db_dev
-      JWT_SECRET: dev-jwt-secret
-      JWT_EXPIRES_IN: 1h
-      JWT_REFRESH_SECRET: dev-refresh-secret
-      JWT_REFRESH_EXPIRES_IN: 7d
+      - ./.env
     volumes:
       - ../../packages/database:/app/packages/database
       - ../../apps/secondary/api:/app/apps/secondary/api
