@@ -25,6 +25,8 @@
   --color-accent-foreground: hsl(var(--ases-navy));
   --color-destructive: hsl(0 84% 60%);
   --color-destructive-foreground: hsl(0 0% 100%);
+  --color-card: hsl(0 0% 100%);
+  --color-card-foreground: hsl(var(--ases-navy));
 }
 
 :root {
@@ -48,5 +50,95 @@
   --accent-foreground: hsl(var(--ases-navy));
   --destructive: hsl(0 84% 60%);
   --destructive-foreground: hsl(0 0% 100%);
+  --card: hsl(0 0% 100%);
+  --card-foreground: hsl(var(--ases-navy));
   --radius: 0.5rem;
+}
+
+/* Secondary app theme: hub-style dark gradient + navy cards (registration & admin) */
+[data-theme="secondary"] {
+  --background: transparent;
+  --foreground: hsl(0 0% 98%);
+  --color-background: transparent;
+  --color-foreground: hsl(0 0% 98%);
+  /* Card: same navy as hub gradient (#0f2744), with shadow and light text */
+  --card: rgba(15, 39, 68, 0.92);
+  --card-foreground: hsl(0 0% 98%);
+  --color-card: rgba(15, 39, 68, 0.92);
+  --color-card-foreground: hsl(0 0% 98%);
+  --muted: rgba(255 255 255 / 0.08);
+  --muted-foreground: hsl(215 20% 78%);
+  --color-muted: rgba(255 255 255 / 0.08);
+  --color-muted-foreground: hsl(215 20% 78%);
+  --border: rgba(255 255 255 / 0.12);
+  --color-border: rgba(255 255 255 / 0.12);
+  --input: rgba(255 255 255 / 0.1);
+  --color-input: rgba(255 255 255 / 0.1);
+  --ring: hsl(17 81% 54%);
+  --color-ring: hsl(17 81% 54%);
+  --accent: rgba(255 255 255 / 0.1);
+  --accent-foreground: hsl(0 0% 98%);
+  --color-accent: rgba(255 255 255 / 0.1);
+  --color-accent-foreground: hsl(0 0% 98%);
+  --destructive: hsl(0 63% 55%);
+  --color-destructive: hsl(0 63% 55%);
+  --destructive-foreground: hsl(0 0% 100%);
+  --color-destructive-foreground: hsl(0 0% 100%);
+}
+
+/* Secondary cards only: navy bg (override Tailwind’s fixed utility), shadow and text for depth */
+/* Use class "secondary-card" on Card for navy bg + shadow + light text */
+.secondary-card {
+  background-color: rgba(15, 39, 68, 0.92) !important;
+  color: hsl(0 0% 98%) !important;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.35), 0 0 0 1px rgba(255, 255, 255, 0.12);
+}
+.secondary-card .text-muted-foreground,
+.secondary-card [class*="text-muted"] {
+  color: hsl(215 20% 78%) !important;
+}
+
+/* Inputs and selects inside secondary theme (glass look) */
+[data-theme="secondary"] input:not([type="checkbox"]):not([type="radio"]),
+[data-theme="secondary"] textarea,
+[data-theme="secondary"] [role="combobox"] {
+  background-color: rgba(255 255 255 / 0.06);
+  color: hsl(0 0% 98%);
+}
+[data-theme="secondary"] input::placeholder,
+[data-theme="secondary"] textarea::placeholder {
+  color: hsl(215 20% 65%);
+}
+[data-theme="secondary"] input:focus,
+[data-theme="secondary"] textarea:focus {
+  outline: none;
+  box-shadow: 0 0 0 1px rgba(255 255 255 / 0.2);
+}
+
+/* Registration: lighter borders and button text (forced overrides) */
+[data-theme="secondary"] .secondary-card {
+  border-color: rgba(255 255 255 / 0.2) !important;
+}
+[data-theme="secondary"] .secondary-card [class*="border-b"] {
+  border-bottom-color: rgba(255 255 255 / 0.15) !important;
+}
+[data-theme="secondary"] header[class*="border-b"] {
+  border-bottom-color: rgba(255 255 255 / 0.15) !important;
+}
+[data-theme="secondary"] .fixed.border-t {
+  border-top-color: rgba(255 255 255 / 0.15) !important;
+}
+[data-theme="secondary"] .secondary-card button.bg-orange-500,
+[data-theme="secondary"] .secondary-card button.bg-orange-500:hover:not(:disabled) {
+  color: #fff !important;
+  font-weight: 500;
+}
+[data-theme="secondary"] .secondary-card button.bg-orange-500:hover:not(:disabled) {
+  background-color: rgb(234 88 12) !important;
+}
+[data-theme="secondary"] .secondary-card button[type="button"]:not(.bg-orange-500):not(.bg-destructive) {
+  color: #fff !important;
+}
+[data-theme="secondary"] .secondary-card button:disabled {
+  color: rgb(100 116 139) !important;
 }

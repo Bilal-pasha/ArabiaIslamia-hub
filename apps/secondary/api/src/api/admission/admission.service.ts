@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { AdmissionApplication } from '@arabiaaislamia/database';
@@ -62,6 +62,42 @@ export class AdmissionService {
 
   async findByApplicationNumber(applicationNumber: string): Promise<AdmissionApplication | null> {
     return this.repo.findOne({ where: { applicationNumber } });
+  }
+
+  async updateStatus(
+    id: string,
+    status: string,
+    reason?: string,
+  ): Promise<AdmissionApplication> {
+    const app = await this.repo.findOne({ where: { id } });
+    if (!app) throw new NotFoundException('Application not found');
+    app.status = status;
+    app.statusReason = reason ?? null;
+    await this.repo.save(app);
+    return app;
+  }
+
+  async updateOralTest(
+    id: string,
+    marks: string | undefined,
+    passed: boolean,
+    reason?: string,
+  ): Promise<AdmissionApplication> {
+    const app = await this.repo.findOne({ where: { id } });
+    if (!app) throw new NotFoundException('Application not found');
+    app.oralTestMarks = marks ?? null;
+    app.oralTestPassed = passed;
+    if (passed) app.writtenAdmitEligible = true;
+    await this.repo.save(app);
+    return app;
+  }
+
+  async setWrittenAdmitEligible(id: string): Promise<AdmissionApplication> {
+    const app = await this.repo.findOne({ where: { id } });
+    if (!app) throw new NotFoundException('Application not found');
+    app.writtenAdmitEligible = true;
+    await this.repo.save(app);
+    return app;
   }
 
   private generateApplicationNumber(): string {

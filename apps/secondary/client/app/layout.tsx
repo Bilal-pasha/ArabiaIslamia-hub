@@ -1,4 +1,5 @@
 import './globals.css';
+import { PageFadeUp } from '@/components/page-fade-up';
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
@@ -11,7 +12,11 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           rel="stylesheet"
         />
       </head>
-      <body className="font-sans antialiased" suppressHydrationWarning>{children}</body>
+      <body className="font-sans antialiased" suppressHydrationWarning>
+        <PageFadeUp className="min-h-screen">
+          {children}
+        </PageFadeUp>
+      </body>
     </html>
   );
 }

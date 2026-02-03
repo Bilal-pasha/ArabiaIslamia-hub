@@ -17,12 +17,12 @@ export default function SecondaryHubPage() {
       <div className="relative overflow-hidden">
         <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,_rgba(77,163,199,0.15)_0%,_transparent_50%)]" />
         <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_bottom_left,_rgba(232,93,44,0.1)_0%,_transparent_50%)]" />
-        <div className="relative mx-auto max-w-4xl px-4 sm:px-6 py-16 sm:py-24">
-          <motion.div variants={fadeInUp} transition={defaultTransition} className="text-center mb-12">
-            <div className="inline-flex items-center justify-center rounded-2xl bg-white/10 backdrop-blur p-4 mb-6 shadow-xl">
+        <div className="relative flex flex-col items-center justify-between mx-auto min-h-screen p-12">
+          <motion.div variants={fadeInUp} transition={defaultTransition} className="text-center gap-4 my-4 flex flex-col items-center justify-center">
+            <div className="inline-flex items-center justify-center rounded-2xl bg-white/10 backdrop-blur p-4 shadow-xl">
               <SecondaryLogo width={120} height={120} className="rounded-xl" />
             </div>
-            <h1 className="text-4xl sm:text-5xl font-bold tracking-tight mb-4">
+            <h1 className="text-4xl sm:text-5xl font-bold tracking-tight">
               Arabia Islamia
             </h1>
             <p className="text-xl text-slate-300 max-w-xl mx-auto">
@@ -33,7 +33,7 @@ export default function SecondaryHubPage() {
           <motion.div
             variants={fadeInUp}
             transition={{ ...defaultTransition, delay: 0.15 }}
-            className="grid sm:grid-cols-2 gap-6 max-w-2xl mx-auto"
+            className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-fit mx-auto"
           >
             <Link href={externalUrls.registration}>
               <motion.div
@@ -50,6 +50,25 @@ export default function SecondaryHubPage() {
                 <p className="text-slate-400 text-sm text-center">Apply for admission to Secondary Education</p>
                 <span className="mt-4 text-orange-400 text-sm font-medium group-hover:underline">
                   Start Application →
+                </span>
+              </motion.div>
+            </Link>
+
+            <Link href={externalUrls.status}>
+              <motion.div
+                whileHover={{ scale: 1.02, y: -4 }}
+                whileTap={{ scale: 0.98 }}
+                className="group flex flex-col items-center p-8 rounded-2xl bg-white/5 backdrop-blur border border-white/10 hover:bg-white/10 hover:border-emerald-400/50 transition-all duration-300 cursor-pointer"
+              >
+                <div className="size-14 rounded-xl bg-emerald-500/20 flex items-center justify-center mb-4 group-hover:bg-emerald-500/30 transition-colors">
+                  <svg className="size-8 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4" />
+                  </svg>
+                </div>
+                <h2 className="text-xl font-semibold mb-2">View My Application Status</h2>
+                <p className="text-slate-400 text-sm text-center">Check status with your application number</p>
+                <span className="mt-4 text-emerald-400 text-sm font-medium group-hover:underline">
+                  Check Status →
                 </span>
               </motion.div>
             </Link>
@@ -77,7 +96,7 @@ export default function SecondaryHubPage() {
           <motion.p
             variants={fadeInUp}
             transition={{ ...defaultTransition, delay: 0.25 }}
-            className="text-center text-slate-500 text-sm mt-12"
+            className="text-center text-slate-500 text-sm"
           >
             Arabia Islamia © {new Date().getFullYear()}
           </motion.p>

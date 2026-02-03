@@ -1,0 +1,88 @@
+'use client';
+
+import { useState } from 'react';
+import { useRouter, useSearchParams } from 'next/navigation';
+import Link from 'next/link';
+import { Card, CardContent, CardTitle } from '@arabiaaislamia/ui';
+import { Button, Input, Label } from '@arabiaaislamia/ui';
+import { SecondaryLogo } from '@arabiaaislamia/ui';
+import { publicRoutes, privateRoutes } from '@/constants/route';
+import { apiClient } from '@/lib/axios-instance';
+
+export default function AdminSigninPage() {
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  const redirect = searchParams.get('redirect') || privateRoutes.applications;
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [error, setError] = useState<string | null>(null);
+  const [loading, setLoading] = useState(false);
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setError(null);
+    setLoading(true);
+    try {
+      await apiClient.post('/api/auth/login', { email, password });
+      router.push(redirect);
+      router.refresh();
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Login failed');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  return (
+    <div className="min-h-screen flex items-center justify-center p-6">
+      <div className="w-full max-w-md">
+        <Card className="secondary-card backdrop-blur-xl border border-white/10">
+          <CardContent className="pt-8 pb-8">
+            <div className="flex justify-center mb-6">
+              <SecondaryLogo width={80} height={80} />
+            </div>
+            <CardTitle className="text-2xl mb-2 text-center text-white">Admin Sign In</CardTitle>
+            <p className="text-slate-300 text-sm mb-6 text-center">
+              Secondary — Admission Admin
+            </p>
+            <form onSubmit={handleSubmit} className="space-y-4">
+              <div>
+                <Label htmlFor="email" className="mb-1.5 block text-slate-200">Email</Label>
+                <Input
+                  id="email"
+                  type="email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  className="h-10 bg-white/5 border-white/20 text-white placeholder:text-slate-500"
+                  required
+                />
+              </div>
+              <div>
+                <Label htmlFor="password" className="mb-1.5 block text-slate-200">Password</Label>
+                <Input
+                  id="password"
+                  type="password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  className="h-10 bg-white/5 border-white/20 text-white placeholder:text-slate-500"
+                  required
+                />
+              </div>
+              {error && (
+                <p className="text-sm text-red-300">{error}</p>
+              )}
+              <Button type="submit" className="w-full bg-orange-500 hover:bg-orange-600" disabled={loading}>
+                {loading ? 'Signing in...' : 'Sign In'}
+              </Button>
+            </form>
+            <p className="mt-4 text-center">
+              <Link href={publicRoutes.home} className="text-sm text-orange-300 hover:text-orange-200 hover:underline">
+                ← Back to Hub
+              </Link>
+            </p>
+          </CardContent>
+        </Card>
+      </div>
+    </div>
+  );
+}

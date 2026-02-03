@@ -15,3 +15,14 @@ export {
   SelectSeparator,
 } from './components/select';
 export { Alert, AlertTitle, AlertDescription } from './components/alert';
+export {
+  Table,
+  TableHeader,
+  TableBody,
+  TableFooter,
+  TableHead,
+  TableRow,
+  TableCell,
+  TableCaption,
+} from './components/table';
+export { Badge, badgeVariants } from './components/badge';

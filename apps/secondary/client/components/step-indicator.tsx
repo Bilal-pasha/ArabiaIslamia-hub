@@ -37,12 +37,12 @@ export function StepIndicator({ currentStep }: StepIndicatorProps) {
                       s.icon
                     )}
                   </motion.div>
-                  <span className={`mt-2 hidden text-xs font-medium sm:block ${isActive ? 'text-primary' : 'text-muted-foreground'}`}>
+                  <span className={`mt-2 hidden text-xs font-medium sm:block ${isActive ? 'text-orange-200' : 'text-slate-400'}`}>
                     {s.title}
                   </span>
                 </div>
                 {!isLast && (
-                  <div className="mx-1 h-0.5 flex-1 min-w-[12px] sm:min-w-[20px] bg-muted rounded-full overflow-hidden">
+                  <div className="mx-1 h-0.5 flex-1 min-w-[12px] sm:min-w-[20px] bg-white/25 rounded-full overflow-hidden">
                     <motion.div
                       className="h-full rounded-full bg-primary"
                       initial={false}
@@ -56,8 +56,8 @@ export function StepIndicator({ currentStep }: StepIndicatorProps) {
           })}
         </div>
         <div className="mt-2 text-center sm:hidden">
-          <span className="text-sm font-medium text-foreground">{STEPS[currentStep - 1]?.title}</span>
-          <span className="text-muted-foreground text-xs ml-1">— {STEPS[currentStep - 1]?.subtitle}</span>
+          <span className="text-sm font-medium text-white">{STEPS[currentStep - 1]?.title}</span>
+          <span className="text-slate-300 text-xs ml-1">— {STEPS[currentStep - 1]?.subtitle}</span>
         </div>
       </div>
     </div>

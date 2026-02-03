@@ -13,6 +13,8 @@
     "./components/card": "./src/components/card.tsx",
     "./components/select": "./src/components/select.tsx",
     "./components/alert": "./src/components/alert.tsx",
+    "./components/table": "./src/components/table.tsx",
+    "./components/badge": "./src/components/badge.tsx",
     "./lib/utils": "./src/lib/utils.ts"
   },
   "scripts": {},

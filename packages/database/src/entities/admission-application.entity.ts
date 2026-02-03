@@ -103,6 +103,18 @@ export class AdmissionApplication {
   @Column({ type: 'varchar', length: 20, default: 'pending' })
   status: string;
 
+  @Column({ type: 'varchar', length: 500, name: 'status_reason', nullable: true })
+  statusReason: string | null;
+
+  @Column({ type: 'varchar', length: 20, name: 'oral_test_marks', nullable: true })
+  oralTestMarks: string | null;
+
+  @Column({ type: 'boolean', name: 'oral_test_passed', nullable: true })
+  oralTestPassed: boolean | null;
+
+  @Column({ type: 'boolean', name: 'written_admit_eligible', default: false })
+  writtenAdmitEligible: boolean;
+
   @CreateDateColumn({ type: 'timestamp', name: 'created_at' })
   createdAt: Date;
 }

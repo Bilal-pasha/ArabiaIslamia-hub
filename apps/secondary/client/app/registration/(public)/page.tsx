@@ -123,7 +123,7 @@ export default function AdmissionFormPage() {
       animate="visible"
       variants={fadeInUp}
       transition={defaultTransition}
-      className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50/20 to-amber-50/10"
+      className="min-h-screen"
     >
       <AdmissionHeader />
 
@@ -135,12 +135,12 @@ export default function AdmissionFormPage() {
         </div>
 
         <form ref={formRef} onSubmit={handleSubmit} className="pb-24">
-          <Card className="overflow-hidden shadow-[0_4px_24px_-4px_rgba(15,39,68,0.08),0_8px_16px_-8px_rgba(15,39,68,0.04)]">
-            <CardHeader className="border-b border-border/50 bg-gradient-to-br from-slate-50/80 to-blue-50/40 pb-6">
-              <CardTitle className="text-xl sm:text-2xl font-semibold">
+          <Card className="secondary-card overflow-hidden backdrop-blur-xl border border-white/20">
+            <CardHeader className="border-b border-white/15 bg-white/5 pb-6">
+              <CardTitle className="text-xl sm:text-2xl font-semibold text-white">
                 {STEPS[step - 1]?.title} Information
               </CardTitle>
-              <p className="text-muted-foreground text-sm mt-0.5">{STEPS[step - 1]?.subtitle}</p>
+              <p className="text-slate-300 text-sm mt-0.5">{STEPS[step - 1]?.subtitle}</p>
             </CardHeader>
             <CardContent className="pt-6 sm:pt-8">
               <AnimatePresence mode="wait">
@@ -149,7 +149,7 @@ export default function AdmissionFormPage() {
                     initial={{ opacity: 0, y: -8 }}
                     animate={{ opacity: 1, y: 0 }}
                     exit={{ opacity: 0 }}
-                    className="mb-6 rounded-lg border border-destructive/50 bg-destructive/10 px-4 py-3 text-sm text-destructive"
+                    className="mb-6 rounded-lg border border-red-400/50 bg-red-500/10 px-4 py-3 text-sm text-red-200"
                   >
                     {errors._form}
                   </motion.div>

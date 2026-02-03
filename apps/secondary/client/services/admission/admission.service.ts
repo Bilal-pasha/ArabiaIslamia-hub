@@ -33,6 +33,10 @@ export interface AdmissionApplication {
   authorityLetterFileKey: string | null;
   previousResultFileKey: string | null;
   status: string;
+  statusReason?: string | null;
+  oralTestMarks?: string | null;
+  oralTestPassed?: boolean | null;
+  writtenAdmitEligible?: boolean;
   createdAt: string;
 }
 
@@ -58,6 +62,42 @@ export async function fetchApplications(): Promise<AdmissionApplication[]> {
 
 export async function fetchApplication(id: string): Promise<AdmissionApplication> {
   const { data } = await apiClient.get<AdmissionApplication>(`/admission/${id}`);
+  return data;
+}
+
+export async function findByApplicationNumber(
+  applicationNumber: string
+): Promise<AdmissionApplication | null> {
+  const { data } = await apiClient.get<AdmissionApplication | null>(
+    `/admission/by-number/${encodeURIComponent(applicationNumber)}`
+  );
+  return data;
+}
+
+export async function updateStatus(
+  id: string,
+  status: 'approved' | 'rejected',
+  reason?: string
+): Promise<AdmissionApplication> {
+  const { data } = await apiClient.patch<AdmissionApplication>(`/admission/${id}/status`, {
+    status,
+    reason,
+  });
+  return data;
+}
+
+export async function updateOralTest(
+  id: string,
+  payload: { marks?: string; passed: boolean; reason?: string }
+): Promise<AdmissionApplication> {
+  const { data } = await apiClient.patch<AdmissionApplication>(`/admission/${id}/oral-test`, payload);
+  return data;
+}
+
+export async function setWrittenAdmitEligible(id: string): Promise<AdmissionApplication> {
+  const { data } = await apiClient.patch<AdmissionApplication>(
+    `/admission/${id}/written-admit-eligible`
+  );
   return data;
 }
 
