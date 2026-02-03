@@ -3,7 +3,7 @@
 import { useRef } from 'react';
 import { FormField } from './form-field';
 import { motion, AnimatePresence } from 'framer-motion';
-import type { AdmissionFormData } from '@/lib/admission-schema';
+import type { AdmissionFormDataWithEmptyEnums } from '@/lib/admission-schema';
 
 const DOCUMENT_FIELDS = [
   { key: 'photoFile' as const, label: 'Photograph', accept: 'image/*' },
@@ -17,9 +17,9 @@ const DOCUMENT_KEYS = ['photoFile', 'idFile', 'authorityLetterFile', 'previousRe
 export type DocumentFileKey = (typeof DOCUMENT_KEYS)[number];
 
 interface FormStepDocumentsProps {
-  data: AdmissionFormData;
+  data: AdmissionFormDataWithEmptyEnums;
   files: Partial<Record<DocumentFileKey, File | null>>;
-  onUpdate: (key: keyof AdmissionFormData, value: string) => void;
+  onUpdate: (key: keyof AdmissionFormDataWithEmptyEnums, value: string) => void;
   onFileSelect: (key: DocumentFileKey, file: File | null) => void;
 }
 

@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { Suspense, useState } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import { Card, CardContent, CardTitle } from '@arabiaaislamia/ui';
@@ -9,7 +9,7 @@ import { SecondaryLogo } from '@arabiaaislamia/ui';
 import { publicRoutes, privateRoutes } from '@/constants/route';
 import { apiClient } from '@/utils/axios-instance';
 
-export default function AdminSigninPage() {
+function AdminSigninContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const redirect = searchParams.get('redirect') || privateRoutes.applications;
@@ -84,5 +84,30 @@ export default function AdminSigninPage() {
         </Card>
       </div>
     </div>
+  );
+}
+
+function SigninFallback() {
+  return (
+    <div className="min-h-screen flex items-center justify-center p-6">
+      <div className="w-full max-w-md">
+        <Card className="secondary-card backdrop-blur-xl border border-white/10">
+          <CardContent className="pt-8 pb-8">
+            <div className="flex justify-center mb-6">
+              <SecondaryLogo width={80} height={80} />
+            </div>
+            <p className="text-slate-300 text-sm text-center">Loading...</p>
+          </CardContent>
+        </Card>
+      </div>
+    </div>
+  );
+}
+
+export default function AdminSigninPage() {
+  return (
+    <Suspense fallback={<SigninFallback />}>
+      <AdminSigninContent />
+    </Suspense>
   );
 }

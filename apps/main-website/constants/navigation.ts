@@ -19,6 +19,7 @@ export const NAV_DATA: NavLinkItem[] = [
   { text: 'Contact us', href: '/contact' },
   {
     text: 'More',
+    href: '/more',
     links: [
       { text: 'Admissions', href: '/more#admissions' },
       { text: 'Scholarships', href: '/more#scholarships' },

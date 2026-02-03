@@ -1,4 +1,4 @@
-import type { AdmissionFormData } from './admission-schema';
+import type { AdmissionFormDataWithEmptyEnums } from './admission-schema';
 
 export const STEPS = [
   { id: 1, title: 'Personal', icon: '1', subtitle: 'Student details' },
@@ -55,7 +55,7 @@ export const COUNTRIES = [
   'Other',
 ];
 
-export const INITIAL_FORM_DATA: AdmissionFormData = {
+export const INITIAL_FORM_DATA: AdmissionFormDataWithEmptyEnums = {
   name: '',
   fatherName: '',
   dateOfBirth: '',

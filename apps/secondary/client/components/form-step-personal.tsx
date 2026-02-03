@@ -3,12 +3,12 @@
 import { Input, Textarea, Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@arabiaaislamia/ui';
 import { FormField } from './form-field';
 import { COUNTRIES } from '@/lib/admission-constants';
-import type { AdmissionFormData } from '@/lib/admission-schema';
+import type { AdmissionFormDataWithEmptyEnums } from '@/lib/admission-schema';
 
 interface FormStepPersonalProps {
-  data: AdmissionFormData;
+  data: AdmissionFormDataWithEmptyEnums;
   errors: Record<string, string>;
-  onUpdate: (key: keyof AdmissionFormData, value: string) => void;
+  onUpdate: (key: keyof AdmissionFormDataWithEmptyEnums, value: string) => void;
 }
 
 export function FormStepPersonal({ data, errors, onUpdate }: FormStepPersonalProps) {

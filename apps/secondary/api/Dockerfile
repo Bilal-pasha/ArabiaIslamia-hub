@@ -16,15 +16,13 @@ RUN pnpm --filter @arabiaaislamia/database run build
 RUN pnpm --filter @arabiaaislamia/storage run build
 RUN pnpm --filter secondary-api build
 
+# Deploy creates an isolated dir with node_modules (workspace deps included); dist is in .gitignore so copy it in
+RUN pnpm --filter secondary-api deploy --prod deploy && cp -r apps/secondary/api/dist deploy/dist
+
 FROM node:20-alpine
 WORKDIR /app
-RUN corepack enable && corepack prepare pnpm@9.14.2 --activate
 
-COPY --from=builder /app/apps/secondary/api/dist ./dist
-COPY --from=builder /app/apps/secondary/api/package.json ./
-COPY --from=builder /app/node_modules ./node_modules
-COPY --from=builder /app/packages/database ./packages/database
-COPY --from=builder /app/packages/storage ./packages/storage
+COPY --from=builder /app/deploy .
 
 ENV NODE_ENV=production
 EXPOSE 8002

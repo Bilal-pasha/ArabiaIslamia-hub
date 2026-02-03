@@ -7,7 +7,7 @@ import { fadeInUp, staggerContainer, defaultTransition } from '@arabiaaislamia/a
 import {
   admissionFormSchema,
   validateStep,
-  type AdmissionFormData,
+  type AdmissionFormDataWithEmptyEnums,
 } from '@/lib/admission-schema';
 import { STEPS, INITIAL_FORM_DATA } from '@/lib/admission-constants';
 import { StepIndicator } from '@/components/step-indicator';
@@ -39,15 +39,15 @@ function getErrorStep(fieldErrors: Record<string, string>): number {
 export default function AdmissionFormPage() {
   const formRef = useRef<HTMLFormElement>(null);
   const [step, setStep] = useState(1);
-  const [data, setData] = useState<AdmissionFormData>(INITIAL_FORM_DATA);
+  const [data, setData] = useState<AdmissionFormDataWithEmptyEnums>(INITIAL_FORM_DATA);
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitted, setSubmitted] = useState(false);
   const [applicationNumber, setApplicationNumber] = useState<string>('');
   const [files, setFiles] = useState<Partial<Record<DocumentFileKey, File | null>>>({});
 
-  const update = useCallback((key: keyof AdmissionFormData, value: string) => {
-    setData((d: AdmissionFormData) => ({ ...d, [key]: value }));
+  const update = useCallback((key: keyof AdmissionFormDataWithEmptyEnums, value: string) => {
+    setData((d: AdmissionFormDataWithEmptyEnums) => ({ ...d, [key]: value }));
     setErrors((prev) => {
       const next = { ...prev };
       delete next[key as string];

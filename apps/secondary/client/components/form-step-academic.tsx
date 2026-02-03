@@ -3,12 +3,12 @@
 import { Input, Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@arabiaaislamia/ui';
 import { FormField } from './form-field';
 import { CLASSES, MADHABS } from '@/lib/admission-constants';
-import type { AdmissionFormData } from '@/lib/admission-schema';
+import type { AdmissionFormDataWithEmptyEnums } from '@/lib/admission-schema';
 
 interface FormStepAcademicProps {
-  data: AdmissionFormData;
+  data: AdmissionFormDataWithEmptyEnums;
   errors: Record<string, string>;
-  onUpdate: (key: keyof AdmissionFormData, value: string) => void;
+  onUpdate: (key: keyof AdmissionFormDataWithEmptyEnums, value: string) => void;
 }
 
 export function FormStepAcademic({ data, errors, onUpdate }: FormStepAcademicProps) {

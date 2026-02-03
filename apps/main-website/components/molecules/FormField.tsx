@@ -1,14 +1,14 @@
 'use client';
 
-import type { UseFormRegister } from 'react-hook-form';
+import type { FieldValues, Path, UseFormRegister } from 'react-hook-form';
 import { Input } from '@/components/atoms';
 import { Label } from '@/components/atoms';
 import { Textarea } from '@/components/atoms';
 import { cn } from '@/lib/utils';
 
-interface FormFieldProps {
+interface FormFieldProps<TFieldValues extends FieldValues = FieldValues> {
   label?: string;
-  name: string;
+  name: Path<TFieldValues>;
   error?: string;
   type?: 'text' | 'email' | 'number';
   placeholder?: string;
@@ -17,10 +17,10 @@ interface FormFieldProps {
   inputClassName?: string;
   multiline?: boolean;
   rows?: number;
-  register?: UseFormRegister<Record<string, unknown>>;
+  register?: UseFormRegister<TFieldValues>;
 }
 
-export function FormField({
+export function FormField<TFieldValues extends FieldValues = FieldValues>({
   label,
   name,
   error,
@@ -32,7 +32,7 @@ export function FormField({
   multiline,
   rows = 3,
   register,
-}: FormFieldProps) {
+}: FormFieldProps<TFieldValues>) {
   const commonProps = register
     ? { ...register(name) }
     : { name, id: name };

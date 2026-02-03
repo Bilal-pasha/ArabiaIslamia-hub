@@ -24,7 +24,9 @@ export const personalInfoSchema = z.object({
       const currentYear = new Date().getFullYear();
       return year >= 1920 && year <= currentYear;
     }, 'Please enter a valid date of birth'),
-  gender: z.enum(['male', 'female'], { required_error: 'Please select gender' }),
+  gender: z
+    .union([z.enum(['male', 'female']), z.literal('')])
+    .refine((val) => val === 'male' || val === 'female', 'Please select gender'),
   phone: z
     .string()
     .min(10, 'Phone must be at least 10 digits')
@@ -50,10 +52,12 @@ export const guardianInfoSchema = z.object({
     .string()
     .min(2, 'Guardian name must be at least 2 characters')
     .max(150, 'Guardian name must be at most 150 characters'),
-  guardianRelation: z.enum(
-    ['father', 'mother', 'guardian', 'other'],
-    { required_error: 'Please select relation' }
-  ),
+  guardianRelation: z
+    .union([z.enum(['father', 'mother', 'guardian', 'other']), z.literal('')])
+    .refine(
+      (val) => ['father', 'mother', 'guardian', 'other'].includes(val),
+      'Please select relation'
+    ),
   guardianPhone: z
     .string()
     .min(10, 'Guardian phone must be at least 10 digits')
@@ -73,10 +77,12 @@ export const academicInfoSchema = z.object({
   previousClass: z.string().optional().or(z.literal('')),
   previousGrade: z.enum(['excellent', 'very-good', 'good', 'acceptable']).optional().or(z.literal('')),
   isHafiz: z.enum(['yes', 'no']).optional().or(z.literal('')),
-  accommodationType: z.enum(
-    ['residential', 'non-residential'],
-    { required_error: 'Please select accommodation type' }
-  ),
+  accommodationType: z
+    .union([z.enum(['residential', 'non-residential']), z.literal('')])
+    .refine(
+      (val) => val === 'residential' || val === 'non-residential',
+      'Please select accommodation type'
+    ),
   madhab: z
     .enum(['Hanafi', "Shafi'i", 'Maliki', 'Hanbali'])
     .optional()
@@ -98,6 +104,17 @@ export const admissionFormSchema = personalInfoSchema
   .merge(documentsSchema);
 
 export type AdmissionFormData = z.infer<typeof admissionFormSchema>;
+
+/** Form state type: allows empty string for enum fields before user selection */
+export type AdmissionFormDataWithEmptyEnums = Omit<
+  AdmissionFormData,
+  'gender' | 'guardianRelation' | 'accommodationType'
+> & {
+  gender: '' | 'male' | 'female';
+  guardianRelation: '' | 'father' | 'mother' | 'guardian' | 'other';
+  accommodationType: '' | 'residential' | 'non-residential';
+};
+
 export type PersonalInfo = z.infer<typeof personalInfoSchema>;
 export type GuardianInfo = z.infer<typeof guardianInfoSchema>;
 export type AcademicInfo = z.infer<typeof academicInfoSchema>;
