@@ -5,6 +5,8 @@
 
 @theme inline {
   --font-sans: 'Poppins', 'Noto Nastaliq Urdu', ui-sans-serif, system-ui, sans-serif;
+  /* Shared page background for body, navbar, footer (warm off-white) */
+  --color-page: hsl(40 33% 98%);
   /* Main website: Jamia Arabia Islamia – green & amber */
   --color-background: hsl(0 0% 100%);
   --color-foreground: hsl(140 30% 15%);
@@ -26,7 +28,7 @@
 }
 
 :root {
-  --background: hsl(0 0% 100%);
+  --background: hsl(40 33% 98%);
   --foreground: hsl(140 30% 15%);
   --primary: 142 76% 26%;
   --primary-foreground: 0 0% 100%;
@@ -46,10 +48,26 @@
   --accent-foreground: 140 30% 15%;
 }
 
+html {
+  scroll-behavior: smooth;
+  min-height: 100%;
+}
+
 body {
+  min-height: 100vh;
   font-family: 'Poppins', ui-sans-serif, system-ui, sans-serif;
-  background-color: hsl(var(--background));
+  background: linear-gradient(135deg,
+      hsl(48 95% 94%) 0%,
+      hsl(45 88% 92%) 20%,
+      hsl(42 85% 93%) 40%,
+      hsl(40 90% 94%) 60%,
+      hsl(44 92% 93%) 80%,
+      hsl(48 95% 94%) 100%);
+  background-attachment: fixed;
+  background-repeat: no-repeat;
   color: hsl(var(--foreground));
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
 .urdutext {
@@ -77,7 +95,13 @@ body {
   background-image: url('/images/StatisticSectionImage.png');
   background-size: cover;
   background-position: center;
-  background-attachment: fixed;
+  background-attachment: scroll;
+}
+
+@media (min-width: 1024px) {
+  .section-statistics {
+    background-attachment: fixed;
+  }
 }
 
 .section-about-hero {

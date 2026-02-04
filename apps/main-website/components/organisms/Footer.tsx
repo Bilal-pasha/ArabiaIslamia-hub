@@ -1,13 +1,13 @@
 'use client';
 
 import Link from 'next/link';
-import { motion } from 'framer-motion';
-import { useInView } from 'framer-motion';
+import { motion, useInView } from 'framer-motion';
 import { useRef } from 'react';
-import { Facebook, Twitter, Instagram, Youtube } from 'lucide-react';
+import { Facebook, Twitter, Instagram, Youtube, GraduationCap, ExternalLink } from 'lucide-react';
 import { Logo } from '@/components/atoms';
+import { APP_LINKS } from '@/constants/navigation';
 
-const FOOTER_LINKS = [
+const FOOTER_NAV_LINKS = [
   { label: 'Faculties', href: '/faculties' },
   { label: 'About us', href: '/about' },
   { label: 'Contact us', href: '/contact' },
@@ -21,51 +21,98 @@ const SOCIAL_LINKS = [
   { Icon: Youtube, href: '#', label: 'YouTube' },
 ];
 
+function isExternal(href: string) {
+  return href.startsWith('http');
+}
+
 export function Footer() {
   const ref = useRef(null);
   const isInView = useInView(ref, { once: true });
 
   return (
-    <footer className="bg-[#915d03b5] text-[#f7f7f7]">
-      <section className="px-4 shadow-lg md:px-8 lg:px-16">
+    <footer className="bg-page border-t border-amber-200/80">
+      <section className="mx-auto px-4 py-10 sm:px-6 md:px-8 lg:px-12">
         <motion.div
           ref={ref}
-          className="grid gap-8 py-8 md:grid-cols-4 md:grid-rows-1"
-          initial={{ opacity: 0, x: -24 }}
-          animate={isInView ? { opacity: 1, x: 0 } : {}}
-          transition={{ duration: 0.6, ease: [0.25, 0.46, 0.45, 0.94] }}
+          className="flex flex-col gap-10 lg:flex-row lg:items-start lg:justify-between lg:gap-12"
+          initial={{ opacity: 0, y: 12 }}
+          animate={isInView ? { opacity: 1, y: 0 } : {}}
+          transition={{ duration: 0.4, ease: [0.25, 0.46, 0.45, 0.94] }}
         >
-          <div className="flex flex-col items-center md:items-start">
-            <Logo showUrdu className="text-[#f7f7f7]" />
+          {/* Left: Logo + tagline */}
+          <div className="flex flex-col items-center text-center lg:max-w-xs lg:items-start lg:text-left">
+            <Logo showUrdu className="text-amber-900" />
+            <p className="mt-3 text-sm leading-relaxed text-amber-800/85">
+              Where tradition meets innovation, and faith meets knowledge.
+            </p>
           </div>
-          <div className="flex flex-col justify-end gap-6 md:col-span-3 md:flex-row md:items-start">
-            <ul className="flex flex-wrap justify-center gap-6 md:justify-end">
-              {FOOTER_LINKS.map((link) => (
-                <li key={link.href}>
-                  <Link
-                    href={link.href}
-                    className="text-sm font-medium text-[#f7f7f7] transition-colors hover:text-amber-300"
+
+          {/* Right: Link columns */}
+          <div className="flex flex-col gap-8 sm:flex-row sm:flex-wrap sm:justify-center sm:gap-x-10 sm:gap-y-8 lg:flex-1 lg:justify-end lg:gap-x-12 lg:gap-y-0">
+            {/* Site */}
+            <div className="flex flex-col items-center sm:items-start">
+              <h3 className="mb-3 text-xs font-semibold uppercase tracking-widest text-amber-800/90">
+                Site
+              </h3>
+              <ul className="flex flex-col gap-2 text-center sm:text-left">
+                {FOOTER_NAV_LINKS.map((link) => (
+                  <li key={link.href}>
+                    <Link
+                      href={link.href}
+                      className="text-sm text-amber-900/90 transition-colors hover:text-amber-700 focus:outline-none focus:ring-2 focus:ring-amber-400 focus:ring-offset-2 rounded"
+                    >
+                      {link.label}
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            </div>
+
+            {/* Our Apps */}
+            <div className="flex flex-col items-center sm:items-start">
+              <h3 className="mb-3 flex items-center gap-2 text-xs font-semibold uppercase tracking-widest text-amber-800/90">
+                <GraduationCap className="h-3.5 w-3.5" />
+                Our Apps
+              </h3>
+              <ul className="flex flex-col gap-2 text-center sm:text-left">
+                {APP_LINKS.map((app) => (
+                  <li key={app.href + app.text}>
+                    <a
+                      href={app.href}
+                      target={isExternal(app.href) ? '_blank' : undefined}
+                      rel={isExternal(app.href) ? 'noopener noreferrer' : undefined}
+                      className="inline-flex items-center gap-1.5 text-sm text-amber-900/90 transition-colors hover:text-amber-700 focus:outline-none focus:ring-2 focus:ring-amber-400 focus:ring-offset-2 rounded"
+                    >
+                      {app.text}
+                      {isExternal(app.href) && <ExternalLink className="h-3.5 w-3.5 opacity-70" />}
+                    </a>
+                  </li>
+                ))}
+              </ul>
+            </div>
+
+            {/* Follow us */}
+            <div className="flex flex-col items-center sm:items-start">
+              <h3 className="mb-3 text-xs font-semibold uppercase tracking-widest text-amber-800/90">
+                Follow us
+              </h3>
+              <div className="flex items-center gap-2">
+                {SOCIAL_LINKS.map(({ Icon, href, label }) => (
+                  <a
+                    key={label}
+                    href={href}
+                    aria-label={label}
+                    className="rounded-lg p-2.5 text-amber-800/90 transition-colors hover:bg-amber-200/70 hover:text-amber-900 focus:outline-none focus:ring-2 focus:ring-amber-400 focus:ring-offset-2"
                   >
-                    {link.label}
-                  </Link>
-                </li>
-              ))}
-            </ul>
-            <div className="flex items-center justify-center gap-4 md:justify-end">
-              {SOCIAL_LINKS.map(({ Icon, href, label }) => (
-                <a
-                  key={label}
-                  href={href}
-                  aria-label={label}
-                  className="text-2xl text-[#f7f7f7] transition-colors hover:text-amber-300"
-                >
-                  <Icon className="h-6 w-6" />
-                </a>
-              ))}
+                    <Icon className="h-5 w-5" />
+                  </a>
+                ))}
+              </div>
             </div>
           </div>
         </motion.div>
-        <div className="border-t border-amber-800/50 py-4 text-center text-sm text-[#f7f7f7]/90">
+
+        <div className="mx-auto mt-10 border-t border-amber-200/80 pt-6 text-center text-xs text-amber-700/75">
           © {new Date().getFullYear()} Jamia Arabia Islamia. All rights reserved.
         </div>
       </section>

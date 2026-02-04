@@ -5,6 +5,12 @@ services:
     restart: unless-stopped
     env_file:
       - ./.env
+    environment:
+      # Dev credentials; must match secondary-api (and pgadmin if you use it). If you get "password authentication failed", remove the postgres volume and re-up: docker compose down -v && docker compose up -d
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    ports:
+      - "5432:5432"
     volumes:
       - postgres_dev_data:/var/lib/postgresql/data
       - ./init-databases.sql:/docker-entrypoint-initdb.d/init-databases.sql
@@ -22,6 +28,8 @@ services:
     restart: unless-stopped
     env_file:
       - ./.env
+    ports:
+      - "5050:5050"
     volumes:
       - pgadmin_dev_data:/var/lib/pgadmin
     networks:
@@ -66,6 +74,14 @@ services:
     restart: unless-stopped
     env_file:
       - ./.env
+    environment:
+      DB_HOST: postgres
+      DB_PORT: 5432
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      SECONDARY_DB_NAME: secondary_db_dev
+    ports:
+      - "8002:8002"
     volumes:
       - ../../packages/database:/app/packages/database
       - ../../apps/secondary/api:/app/apps/secondary/api
@@ -85,6 +101,8 @@ services:
       dockerfile: apps/main-website/Dockerfile.dev
     container_name: main-website-dev
     restart: unless-stopped
+    ports:
+      - "3000:3000"
     volumes:
       - ../../apps/main-website:/app/apps/main-website
       - main-website-node_modules:/app/apps/main-website/node_modules
@@ -110,6 +128,8 @@ services:
       context: ../..
       dockerfile: apps/secondary/client/Dockerfile.dev
     container_name: secondary-app-dev
+    ports:
+      - "3011:3011"
     restart: unless-stopped
     volumes:
       - ../../apps/secondary/client:/app/apps/secondary/client
