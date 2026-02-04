@@ -5,10 +5,11 @@ import Link from 'next/link';
 import { motion } from 'framer-motion';
 import { Button } from '@/components/atoms';
 import { NewsSection } from '@/components/organisms';
+import { SEO_DEFAULTS } from '@/constants/seo';
 
 const ABOUT_DATA = {
-  intro: 'Who we are',
-  heading: 'Jamia Arabia Islamia',
+  intro: `Who we are | ${SEO_DEFAULTS.siteName}`,
+  heading: `${SEO_DEFAULTS.siteName}`,
   paragraphs: [
     'Our mission is to kindle the flames of enlightenment and empower the upcoming generation of scholars, leaders, and visionaries. We are steadfast in our dedication to offering exceptional education in the fields of Islamic studies and the Arabic language. However, to sustain and expand our significant influence, we rely on your support.',
     "By supporting us, you're playing an instrumental role in shaping the future by providing opportunities for eager minds to grow into knowledgeable scholars, compassionate leaders, and forward-thinking visionaries. We firmly believe in the transformative power of education, particularly in the fields of Islamic studies and Arabic language, and our unwavering commitment is a testament to this belief.",

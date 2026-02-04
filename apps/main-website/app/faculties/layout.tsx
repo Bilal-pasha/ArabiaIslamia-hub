@@ -1,7 +1,7 @@
 import { SEO_DEFAULTS } from '@/constants/seo';
 
 export const metadata = {
-  title: 'Faculties',
+  title: `Faculties | ${SEO_DEFAULTS.siteName}`,
   description:
     'Explore Jamia Arabia Islamia faculties: Tahfeez ul Quran, Darse Nizami, Mahad ul Arabia, and Schooling System. Islamic education combining tradition with modern learning.',
   keywords: [
@@ -13,7 +13,7 @@ export const metadata = {
     'Islamic studies Karachi',
   ],
   openGraph: {
-    title: 'Faculties | Jamia Arabia Islamia',
+    title: `Faculties | ${SEO_DEFAULTS.siteName}`,
     description:
       'Tahfeez ul Quran, Darse Nizami, Mahad ul Arabia, and Schooling System – discover our Islamic education programs.',
     url: `${SEO_DEFAULTS.url}/faculties`,

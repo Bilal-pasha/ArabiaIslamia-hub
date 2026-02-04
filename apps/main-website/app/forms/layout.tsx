@@ -1,11 +1,11 @@
 import { SEO_DEFAULTS } from '@/constants/seo';
 
 export const metadata = {
-  title: 'Scouts Camping Registration',
+  title: `Scouts Camping Registration | ${SEO_DEFAULTS.siteName}`,
   description:
     'Register for Inter Madaris Scouts Camping 2023 organized by Jamia Arabia Islamia. Fill out the registration form to participate.',
   openGraph: {
-    title: 'Scouts Camping Registration | Jamia Arabia Islamia',
+    title: `Scouts Camping Registration | ${SEO_DEFAULTS.siteName}`,
     description: 'Register for Inter Madaris Scouts Camping 2023 – organized by Jamia Arabia Islamia.',
     url: `${SEO_DEFAULTS.url}/forms`,
     images: [SEO_DEFAULTS.ogImage],

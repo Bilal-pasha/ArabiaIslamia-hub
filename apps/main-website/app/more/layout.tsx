@@ -1,7 +1,7 @@
 import { SEO_DEFAULTS } from '@/constants/seo';
 
 export const metadata = {
-  title: 'More',
+  title: `More | ${SEO_DEFAULTS.siteName}`,
   description:
     'Admissions, scholarships, downloads, and results at Jamia Arabia Islamia. Find information about applying, scholarship opportunities, and examination results.',
   keywords: [
@@ -11,7 +11,7 @@ export const metadata = {
     'Jamia Arabia Islamia downloads',
   ],
   openGraph: {
-    title: 'More – Admissions, Scholarships, Results | Jamia Arabia Islamia',
+    title: `More | ${SEO_DEFAULTS.siteName}`,
     description: 'Admissions, scholarships, downloads, and examination results at Jamia Arabia Islamia.',
     url: `${SEO_DEFAULTS.url}/more`,
     images: [SEO_DEFAULTS.ogImage],
