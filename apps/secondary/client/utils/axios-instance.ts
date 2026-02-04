@@ -1,9 +1,8 @@
 import axios from 'axios';
-
-const API_BASE = process.env.SECONDARY_API_URL || 'http://localhost:8002';
+import { SECONDARY_API_URL } from '@/constants/env';
 
 export const apiClient = axios.create({
-  baseURL: API_BASE,
+  baseURL: SECONDARY_API_URL,
   headers: {
     'Content-Type': 'application/json',
   },

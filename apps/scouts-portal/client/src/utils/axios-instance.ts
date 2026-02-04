@@ -1,12 +1,8 @@
 import axios from 'axios';
-
-const API_BASE =
-  typeof window !== 'undefined'
-    ? (process.env.NEXT_PUBLIC_SCOUTS_API_URL || 'http://localhost:8003')
-    : process.env.SCOUTS_API_URL || process.env.NEXT_PUBLIC_SCOUTS_API_URL || 'http://localhost:8003';
+import { SCOUTS_API_URL } from '@/constant/env';
 
 export const apiClient = axios.create({
-  baseURL: API_BASE,
+  baseURL: SCOUTS_API_URL,
   headers: { 'Content-Type': 'application/json' },
   timeout: 30000,
   withCredentials: true,

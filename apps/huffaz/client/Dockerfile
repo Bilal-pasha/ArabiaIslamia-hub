@@ -10,6 +10,10 @@ RUN pnpm install --frozen-lockfile || pnpm install
 
 COPY apps/huffaz/client ./apps/huffaz/client
 
+# NEXT_PUBLIC_* must be present at build time (Next.js inlines them into the client bundle)
+ARG NEXT_PUBLIC_HUFFAZ_API_URL
+ENV NEXT_PUBLIC_HUFFAZ_API_URL=${NEXT_PUBLIC_HUFFAZ_API_URL}
+
 RUN pnpm --filter huffaz-app build
 
 FROM node:20-alpine

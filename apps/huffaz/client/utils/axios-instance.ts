@@ -1,9 +1,8 @@
 import axios from 'axios';
-
-const API_BASE = process.env.HUFFAZ_API_URL || 'http://localhost:8001';
+import { HUFFAZ_API_URL } from '@/constants/env';
 
 export const apiClient = axios.create({
-  baseURL: API_BASE,
+  baseURL: HUFFAZ_API_URL,
   headers: {
     'Content-Type': 'application/json',
   },

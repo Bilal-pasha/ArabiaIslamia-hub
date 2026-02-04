@@ -18,6 +18,10 @@ RUN pnpm install --frozen-lockfile || pnpm install
 
 COPY apps/secondary/client ./apps/secondary/client
 
+# NEXT_PUBLIC_* must be present at build time (Next.js inlines them into the client bundle)
+ARG NEXT_PUBLIC_SECONDARY_API_URL
+ENV NEXT_PUBLIC_SECONDARY_API_URL=${NEXT_PUBLIC_SECONDARY_API_URL}
+
 ENV NODE_ENV=production
 RUN pnpm --filter secondary-app build
 

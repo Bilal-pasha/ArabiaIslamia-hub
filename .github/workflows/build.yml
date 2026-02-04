@@ -92,6 +92,7 @@ jobs:
             NEXT_PUBLIC_SECONDARY_APP_URL=${{ vars.NEXT_PUBLIC_SECONDARY_APP_URL }}
             NEXT_PUBLIC_HUFFAZ_APP_URL=${{ vars.NEXT_PUBLIC_HUFFAZ_APP_URL }}
             NEXT_PUBLIC_SCOUTS_APP_URL=${{ vars.NEXT_PUBLIC_SCOUTS_APP_URL }}
+            NEXT_PUBLIC_MAIN_WEBSITE_API_URL=${{ vars.NEXT_PUBLIC_MAIN_WEBSITE_API_URL }}
 
   build-secondary-api:
     name: Build Secondary API
@@ -178,6 +179,8 @@ jobs:
           cache-from: type=gha
           cache-to: type=gha,mode=max
           platforms: linux/amd64,linux/arm64
+          build-args: |
+            NEXT_PUBLIC_SECONDARY_API_URL=${{ vars.NEXT_PUBLIC_SECONDARY_API_URL }}
 
   build-scouts-portal-api:
     name: Build Scouts Portal API
@@ -264,3 +267,5 @@ jobs:
           cache-from: type=gha
           cache-to: type=gha,mode=max
           platforms: linux/amd64,linux/arm64
+          build-args: |
+            NEXT_PUBLIC_SCOUTS_API_URL=${{ vars.NEXT_PUBLIC_SCOUTS_API_URL }}

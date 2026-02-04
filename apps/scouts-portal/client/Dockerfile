@@ -21,6 +21,10 @@ RUN pnpm install --frozen-lockfile || pnpm install
 
 COPY apps/scouts-portal/client ./apps/scouts-portal/client
 
+# NEXT_PUBLIC_* must be present at build time (Next.js inlines them into the client bundle)
+ARG NEXT_PUBLIC_SCOUTS_API_URL
+ENV NEXT_PUBLIC_SCOUTS_API_URL=${NEXT_PUBLIC_SCOUTS_API_URL}
+
 ENV NODE_ENV=production
 RUN pnpm --filter scouts-portal-app build
 
