@@ -1,6 +1,8 @@
 # Keep in sync with apps/secondary/client/Dockerfile (same structure; only paths/filter/port differ)
 # Builder: same layout as Dockerfile.dev for reliable install, then production build
-FROM node:20-alpine AS builder
+# Pin to amd64 to avoid QEMU emulation when building on x86 (prevents SIGILL during Next.js static generation).
+# For arm64, build on native ARM (e.g. --platform linux/arm64 on M1/M2) so no emulation is used.
+FROM --platform=linux/amd64 node:20-alpine AS builder
 WORKDIR /app
 RUN corepack enable && corepack prepare pnpm@9.14.2 --activate
 
@@ -23,7 +25,7 @@ ENV NODE_ENV=production
 RUN pnpm --filter scouts-portal-app build
 
 # Runtime: standalone output only (no pnpm, minimal image)
-FROM node:20-alpine
+FROM --platform=linux/amd64 node:20-alpine
 WORKDIR /app
 ENV NODE_ENV=production
 ENV PORT=3012
