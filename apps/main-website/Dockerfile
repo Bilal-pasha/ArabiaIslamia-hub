@@ -18,6 +18,14 @@ RUN pnpm install --frozen-lockfile || pnpm install
 
 COPY apps/main-website ./apps/main-website
 
+# NEXT_PUBLIC_* must be present at build time (Next.js inlines them into the client bundle)
+ARG NEXT_PUBLIC_SECONDARY_APP_URL
+ARG NEXT_PUBLIC_HUFFAZ_APP_URL
+ARG NEXT_PUBLIC_SCOUTS_APP_URL
+ENV NEXT_PUBLIC_SECONDARY_APP_URL=${NEXT_PUBLIC_SECONDARY_APP_URL}
+ENV NEXT_PUBLIC_HUFFAZ_APP_URL=${NEXT_PUBLIC_HUFFAZ_APP_URL}
+ENV NEXT_PUBLIC_SCOUTS_APP_URL=${NEXT_PUBLIC_SCOUTS_APP_URL}
+
 ENV NODE_ENV=production
 RUN pnpm --filter main-website build
 
