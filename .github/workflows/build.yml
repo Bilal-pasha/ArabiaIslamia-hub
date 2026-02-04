@@ -16,6 +16,17 @@ env:
   REPO: ${{ github.repository }}
 
 jobs:
+  vars:
+    name: Set image prefix
+    runs-on: ubuntu-latest
+    steps:
+      - name: Lowercase repository name
+        id: vars
+        run: |
+          echo "repo_lower=${GITHUB_REPOSITORY,,}" >> $GITHUB_OUTPUT
+    outputs:
+      repo_lower: ${{ steps.vars.outputs.repo_lower }}
+
   validate:
     name: Validate Docker Compose and Dockerfiles
     runs-on: ubuntu-latest
@@ -38,7 +49,7 @@ jobs:
   build-main-website:
     name: Build Main Website
     runs-on: ubuntu-latest
-    needs: [validate]
+    needs: [validate, vars]
     permissions:
       contents: read
       packages: write
@@ -60,7 +71,7 @@ jobs:
         id: meta
         uses: docker/metadata-action@v5
         with:
-          images: ${{ env.REGISTRY }}/${{ env.REPO }}-main-website
+          images: ${{ env.REGISTRY }}/${{ needs.vars.outputs.repo_lower }}-main-website
           tags: |
             type=raw,value=latest,enable=${{ github.ref == 'refs/heads/main' }}
             type=sha,prefix=
@@ -81,7 +92,7 @@ jobs:
   build-secondary-api:
     name: Build Secondary API
     runs-on: ubuntu-latest
-    needs: [validate]
+    needs: [validate, vars]
     permissions:
       contents: read
       packages: write
@@ -103,7 +114,7 @@ jobs:
         id: meta
         uses: docker/metadata-action@v5
         with:
-          images: ${{ env.REGISTRY }}/${{ env.REPO }}-secondary-api
+          images: ${{ env.REGISTRY }}/${{ needs.vars.outputs.repo_lower }}-secondary-api
           tags: |
             type=raw,value=latest,enable=${{ github.ref == 'refs/heads/main' }}
             type=sha,prefix=
@@ -124,7 +135,7 @@ jobs:
   build-secondary-app:
     name: Build Secondary App
     runs-on: ubuntu-latest
-    needs: [validate]
+    needs: [validate, vars]
     permissions:
       contents: read
       packages: write
@@ -146,7 +157,7 @@ jobs:
         id: meta
         uses: docker/metadata-action@v5
         with:
-          images: ${{ env.REGISTRY }}/${{ env.REPO }}-secondary-app
+          images: ${{ env.REGISTRY }}/${{ needs.vars.outputs.repo_lower }}-secondary-app
           tags: |
             type=raw,value=latest,enable=${{ github.ref == 'refs/heads/main' }}
             type=sha,prefix=
@@ -167,7 +178,7 @@ jobs:
   build-scouts-portal-api:
     name: Build Scouts Portal API
     runs-on: ubuntu-latest
-    needs: [validate]
+    needs: [validate, vars]
     permissions:
       contents: read
       packages: write
@@ -189,7 +200,7 @@ jobs:
         id: meta
         uses: docker/metadata-action@v5
         with:
-          images: ${{ env.REGISTRY }}/${{ env.REPO }}-scouts-portal-api
+          images: ${{ env.REGISTRY }}/${{ needs.vars.outputs.repo_lower }}-scouts-portal-api
           tags: |
             type=raw,value=latest,enable=${{ github.ref == 'refs/heads/main' }}
             type=sha,prefix=
@@ -210,7 +221,7 @@ jobs:
   build-scouts-portal-app:
     name: Build Scouts Portal App
     runs-on: ubuntu-latest
-    needs: [validate]
+    needs: [validate, vars]
     permissions:
       contents: read
       packages: write
@@ -232,7 +243,7 @@ jobs:
         id: meta
         uses: docker/metadata-action@v5
         with:
-          images: ${{ env.REGISTRY }}/${{ env.REPO }}-scouts-portal-app
+          images: ${{ env.REGISTRY }}/${{ needs.vars.outputs.repo_lower }}-scouts-portal-app
           tags: |
             type=raw,value=latest,enable=${{ github.ref == 'refs/heads/main' }}
             type=sha,prefix=
