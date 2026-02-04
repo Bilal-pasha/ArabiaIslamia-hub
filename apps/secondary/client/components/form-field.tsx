@@ -13,7 +13,7 @@ interface FormFieldProps {
 export function FormField({ label, children, required, error, className = '' }: FormFieldProps) {
   return (
     <div className={className}>
-      <Label className="mb-1.5 block text-sm font-medium text-slate-300">
+      <Label className="mb-1.5 block text-sm font-medium text-card-foreground/90">
         {label}
         {required && <span className="text-amber-400 ml-0.5">*</span>}
       </Label>

@@ -27,6 +27,8 @@
   --color-destructive-foreground: hsl(0 0% 100%);
   --color-card: hsl(0 0% 100%);
   --color-card-foreground: hsl(var(--ases-navy));
+  --color-popover: hsl(0 0% 100%);
+  --color-popover-foreground: hsl(var(--ases-navy));
 }
 
 :root {
@@ -53,6 +55,8 @@
   --card: hsl(0 0% 100%);
   --card-foreground: hsl(var(--ases-navy));
   --radius: 0.5rem;
+  --popover: hsl(0 0% 100%);
+  --popover-foreground: hsl(var(--ases-navy));
 }
 
 /* Secondary app theme: hub-style dark gradient + navy cards (registration & admin) */
@@ -84,6 +88,11 @@
   --color-destructive: hsl(0 63% 55%);
   --destructive-foreground: hsl(0 0% 100%);
   --color-destructive-foreground: hsl(0 0% 100%);
+  /* Popover (Select dropdown, etc.) – dark to match cards */
+  --popover: rgba(15, 39, 68, 0.98);
+  --popover-foreground: hsl(0 0% 98%);
+  --color-popover: rgba(15, 39, 68, 0.98);
+  --color-popover-foreground: hsl(0 0% 98%);
 }
 
 /* Secondary cards only: navy bg (override Tailwind’s fixed utility), shadow and text for depth */
@@ -93,52 +102,122 @@
   color: hsl(0 0% 98%) !important;
   box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.35), 0 0 0 1px rgba(255, 255, 255, 0.12);
 }
+
 .secondary-card .text-muted-foreground,
 .secondary-card [class*="text-muted"] {
   color: hsl(215 20% 78%) !important;
 }
 
-/* Inputs and selects inside secondary theme (glass look) */
+/* Inputs, textareas and select triggers inside secondary theme (glass look, visible text) */
 [data-theme="secondary"] input:not([type="checkbox"]):not([type="radio"]),
 [data-theme="secondary"] textarea,
-[data-theme="secondary"] [role="combobox"] {
-  background-color: rgba(255 255 255 / 0.06);
-  color: hsl(0 0% 98%);
+[data-theme="secondary"] [role="combobox"],
+[data-theme="secondary"] button[data-radix-collection-item] {
+  background-color: rgba(255 255 255 / 0.08) !important;
+  color: hsl(0 0% 98%) !important;
+  border-color: rgba(255 255 255 / 0.2) !important;
 }
+
 [data-theme="secondary"] input::placeholder,
 [data-theme="secondary"] textarea::placeholder {
-  color: hsl(215 20% 65%);
+  color: hsl(215 20% 65%) !important;
 }
+
 [data-theme="secondary"] input:focus,
-[data-theme="secondary"] textarea:focus {
+[data-theme="secondary"] textarea:focus,
+[data-theme="secondary"] [role="combobox"]:focus {
   outline: none;
-  box-shadow: 0 0 0 1px rgba(255 255 255 / 0.2);
+  box-shadow: 0 0 0 1px rgba(255 255 255 / 0.25);
+}
+
+/* Labels and text inside cards – ensure visible on dark background */
+[data-theme="secondary"] .secondary-card label,
+[data-theme="secondary"] .secondary-card [class*="Label"],
+[data-theme="secondary"] .secondary-card .text-muted-foreground,
+[data-theme="secondary"] .secondary-card [class*="text-muted"] {
+  color: hsl(215 20% 85%) !important;
+}
+
+[data-theme="secondary"] .secondary-card p:not([class*="text-red"]):not([class*="text-amber"]):not([class*="text-emerald"]) {
+  color: hsl(215 20% 85%);
 }
 
 /* Registration: lighter borders and button text (forced overrides) */
 [data-theme="secondary"] .secondary-card {
   border-color: rgba(255 255 255 / 0.2) !important;
 }
+
 [data-theme="secondary"] .secondary-card [class*="border-b"] {
   border-bottom-color: rgba(255 255 255 / 0.15) !important;
 }
+
 [data-theme="secondary"] header[class*="border-b"] {
   border-bottom-color: rgba(255 255 255 / 0.15) !important;
 }
+
 [data-theme="secondary"] .fixed.border-t {
   border-top-color: rgba(255 255 255 / 0.15) !important;
 }
+
+/* Primary (orange) buttons – white text (button and asChild Link) */
 [data-theme="secondary"] .secondary-card button.bg-orange-500,
-[data-theme="secondary"] .secondary-card button.bg-orange-500:hover:not(:disabled) {
+[data-theme="secondary"] .secondary-card button.bg-orange-500:hover:not(:disabled),
+[data-theme="secondary"] button.bg-orange-500,
+[data-theme="secondary"] button.bg-orange-500:hover:not(:disabled),
+[data-theme="secondary"] a.bg-orange-500,
+[data-theme="secondary"] a.bg-orange-500:hover {
   color: #fff !important;
   font-weight: 500;
 }
-[data-theme="secondary"] .secondary-card button.bg-orange-500:hover:not(:disabled) {
+
+[data-theme="secondary"] .secondary-card button.bg-orange-500:hover:not(:disabled),
+[data-theme="secondary"] button.bg-orange-500:hover:not(:disabled) {
   background-color: rgb(234 88 12) !important;
 }
-[data-theme="secondary"] .secondary-card button[type="button"]:not(.bg-orange-500):not(.bg-destructive) {
+
+/* Outline / ghost buttons inside cards – light text */
+[data-theme="secondary"] .secondary-card button[type="button"]:not(.bg-orange-500):not(.bg-destructive):not(.bg-sky),
+[data-theme="secondary"] .secondary-card button[type="submit"]:not(.bg-orange-500) {
+  color: hsl(0 0% 95%) !important;
+}
+
+[data-theme="secondary"] .secondary-card button:disabled,
+[data-theme="secondary"] button:disabled {
+  color: hsl(215 20% 55%) !important;
+}
+
+/* Fixed nav / footer buttons (form navigation) */
+[data-theme="secondary"] .fixed button.bg-orange-500 {
   color: #fff !important;
 }
-[data-theme="secondary"] .secondary-card button:disabled {
-  color: rgb(100 116 139) !important;
+
+[data-theme="secondary"] .fixed button:not(.bg-orange-500) {
+  color: hsl(0 0% 95%) !important;
+}
+
+/* Header: all buttons and links – visible light text */
+[data-theme="secondary"] header button,
+[data-theme="secondary"] header a[class*="inline-flex"],
+[data-theme="secondary"] header a[class*="gap-2"] {
+  color: hsl(0 0% 95%) !important;
+}
+
+[data-theme="secondary"] header .text-orange-200,
+[data-theme="secondary"] header a.border-orange-400\/40 {
+  color: rgb(254 215 170) !important;
+}
+
+[data-theme="secondary"] header .text-sky-200,
+[data-theme="secondary"] header a.border-sky-400\/40 {
+  color: rgb(186 230 253) !important;
+}
+
+[data-theme="secondary"] header button.border-white\/20,
+[data-theme="secondary"] header a.border-white\/20 {
+  color: hsl(0 0% 92%) !important;
+}
+
+[data-theme="secondary"] header button:hover,
+[data-theme="secondary"] header a:hover {
+  color: #fff !important;
 }

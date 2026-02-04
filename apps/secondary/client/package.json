@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "@arabiaaislamia/ui": "workspace:*",
+    "lucide-react": "^0.468.0",
     "@arabiaaislamia/animations": "workspace:*",
     "framer-motion": "^11.11.0",
     "axios": "^1.7.0",

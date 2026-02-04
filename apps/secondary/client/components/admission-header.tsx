@@ -1,6 +1,7 @@
 'use client';
 
 import Link from 'next/link';
+import { ClipboardList, Building2 } from 'lucide-react';
 import { SecondaryLogo, Button } from '@arabiaaislamia/ui';
 import { publicRoutes, privateRoutes } from '@/constants/route';
 
@@ -19,19 +20,15 @@ export function AdmissionHeader() {
             </div>
           </div>
           <div className="flex gap-2 shrink-0">
-            <Button variant="outline" size="sm" asChild className="border-orange-400/40 text-orange-200 hover:bg-orange-500/20 hover:text-white hover:border-orange-400/60">
-              <Link href={publicRoutes.status} className="inline-flex items-center gap-2 text-current">
-                <svg className="size-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4" />
-                </svg>
+            <Button variant="outline" size="sm" asChild className="border-orange-400/40  hover:bg-orange-500/20 hover:text-white hover:border-orange-400/60">
+              <Link href={publicRoutes.status} className="inline-flex items-center gap-2 text-current ">
+                <ClipboardList className="size-4" />
                 Check Status
               </Link>
             </Button>
             <Button variant="outline" size="sm" asChild className="border-sky-400/40 text-sky-200 hover:bg-sky-500/20 hover:text-white hover:border-sky-400/60">
               <Link href={privateRoutes.applications} className="inline-flex items-center gap-2 text-current">
-                <svg className="size-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
-                </svg>
+                <Building2 className="size-4" />
                 Admin
               </Link>
             </Button>

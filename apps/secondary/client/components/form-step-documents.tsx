@@ -1,6 +1,7 @@
 'use client';
 
 import { useRef } from 'react';
+import { CheckCircle2, Upload, X } from 'lucide-react';
 import { FormField } from './form-field';
 import { motion, AnimatePresence } from 'framer-motion';
 import type { AdmissionFormDataWithEmptyEnums } from '@/lib/admission-schema';
@@ -59,9 +60,7 @@ export function FormStepDocuments({ data, files, onUpdate, onFileSelect }: FormS
                   {hasFile ? (
                     <div className="flex flex-col items-center gap-2 px-4 text-center">
                       <div className="flex size-12 items-center justify-center rounded-full bg-primary/15">
-                        <svg className="size-6 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-                        </svg>
+                        <CheckCircle2 className="size-6 text-primary" />
                       </div>
                       <span className="text-sm font-medium text-foreground break-all line-clamp-2" title={data[key]!}>
                         {data[key]}
@@ -70,14 +69,7 @@ export function FormStepDocuments({ data, files, onUpdate, onFileSelect }: FormS
                     </div>
                   ) : (
                     <>
-                      <svg
-                        className="size-10 text-muted-foreground mb-2 group-hover:text-primary transition-colors"
-                        fill="none"
-                        stroke="currentColor"
-                        viewBox="0 0 24 24"
-                      >
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12" />
-                      </svg>
+                      <Upload className="size-10 text-muted-foreground mb-2 group-hover:text-primary transition-colors" />
                       <span className="text-sm text-muted-foreground group-hover:text-foreground">Click to upload</span>
                     </>
                   )}
@@ -97,9 +89,7 @@ export function FormStepDocuments({ data, files, onUpdate, onFileSelect }: FormS
                       }}
                       className="absolute -top-2 -right-2 flex size-7 items-center justify-center rounded-full bg-destructive text-destructive-foreground shadow-md hover:bg-destructive/90 transition-colors"
                     >
-                      <svg className="size-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                      </svg>
+                      <X className="size-4" />
                     </motion.button>
                   )}
                 </AnimatePresence>
