@@ -62,7 +62,7 @@ export default function AdmissionStatusPage() {
       className="min-h-screen w-full min-w-0 flex items-center justify-center px-4 py-6 sm:p-6 overflow-x-hidden"
     >
       <div className="w-full max-w-md min-w-0">
-        <Button variant="ghost" size="sm" asChild className="text-slate-300 hover:text-white hover:bg-white/10 mb-6">
+        <Button variant="ghost" size="sm" asChild className="mb-6">
           <Link href={publicRoutes.form} className="gap-2 inline-flex items-center text-sm font-medium">
             <svg className="size-4 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />

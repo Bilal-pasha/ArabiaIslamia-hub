@@ -48,7 +48,7 @@ function FileLink({
     }
   };
   return (
-    <Button variant="outline" size="sm" onClick={handleClick} disabled={loading} className="border-white/20 text-slate-200 hover:bg-white/10 hover:text-white">
+    <Button variant="outline" size="sm" onClick={handleClick} disabled={loading}>
       {loading ? 'Opening...' : `View ${label}`}
     </Button>
   );
@@ -165,7 +165,7 @@ export default function ApplicationDetailPage() {
             </span>
           )}
         </div>
-        <Button variant="outline" size="sm" asChild className="border-white/20 text-slate-200 hover:bg-white/10 hover:text-white w-fit">
+        <Button variant="outline" size="sm" asChild className="w-fit">
           <Link href={privateRoutes.applications}>← All applications</Link>
         </Button>
       </div>
@@ -196,7 +196,7 @@ export default function ApplicationDetailPage() {
                     <Button variant="destructive" onClick={handleReject} disabled={!rejectReason.trim() || actionLoading}>
                       Confirm reject
                     </Button>
-                    <Button variant="outline" onClick={() => { setShowRejectInput(false); setRejectReason(''); }} className="border-white/20 text-slate-200 hover:bg-white/10">
+                    <Button variant="outline" onClick={() => { setShowRejectInput(false); setRejectReason(''); }}>
                       Cancel
                     </Button>
                   </div>

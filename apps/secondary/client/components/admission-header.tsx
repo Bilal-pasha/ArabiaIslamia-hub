@@ -20,13 +20,13 @@ export function AdmissionHeader() {
             </div>
           </div>
           <div className="flex gap-2 shrink-0 flex-wrap">
-            <Button variant="outline" size="sm" asChild className="border-orange-400/40  hover:bg-orange-500/20 hover:text-white hover:border-orange-400/60">
-              <Link href={publicRoutes.status} className="inline-flex items-center gap-2 text-current ">
+            <Button variant="outline" size="sm" asChild>
+              <Link href={publicRoutes.status} className="inline-flex items-center gap-2 text-current">
                 <ClipboardList className="size-4" />
                 Check Status
               </Link>
             </Button>
-            <Button variant="outline" size="sm" asChild className="border-sky-400/40 text-sky-200 hover:bg-sky-500/20 hover:text-white hover:border-sky-400/60">
+            <Button variant="outline" size="sm" asChild>
               <Link href={privateRoutes.applications} className="inline-flex items-center gap-2 text-current">
                 <Building2 className="size-4" />
                 Admin

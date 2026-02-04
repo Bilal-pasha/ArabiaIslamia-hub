@@ -47,11 +47,11 @@ export default function AdminApplicationsPage() {
     >
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <p className="text-slate-400 text-sm">View and manage admission applications.</p>
-        <Button variant="outline" size="sm" asChild className="border-white/20 text-slate-200 hover:bg-white/10 hover:text-white w-fit">
+        <Button variant="outline" size="sm" asChild className="w-fit">
           <Link href={publicRoutes.form}>← Public form</Link>
         </Button>
       </div>
-      <div className="mx-auto max-w-5xl">
+      <div className="mx-auto">
         {loading && (
           <div className="flex justify-center py-16">
             <div className="size-10 animate-spin rounded-full border-2 border-orange-400 border-t-transparent" />
@@ -96,7 +96,7 @@ export default function AdminApplicationsPage() {
                         {new Date(app.createdAt).toLocaleDateString()}
                       </TableCell>
                       <TableCell className="text-right">
-                        <Button variant="outline" size="sm" asChild className="border-white/20 text-slate-200 hover:bg-white/10 hover:text-white">
+                        <Button variant="outline" size="sm" asChild>
                           <Link href={privateRoutes.applicationDetail(app.id)}>View</Link>
                         </Button>
                       </TableCell>

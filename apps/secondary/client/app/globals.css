@@ -186,6 +186,37 @@
   color: hsl(215 20% 55%) !important;
 }
 
+/* All outline / ghost buttons (header, dashboard, forms): transparent glass */
+[data-theme="secondary"] button.border:not(.bg-orange-500):not(.bg-emerald-600):not(.bg-destructive),
+[data-theme="secondary"] a.border[class*="inline-flex"] {
+  background-color: transparent !important;
+  color: hsl(0 0% 98%) !important;
+  border-color: rgba(255 255 255 / 0.25) !important;
+}
+
+[data-theme="secondary"] button.border:not(.bg-orange-500):not(.bg-emerald-600):not(.bg-destructive):hover:not(:disabled),
+[data-theme="secondary"] a.border[class*="inline-flex"]:hover {
+  background-color: rgba(255 255 255 / 0.1) !important;
+  color: #fff !important;
+}
+
+[data-theme="secondary"] button.border:not(.bg-orange-500):not(.bg-emerald-600):not(.bg-destructive):disabled {
+  color: hsl(215 20% 55%) !important;
+}
+
+/* Ghost buttons (no border): same transparent + hover; exclude default primary and secondary colored */
+[data-theme="secondary"] button:not(.border):not(.bg-primary):not(.bg-orange-500):not(.bg-emerald-600):not(.bg-destructive):not([class*="bg-sky"]),
+[data-theme="secondary"] a[class*="inline-flex"][class*="gap-2"]:not(.bg-orange-500):not([class*="bg-"]) {
+  background-color: transparent !important;
+  color: hsl(0 0% 90%) !important;
+}
+
+[data-theme="secondary"] button:not(.border):not(.bg-primary):not(.bg-orange-500):not(.bg-emerald-600):not(.bg-destructive):not([class*="bg-sky"]):hover:not(:disabled),
+[data-theme="secondary"] a[class*="inline-flex"][class*="gap-2"]:not(.bg-orange-500):hover {
+  background-color: rgba(255 255 255 / 0.1) !important;
+  color: #fff !important;
+}
+
 /* Fixed nav / footer buttons (form navigation) */
 [data-theme="secondary"] .fixed button.bg-orange-500 {
   color: #fff !important;
@@ -193,31 +224,4 @@
 
 [data-theme="secondary"] .fixed button:not(.bg-orange-500) {
   color: hsl(0 0% 95%) !important;
-}
-
-/* Header: all buttons and links – visible light text */
-[data-theme="secondary"] header button,
-[data-theme="secondary"] header a[class*="inline-flex"],
-[data-theme="secondary"] header a[class*="gap-2"] {
-  color: hsl(0 0% 95%) !important;
-}
-
-[data-theme="secondary"] header .text-orange-200,
-[data-theme="secondary"] header a.border-orange-400\/40 {
-  color: rgb(254 215 170) !important;
-}
-
-[data-theme="secondary"] header .text-sky-200,
-[data-theme="secondary"] header a.border-sky-400\/40 {
-  color: rgb(186 230 253) !important;
-}
-
-[data-theme="secondary"] header button.border-white\/20,
-[data-theme="secondary"] header a.border-white\/20 {
-  color: hsl(0 0% 92%) !important;
-}
-
-[data-theme="secondary"] header button:hover,
-[data-theme="secondary"] header a:hover {
-  color: #fff !important;
 }

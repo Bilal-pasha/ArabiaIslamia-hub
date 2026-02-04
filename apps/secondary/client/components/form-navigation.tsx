@@ -19,7 +19,7 @@ export function FormNavigation({ step, isSubmitting, onPrev, onNext, onSubmit }:
           variant="outline"
           onClick={onPrev}
           disabled={step === 1}
-          className="min-w-[90px] sm:min-w-[120px] border-white/25 text-white hover:bg-white/10 hover:text-white disabled:opacity-50 disabled:text-slate-500 text-sm sm:text-base"
+          className="min-w-[90px] sm:min-w-[120px] disabled:opacity-50 text-sm sm:text-base"
         >
           Previous
         </Button>

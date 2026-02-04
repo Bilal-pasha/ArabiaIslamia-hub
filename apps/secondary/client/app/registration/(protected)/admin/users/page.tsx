@@ -160,7 +160,6 @@ export default function AdminUsersPage() {
                   type="button"
                   variant="outline"
                   onClick={() => { setShowForm(false); setFormError(null); }}
-                  className="border-white/20 text-slate-200 hover:bg-white/10"
                 >
                   Cancel
                 </Button>
