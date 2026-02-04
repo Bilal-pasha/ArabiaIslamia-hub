@@ -50,6 +50,16 @@ export {
   SheetDescription,
 } from './components/sheet';
 export {
+  Drawer,
+  DrawerTrigger,
+  DrawerClose,
+  DrawerContent,
+  DrawerHeader,
+  DrawerFooter,
+  DrawerTitle,
+  DrawerDescription,
+} from './components/drawer';
+export {
   DropdownMenu,
   DropdownMenuTrigger,
   DropdownMenuContent,

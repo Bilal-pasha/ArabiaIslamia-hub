@@ -23,16 +23,18 @@ export interface NavLinkItem {
 }
 
 /**
- * App URLs: must come from env — base path/domain differs per app, so do not use /{app} redirects.
+ * App URLs: from env when set — base path/domain differs per app.
  * Set NEXT_PUBLIC_SECONDARY_APP_URL, NEXT_PUBLIC_HUFFAZ_APP_URL, NEXT_PUBLIC_SCOUTS_APP_URL
- * to full URLs (e.g. https://secondary.example.com or https://example.com/secondary).
+ * to full URLs (e.g. https://secondary.example.com). If unset, links use '#' so the section still shows.
  */
-const getAppUrl = (key: string): string =>
-  typeof process !== 'undefined' && process.env?.[key] ? String(process.env[key]).trim() : '';
+const getAppUrl = (key: string): string => {
+  if (typeof process === 'undefined' || !process.env?.[key]) return '';
+  return String(process.env[key]).trim();
+};
 
-const secondaryAppUrl = getAppUrl('NEXT_PUBLIC_SECONDARY_APP_URL');
-const huffazAppUrl = getAppUrl('NEXT_PUBLIC_HUFFAZ_APP_URL');
-const scoutsAppUrl = getAppUrl('NEXT_PUBLIC_SCOUTS_APP_URL');
+const secondaryAppUrl = getAppUrl('NEXT_PUBLIC_SECONDARY_APP_URL') || '#';
+const huffazAppUrl = getAppUrl('NEXT_PUBLIC_HUFFAZ_APP_URL') || '#';
+const scoutsAppUrl = getAppUrl('NEXT_PUBLIC_SCOUTS_APP_URL') || '#';
 
 export const NAV_DATA: NavLinkItem[] = [
   {
@@ -70,4 +72,4 @@ export const APP_LINKS: AppLinkItem[] = [
   { text: 'Secondary School', href: secondaryAppUrl, description: 'Portal & admissions' },
   { text: 'Huffaz', href: huffazAppUrl, description: 'Tahfeez & registration' },
   { text: 'Scouts Portal', href: scoutsAppUrl, description: 'Scouts registration & portal' },
-].filter((app) => app.href !== '');
+];

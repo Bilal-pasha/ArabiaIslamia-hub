@@ -17,6 +17,7 @@
     "./components/badge": "./src/components/badge.tsx",
     "./components/dialog": "./src/components/dialog.tsx",
     "./components/sheet": "./src/components/sheet.tsx",
+    "./components/drawer": "./src/components/drawer.tsx",
     "./components/dropdown-menu": "./src/components/dropdown-menu.tsx",
     "./components/spinner": "./src/components/spinner.tsx",
     "./components/sonner": "./src/components/sonner.tsx",
