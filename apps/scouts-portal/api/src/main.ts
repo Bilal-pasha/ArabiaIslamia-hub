@@ -38,7 +38,11 @@ async function bootstrap(): Promise<void> {
   );
 
   app.use(cookieParser());
-  app.enableCors({ origin: true, credentials: true });
+  const corsOrigin = configService.get<string>('CORS_ORIGIN');
+  const allowedOrigins = corsOrigin
+    ? corsOrigin.split(',').map((o) => o.trim()).filter(Boolean)
+    : true;
+  app.enableCors({ origin: allowedOrigins, credentials: true });
 
   await app.listen(port, '0.0.0.0');
   app.get(Logger).log(`Scouts Portal API running on port ${port}`, 'Bootstrap');
