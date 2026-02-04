@@ -103,3 +103,36 @@ secondary.jamiaarabiaislamia.com {
         format json
     }
 }
+
+# Scouts Portal API: https://api.scouts.jamiaarabiaislamia.com
+api.scouts.jamiaarabiaislamia.com {
+    reverse_proxy scouts-portal-api:8003 {
+        health_uri /health
+        health_interval 30s
+    }
+    encode gzip zstd
+    header {
+        X-Frame-Options "DENY"
+        X-Content-Type-Options "nosniff"
+        -Server
+    }
+    log {
+        output file /var/log/caddy/api-scouts.log
+        format json
+    }
+}
+
+# Scouts Portal UI: https://portal.scouts.jamiaarabiaislamia.com
+portal.scouts.jamiaarabiaislamia.com {
+    reverse_proxy scouts-portal-app:3012
+    encode gzip zstd
+    header {
+        X-Frame-Options "DENY"
+        X-Content-Type-Options "nosniff"
+        -Server
+    }
+    log {
+        output file /var/log/caddy/scouts-portal.log
+        format json
+    }
+}

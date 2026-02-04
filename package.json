@@ -6,7 +6,8 @@
     "dev": "turbo run dev --parallel",
     "lint": "turbo run lint",
     "db:migrate:huffaz": "pnpm --filter @arabiaaislamia/database run migrate:huffaz",
-    "db:migrate:secondary": "pnpm --filter @arabiaaislamia/database run migrate:secondary"
+    "db:migrate:secondary": "pnpm --filter @arabiaaislamia/database run migrate:secondary",
+    "db:migrate:scouts-portal": "pnpm --filter @arabiaaislamia/database run migrate:scouts-portal"
   },
   "devDependencies": {
     "turbo": "^2.3.0"

@@ -1,11 +1,12 @@
 import { join } from 'path';
 import { DataSource, DataSourceOptions } from 'typeorm';
 
-export type ProjectId = 'huffaz' | 'secondary';
+export type ProjectId = 'huffaz' | 'secondary' | 'scouts-portal';
 
 const PROJECT_DB_MAP: Record<ProjectId, string> = {
   huffaz: 'huffaz_db',
   secondary: 'secondary_db',
+  'scouts-portal': 'scouts_portal_db',
 };
 
 export interface DatabaseConfigParams {
@@ -17,7 +18,7 @@ export interface DatabaseConfigParams {
 }
 
 export function getDatabaseName(project: ProjectId): string {
-  const envKey = `${project.toUpperCase()}_DB_NAME`;
+  const envKey = `${project.toUpperCase().replace(/-/g, '_')}_DB_NAME`;
   if (process.env[envKey]) return process.env[envKey]!;
   const base = PROJECT_DB_MAP[project];
   return process.env.NODE_ENV === 'development' ? `${base}_dev` : base;

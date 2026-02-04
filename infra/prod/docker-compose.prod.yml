@@ -94,6 +94,30 @@ services:
       NODE_ENV: production
     networks:
       - app-network
+
+  scouts-portal-api:
+    image: ${REGISTRY}/${IMAGE_NAME_LOWER}-scouts-portal-api:latest
+    container_name: arabiaislamia-hub-scouts-portal-api
+    restart: unless-stopped
+    env_file:
+      - ./.env
+    networks:
+      - app-network
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+  scouts-portal-app:
+    image: ${REGISTRY}/${IMAGE_NAME_LOWER}-scouts-portal-app:latest
+    container_name: arabiaislamia-hub-scouts-portal-app
+    restart: unless-stopped
+    env_file:
+      - ./.env
+    environment:
+      NODE_ENV: production
+    networks:
+      - app-network
+
   caddy:
     image: caddy:2-alpine
     container_name: arabiaislamia-hub-caddy
@@ -116,6 +140,8 @@ services:
       - main-website
       # - huffaz-app
       - secondary-app
+      - scouts-portal-api
+      - scouts-portal-app
 
 networks:
   app-network:

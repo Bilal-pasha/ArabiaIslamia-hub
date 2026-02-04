@@ -1,0 +1,42 @@
+@import url("https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Noto+Nastaliq+Urdu:wght@400..700&display=swap");
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+::-webkit-scrollbar {
+  width: 5px;
+  height: 5px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #16a34a;
+  border-radius: 50px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+.protected-class {
+  background-color: #f9fafb !important;
+  min-height: 100vh;
+}
+@keyframes fade-in {
+  0% {
+    opacity: 0;
+    transform: translateY(6px) scale(0.995);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+/* class equivalent to: animate-in fade-in duration-1000 */
+.animate {
+  animation-name: fade-in;
+  animation-duration: 1000ms;        /* same as duration-1000 */
+  animation-timing-function: cubic-bezier(0.16, 1, 0.3, 1); /* nice easing */
+  animation-fill-mode: both;        /* keep the final state */
+  will-change: opacity, transform;  /* hint for smoother animation */
+}

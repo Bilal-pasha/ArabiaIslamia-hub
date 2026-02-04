@@ -12,6 +12,9 @@ export { AdmissionApplication } from './entities/admission-application.entity';
 export { FeeType } from './entities/fee-type.entity';
 export { FeeStructure } from './entities/fee-structure.entity';
 export { FeePayment, type FeePaymentStatus } from './entities/fee-payment.entity';
+export { ScoutsUser } from './entities/scouts-user.entity';
+export { Madrasa } from './entities/madrasa.entity';
+export { ScoutsStudent } from './entities/scouts-student.entity';
 export {
   createDataSource,
   createDataSourceOptions,
