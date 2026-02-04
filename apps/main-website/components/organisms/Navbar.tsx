@@ -17,8 +17,6 @@ export function Navbar() {
   const [appsOpen, setAppsOpen] = useState(false);
   const appsCloseTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
-  const isExternal = (href: string) => href.startsWith('http');
-
   const appsHandleEnter = () => {
     if (appsCloseTimeoutRef.current) {
       clearTimeout(appsCloseTimeoutRef.current);
@@ -101,14 +99,14 @@ export function Navbar() {
                   <a
                     key={app.href + app.text}
                     href={app.href}
-                    target={isExternal(app.href) ? '_blank' : undefined}
-                    rel={isExternal(app.href) ? 'noopener noreferrer' : undefined}
+                    target="_blank"
+                    rel="noopener noreferrer"
                     className="flex items-center gap-2 rounded-xl border border-amber-300/80 bg-amber-50/90 px-4 py-2.5 text-sm font-medium text-amber-950/90 shadow-sm transition-colors hover:bg-amber-100 active:bg-amber-200/60"
                     onClick={() => setMobileOpen(false)}
                   >
                     <GraduationCap className="h-4 w-4 shrink-0 text-amber-600" />
                     <span className="flex-1">{app.text}</span>
-                    {isExternal(app.href) && <ExternalLink className="h-3.5 w-3.5" />}
+                    <ExternalLink className="h-3.5 w-3.5" />
                   </a>
                 ))}
               </div>
@@ -158,13 +156,13 @@ export function Navbar() {
                       <a
                         key={app.href + app.text}
                         href={app.href}
-                        target={isExternal(app.href) ? '_blank' : undefined}
-                        rel={isExternal(app.href) ? 'noopener noreferrer' : undefined}
+                        target="_blank"
+                        rel="noopener noreferrer"
                         className="flex items-center gap-2 px-3.5 py-2 text-sm font-medium text-amber-950/90 transition-colors hover:bg-amber-100 hover:text-amber-900"
                       >
                         <GraduationCap className="h-4 w-4 shrink-0 text-amber-600/90" />
                         <span className="flex-1">{app.text}</span>
-                        {isExternal(app.href) && <ExternalLink className="h-3.5 w-3.5 shrink-0 opacity-70" />}
+                        <ExternalLink className="h-3.5 w-3.5 shrink-0 opacity-70" />
                       </a>
                     ))}
                   </div>

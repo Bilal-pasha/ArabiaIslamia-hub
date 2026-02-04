@@ -36,6 +36,7 @@ ENV PORT=3012
 
 COPY --from=builder /app/apps/scouts-portal/client/.next/standalone ./
 COPY --from=builder /app/apps/scouts-portal/client/.next/static ./apps/scouts-portal/client/.next/static
+COPY --from=builder /app/apps/scouts-portal/client/public ./apps/scouts-portal/client/public
 
 WORKDIR /app/apps/scouts-portal/client
 EXPOSE 3012

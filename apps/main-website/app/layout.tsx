@@ -1,10 +1,51 @@
 import './globals.css';
 import { MainLayout } from '@/components/templates';
+import { SEO_DEFAULTS } from '@/constants/seo';
 
 export const metadata = {
-  title: 'Jamia Arabia Islamia | Scout Colony',
-  description:
-    'Jamia Arabia Islamia - Where tradition meets innovation, and faith meets knowledge. Islamic education, Tahfeez ul Quran, Darse Nizami, Mahad ul Arabia.',
+  metadataBase: new URL(SEO_DEFAULTS.url),
+  title: {
+    default: `${SEO_DEFAULTS.siteName} | Scout Colony`,
+    template: `%s | ${SEO_DEFAULTS.siteName}`,
+  },
+  description: SEO_DEFAULTS.description,
+  keywords: [
+    'Jamia Arabia Islamia',
+    'Islamic education',
+    'Tahfeez ul Quran',
+    'Darse Nizami',
+    'Mahad ul Arabia',
+    'Scout Colony',
+    'Karachi',
+    'Islamic studies',
+  ],
+  authors: [{ name: SEO_DEFAULTS.siteName }],
+  creator: SEO_DEFAULTS.siteName,
+  openGraph: {
+    type: 'website',
+    locale: SEO_DEFAULTS.locale,
+    siteName: SEO_DEFAULTS.siteName,
+    description: SEO_DEFAULTS.description,
+    images: [{ url: SEO_DEFAULTS.ogImage, alt: SEO_DEFAULTS.siteName }],
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: `${SEO_DEFAULTS.siteName} | Scout Colony`,
+    description: SEO_DEFAULTS.description,
+    images: [SEO_DEFAULTS.ogImage],
+  },
+  icons: {
+    icon: '/images/Logo.png',
+  },
+  robots: {
+    index: true,
+    follow: true,
+  },
+  ...(process.env.NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION && {
+    verification: {
+      google: process.env.NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION,
+    },
+  }),
 };
 
 export default function RootLayout({
