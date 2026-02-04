@@ -1,6 +1,19 @@
 import './globals.css';
 import { PageFadeUp } from '@/components/page-fade-up';
 
+export const metadata = {
+  title: {
+    default: 'Arabia Islamia — Secondary Education',
+    template: '%s | Arabia Islamia Secondary',
+  },
+  description: 'Online admission and registration for Arabia Islamia Secondary Education.',
+  keywords: ['Arabia Islamia', 'secondary education', 'admission', 'registration'],
+  authors: [{ name: 'Arabia Islamia' }],
+  openGraph: {
+    type: 'website',
+  },
+};
+
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en">

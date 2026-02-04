@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import { motion } from 'framer-motion';
-import { SecondaryLogo, Button } from '@arabiaaislamia/ui';
+import { SecondaryLogo } from '@arabiaaislamia/ui';
 import { fadeInUp, staggerContainer, defaultTransition } from '@arabiaaislamia/animations';
 import { externalUrls } from '@/constants/route';
 
