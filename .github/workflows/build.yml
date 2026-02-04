@@ -135,7 +135,8 @@ jobs:
           labels: ${{ steps.meta.outputs.labels }}
           cache-from: type=gha
           cache-to: type=gha,mode=max
-          platforms: linux/amd64,linux/arm64
+          # linux/arm64 removed: bcrypt native addon causes SIGILL under QEMU emulation on x86 runners
+          platforms: linux/amd64
 
   build-secondary-app:
     name: Build Secondary App
@@ -223,7 +224,8 @@ jobs:
           labels: ${{ steps.meta.outputs.labels }}
           cache-from: type=gha
           cache-to: type=gha,mode=max
-          platforms: linux/amd64,linux/arm64
+          # linux/arm64 removed: bcrypt native addon causes SIGILL under QEMU emulation on x86 runners
+          platforms: linux/amd64
 
   build-scouts-portal-app:
     name: Build Scouts Portal App
