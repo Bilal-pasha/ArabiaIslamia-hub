@@ -123,19 +123,19 @@ export default function AdmissionFormPage() {
       animate="visible"
       variants={fadeInUp}
       transition={defaultTransition}
-      className="min-h-screen"
+      className="min-h-screen w-full min-w-0 overflow-x-hidden"
     >
       <AdmissionHeader />
 
-      <main className="container mx-auto px-4 sm:px-6 py-6 sm:py-8">
+      <main className="container mx-auto px-3 sm:px-6 py-4 sm:py-8 max-w-4xl w-full min-w-0">
         <InstructionsAlert />
 
         <div className="mb-6 sm:mb-8">
           <StepIndicator currentStep={step} />
         </div>
 
-        <form ref={formRef} onSubmit={handleSubmit} className="pb-24">
-          <Card className="secondary-card overflow-hidden backdrop-blur-xl border border-white/20">
+        <form ref={formRef} onSubmit={handleSubmit} className="pb-24 sm:pb-8">
+          <Card className="secondary-card overflow-hidden backdrop-blur-xl border border-white/20 w-full min-w-0">
             <CardHeader className="border-b border-white/15 bg-white/5 pb-6">
               <CardTitle className="text-xl sm:text-2xl font-semibold text-white">
                 {STEPS[step - 1]?.title} Information

@@ -13,7 +13,7 @@ interface FormStepPersonalProps {
 
 export function FormStepPersonal({ data, errors, onUpdate }: FormStepPersonalProps) {
   return (
-    <div className="grid gap-5 sm:grid-cols-2">
+    <div className="grid gap-4 sm:gap-5 sm:grid-cols-2 min-w-0 w-full">
       <FormField label="Full Name" required error={errors.name}>
         <Input
           value={data.name}

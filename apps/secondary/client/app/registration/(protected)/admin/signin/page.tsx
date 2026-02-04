@@ -34,14 +34,14 @@ function AdminSigninContent() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center p-6">
-      <div className="w-full max-w-md">
-        <Card className="secondary-card backdrop-blur-xl border border-white/10">
-          <CardContent className="pt-8 pb-8">
+    <div className="min-h-screen w-full min-w-0 flex items-center justify-center px-4 py-6 sm:p-6 overflow-x-hidden">
+      <div className="w-full max-w-md min-w-0">
+        <Card className="secondary-card backdrop-blur-xl border border-white/10 w-full">
+          <CardContent className="pt-6 sm:pt-8 pb-6 sm:pb-8 px-4 sm:px-6">
             <div className="flex justify-center mb-6">
               <SecondaryLogo width={80} height={80} />
             </div>
-            <CardTitle className="text-2xl mb-2 text-center text-white">Admin Sign In</CardTitle>
+            <CardTitle className="text-xl sm:text-2xl mb-2 text-center text-white">Admin Sign In</CardTitle>
             <p className="text-slate-300 text-sm mb-6 text-center">
               Secondary — Admission Admin
             </p>
@@ -89,8 +89,8 @@ function AdminSigninContent() {
 
 function SigninFallback() {
   return (
-    <div className="min-h-screen flex items-center justify-center p-6">
-      <div className="w-full max-w-md">
+    <div className="min-h-screen w-full flex items-center justify-center px-4 py-6 sm:p-6">
+      <div className="w-full max-w-md min-w-0">
         <Card className="secondary-card backdrop-blur-xl border border-white/10">
           <CardContent className="pt-8 pb-8">
             <div className="flex justify-center mb-6">

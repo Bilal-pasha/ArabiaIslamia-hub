@@ -99,7 +99,7 @@ services:
     depends_on:
       postgres:
         condition: service_healthy
-    command: sh -c "cd /app && pnpm install && pnpm --filter @arabiaaislamia/database run build && pnpm --filter @arabiaaislamia/database run migrate:secondary && pnpm --filter @arabiaaislamia/storage run build && cd apps/secondary/api && pnpm run start:dev"
+    command: sh -c "cd /app && pnpm install && pnpm --filter @arabiaaislamia/database run build && pnpm --filter @arabiaaislamia/storage run build && cd apps/secondary/api && pnpm run start:dev"
 
   # --- Frontend (UI) containers ---
   # main-website:
@@ -175,7 +175,7 @@ services:
   #   depends_on:
   #     postgres:
   #       condition: service_healthy
-  #   command: sh -c "cd /app && pnpm install && pnpm --filter @arabiaaislamia/database run build && pnpm --filter @arabiaaislamia/database run migrate:scouts-portal && pnpm --filter @arabiaaislamia/storage run build && cd apps/scouts-portal/api && pnpm run start:dev"
+  #   command: sh -c "cd /app && pnpm install && pnpm --filter @arabiaaislamia/database run build && pnpm --filter @arabiaaislamia/storage run build && cd apps/scouts-portal/api && pnpm run start:dev"
 
   # scouts-portal-app:
   #   build:

@@ -27,11 +27,11 @@ interface FormStepDocumentsProps {
 export function FormStepDocuments({ data, files, onUpdate, onFileSelect }: FormStepDocumentsProps) {
   const inputRefs = useRef<Record<string, HTMLInputElement | null>>({});
   return (
-    <div className="space-y-6">
-      <p className="text-sm text-muted-foreground">
+    <div className="space-y-6 w-full min-w-0">
+      <p className="text-sm text-muted-foreground break-words">
         1. Photo &nbsp; 2. Passport/ID &nbsp; 3. Authority Letter &nbsp; 4. Previous Result
       </p>
-      <div className="grid gap-5 sm:grid-cols-2">
+      <div className="grid gap-4 sm:gap-5 sm:grid-cols-2 min-w-0 w-full">
         {DOCUMENT_FIELDS.map(({ key, label, accept }) => {
           const hasFile = !!data[key];
           return (

@@ -10,6 +10,7 @@ import {
   Res,
   Req,
   UnauthorizedException,
+  ForbiddenException,
 } from '@nestjs/common';
 import type { Response, Request } from 'express';
 import { ConfigService } from '@nestjs/config';
@@ -17,6 +18,8 @@ import { AuthService } from './auth.service';
 import { RegisterDto, LoginDto, RefreshTokenDto, UpdateProfileDto, UpdatePasswordDto, GoogleAuthDto } from './dto';
 import { AuthResponseDto } from './dto/auth-response.dto';
 import { JwtAuthGuard } from './guards/jwt-auth.guard';
+import { RolesGuard } from './guards/roles.guard';
+import { Roles } from './decorators/roles.decorator';
 import { CurrentUser } from './decorators/current-user.decorator';
 import { User } from '@arabiaaislamia/database';
 import { COOKIE_NAMES } from '../../common/constants';
@@ -45,12 +48,11 @@ export class AuthController {
   }
 
   @Post('signup')
-  @HttpCode(HttpStatus.CREATED)
-  async register(@Body() dto: RegisterDto, @Res({ passthrough: true }) res: Response) {
-    const { user, tokens } = await this.authService.register(dto);
-    const { isProd, accessExp, refreshExp } = this.cookieConfig();
-    setAuthCookies(res, tokens.accessToken, tokens.refreshToken, isProd, accessExp, refreshExp);
-    return { success: true, message: 'Account created', data: { user } } satisfies AuthResponseDto;
+  @HttpCode(HttpStatus.FORBIDDEN)
+  async register() {
+    throw new ForbiddenException(
+      'Registration is disabled. Contact administrator for an account.',
+    );
   }
 
   @Post('login')
@@ -93,10 +95,32 @@ export class AuthController {
           name: user.name,
           email: user.email,
           avatar: user.avatar,
+          role: user.role ?? 'user',
           createdAt: user.createdAt.toISOString(),
           updatedAt: user.updatedAt.toISOString(),
         },
       },
+    } satisfies AuthResponseDto;
+  }
+
+  @Get('users')
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles('superadmin')
+  async listUsers() {
+    const users = await this.authService.findAllUsers();
+    return { success: true, data: { users } };
+  }
+
+  @Post('admins')
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles('superadmin')
+  @HttpCode(HttpStatus.CREATED)
+  async createAdmin(@Body() dto: RegisterDto) {
+    const user = await this.authService.createAdmin(dto);
+    return {
+      success: true,
+      message: 'Admin created',
+      data: { user },
     } satisfies AuthResponseDto;
   }
 

@@ -5,6 +5,7 @@ export class UserResponseDto {
   @ApiProperty() name: string;
   @ApiProperty() email: string;
   @ApiProperty({ nullable: true }) avatar: string | null;
+  @ApiProperty() role: string;
   @ApiProperty() createdAt: string;
   @ApiProperty() updatedAt: string;
 }

@@ -22,15 +22,15 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body>
-        <div className="protected-class animate">
+      <body className="overflow-x-hidden">
+        <div className="protected-class animate w-full min-w-0 overflow-x-hidden">
           <MadrasaRegistrationProvider>
             <Suspense fallback={<FallBackComponent />}>
               <SessionWrapper>
                 <Toaster position="top-right" richColors />
                 <Sidebar />
                 {/* <FullScreenPoster /> Add the FullScreenPoster here */}
-                <main className="lg:ml-64 min-h-screen bg-gray-50">
+                <main className="lg:ml-64 min-h-screen w-full min-w-0 overflow-x-hidden bg-gray-50 p-4 sm:p-6">
                   {children}
                 </main>
               </SessionWrapper>

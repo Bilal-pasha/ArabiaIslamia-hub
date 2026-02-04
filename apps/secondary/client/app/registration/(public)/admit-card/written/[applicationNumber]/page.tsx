@@ -49,14 +49,14 @@ export default function WrittenAdmitCardPage() {
   }
 
   return (
-    <div className="min-h-screen bg-white p-6 print:p-8">
+    <div className="min-h-screen w-full min-w-0 bg-white p-4 sm:p-6 print:p-8 overflow-x-hidden">
       <div className="hidden print:block fixed top-4 right-4">
         <Button type="button" size="sm" onClick={handlePrint} className="print:hidden">
           Print
         </Button>
       </div>
-      <div className="max-w-lg mx-auto print:max-w-none">
-        <div className="border-2 border-slate-800 rounded-lg p-8 print:border-black">
+      <div className="max-w-lg w-full mx-auto min-w-0 print:max-w-none">
+        <div className="border-2 border-slate-800 rounded-lg p-5 sm:p-8 print:border-black">
           <div className="text-center mb-8">
             <SecondaryLogo width={100} height={100} className="mx-auto mb-4" />
             <h1 className="text-2xl font-bold text-slate-900">Arabia Islamia</h1>
@@ -87,9 +87,9 @@ export default function WrittenAdmitCardPage() {
           </div>
         </div>
       </div>
-      <div className="mt-8 text-center print:hidden">
+      <div className="mt-6 sm:mt-8 text-center print:hidden flex flex-wrap justify-center gap-2">
         <Button onClick={handlePrint}>Print admit card</Button>
-        <Button variant="outline" asChild className="ml-3">
+        <Button variant="outline" asChild>
           <Link href={publicRoutes.status}>Back to status</Link>
         </Button>
       </div>

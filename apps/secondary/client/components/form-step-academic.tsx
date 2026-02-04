@@ -13,7 +13,7 @@ interface FormStepAcademicProps {
 
 export function FormStepAcademic({ data, errors, onUpdate }: FormStepAcademicProps) {
   return (
-    <div className="grid gap-5 sm:grid-cols-2">
+    <div className="grid gap-4 sm:gap-5 sm:grid-cols-2 min-w-0 w-full">
       <FormField label="Required Class" required error={errors.requiredClass}>
         <Select value={data.requiredClass} onValueChange={(v) => onUpdate('requiredClass', v)}>
           <SelectTrigger className={`h-10 ${errors.requiredClass ? 'border-destructive' : ''}`}>

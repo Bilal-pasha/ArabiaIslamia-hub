@@ -20,9 +20,9 @@ export function SecondaryPageTheme({ children, className = '' }: SecondaryPageTh
   return (
     <div
       data-theme="secondary"
-      className={`min-h-screen text-white ${HUB_BG} ${className}`}
+      className={`min-h-screen w-full min-w-0 overflow-x-hidden text-white ${HUB_BG} ${className}`}
     >
-      <div className="relative overflow-hidden min-h-screen">
+      <div className="relative overflow-hidden min-h-screen w-full min-w-0">
         <div className={`absolute inset-0 ${HUB_GLOW_TOP}`} aria-hidden />
         <div className={`absolute inset-0 ${HUB_GLOW_BOTTOM}`} aria-hidden />
         <div className="relative min-h-screen">

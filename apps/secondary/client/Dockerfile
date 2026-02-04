@@ -1,5 +1,5 @@
-# Builder: same layout as Dockerfile.dev for reliable install, then production build
-FROM node:20-alpine AS builder
+# Builder: Debian slim avoids @next/swc-linux-x64-musl (Alpine) and uses -gnu binary
+FROM node:20-slim AS builder
 WORKDIR /app
 RUN corepack enable && corepack prepare pnpm@9.14.2 --activate
 
@@ -14,7 +14,7 @@ COPY packages/animations ./packages/animations
 # App package.json first for better layer caching
 COPY apps/secondary/client/package.json ./apps/secondary/client/
 
-RUN pnpm install --frozen-lockfile || pnpm install
+RUN pnpm config set network-timeout 120000 && pnpm install --frozen-lockfile || pnpm install
 
 COPY apps/secondary/client ./apps/secondary/client
 

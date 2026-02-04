@@ -15,9 +15,9 @@ export function AdmissionSuccess({ applicationNumber }: AdmissionSuccessProps) {
       animate="visible"
       variants={scaleIn}
       transition={defaultTransition}
-      className="min-h-screen flex items-center justify-center p-4 sm:p-6"
+      className="min-h-screen w-full min-w-0 flex items-center justify-center p-4 sm:p-6 overflow-x-hidden"
     >
-      <Card className="secondary-card max-w-lg w-full overflow-hidden backdrop-blur-xl border border-white/10">
+      <Card className="secondary-card max-w-lg w-full min-w-0 overflow-hidden backdrop-blur-xl border border-white/10">
         <div className="bg-gradient-to-r from-[#0f2744] to-[#1e4a6f] px-6 py-8 text-center border-b border-white/10">
           <SecondaryLogo width={80} height={80} className="mx-auto mb-4 rounded-lg" />
           <div className="inline-flex items-center justify-center size-14 rounded-full bg-orange-500/30 text-orange-200 border-2 border-orange-400/50">

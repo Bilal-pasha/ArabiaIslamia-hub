@@ -13,7 +13,7 @@ interface FormStepGuardianProps {
 
 export function FormStepGuardian({ data, errors, onUpdate }: FormStepGuardianProps) {
   return (
-    <div className="grid gap-5 sm:grid-cols-2">
+    <div className="grid gap-4 sm:gap-5 sm:grid-cols-2 min-w-0 w-full">
       <FormField label="Guardian Name" required error={errors.guardianName}>
         <Input
           value={data.guardianName}

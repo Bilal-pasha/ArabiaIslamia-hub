@@ -12,8 +12,8 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           rel="stylesheet"
         />
       </head>
-      <body className="font-sans antialiased" suppressHydrationWarning>
-        <PageFadeUp className="min-h-screen">
+      <body className="font-sans antialiased overflow-x-hidden" suppressHydrationWarning>
+        <PageFadeUp className="min-h-screen w-full min-w-0">
           {children}
         </PageFadeUp>
       </body>

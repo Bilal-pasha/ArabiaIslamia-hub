@@ -4,7 +4,7 @@ import { Alert, AlertTitle, AlertDescription } from '@arabiaaislamia/ui';
 
 export function InstructionsAlert() {
   return (
-    <Alert className="mb-6 sm:mb-8 border-amber-400/25 bg-amber-500/10 backdrop-blur shadow-md">
+    <Alert className="mb-6 sm:mb-8 border-amber-400/25 bg-amber-500/10 backdrop-blur shadow-md w-full min-w-0">
       <AlertTitle className="text-amber-200 font-semibold">Instructions</AlertTitle>
       <AlertDescription>
         <ul className="mt-1.5 space-y-1 text-sm text-amber-100/95">

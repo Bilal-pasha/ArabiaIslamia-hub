@@ -7,7 +7,6 @@ import {
   Card,
   CardContent,
   Button,
-  SecondaryLogo,
   Table,
   TableBody,
   TableCell,
@@ -44,28 +43,15 @@ export default function AdminApplicationsPage() {
       animate="visible"
       variants={fadeInUp}
       transition={defaultTransition}
-      className="min-h-screen"
+      className="space-y-6"
     >
-      <header className="sticky top-0 z-40 border-b border-white/10 bg-white/5 backdrop-blur-xl shadow-lg shadow-black/10">
-        <div className="mx-auto max-w-5xl px-4 sm:px-6 py-4">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-4">
-              <div className="flex size-12 shrink-0 items-center justify-center rounded-xl bg-white/10 border border-white/10 p-1.5 shadow-lg">
-                <SecondaryLogo width={40} height={40} className="rounded-lg" />
-              </div>
-              <div>
-                <h1 className="text-lg font-semibold text-white">Admission Applications</h1>
-                <p className="text-slate-300 text-xs">Secondary — Admin</p>
-              </div>
-            </div>
-            <Button variant="outline" size="sm" asChild className="border-white/20 text-slate-200 hover:bg-white/10 hover:text-white">
-              <Link href={publicRoutes.form}>← Back to Form</Link>
-            </Button>
-          </div>
-        </div>
-      </header>
-
-      <main className="mx-auto max-w-5xl px-4 sm:px-6 py-8">
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+        <p className="text-slate-400 text-sm">View and manage admission applications.</p>
+        <Button variant="outline" size="sm" asChild className="border-white/20 text-slate-200 hover:bg-white/10 hover:text-white w-fit">
+          <Link href={publicRoutes.form}>← Public form</Link>
+        </Button>
+      </div>
+      <div className="mx-auto max-w-5xl">
         {loading && (
           <div className="flex justify-center py-16">
             <div className="size-10 animate-spin rounded-full border-2 border-orange-400 border-t-transparent" />
@@ -84,42 +70,44 @@ export default function AdminApplicationsPage() {
           </Card>
         )}
         {!loading && !error && applications.length > 0 && (
-          <Card className="secondary-card backdrop-blur-xl border border-white/10 overflow-hidden">
-            <Table>
-              <TableHeader>
-                <TableRow className="border-white/10 hover:bg-white/5">
-                  <TableHead className="text-slate-200">Application #</TableHead>
-                  <TableHead className="text-slate-200">Name</TableHead>
-                  <TableHead className="text-slate-200">Class</TableHead>
-                  <TableHead className="text-slate-200">Status</TableHead>
-                  <TableHead className="text-slate-200">Created</TableHead>
-                  <TableHead className="text-right text-slate-200">Actions</TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {applications.map((app) => (
-                  <TableRow key={app.id} className="border-white/10 hover:bg-white/5">
-                    <TableCell className="font-mono font-medium text-white">{app.applicationNumber}</TableCell>
-                    <TableCell className="text-slate-200">{app.name}</TableCell>
-                    <TableCell className="text-slate-200">{app.requiredClass}</TableCell>
-                    <TableCell>
-                      <Badge variant={getStatusVariant(app.status)}>{app.status}</Badge>
-                    </TableCell>
-                    <TableCell className="text-slate-400 text-sm">
-                      {new Date(app.createdAt).toLocaleDateString()}
-                    </TableCell>
-                    <TableCell className="text-right">
-                      <Button variant="outline" size="sm" asChild className="border-white/20 text-slate-200 hover:bg-white/10 hover:text-white">
-                        <Link href={privateRoutes.applicationDetail(app.id)}>View</Link>
-                      </Button>
-                    </TableCell>
+          <Card className="secondary-card backdrop-blur-xl border border-white/10 overflow-hidden w-full min-w-0">
+            <div className="overflow-x-auto">
+              <Table>
+                <TableHeader>
+                  <TableRow className="border-white/10 hover:bg-white/5">
+                    <TableHead className="text-slate-200">Application #</TableHead>
+                    <TableHead className="text-slate-200">Name</TableHead>
+                    <TableHead className="text-slate-200">Class</TableHead>
+                    <TableHead className="text-slate-200">Status</TableHead>
+                    <TableHead className="text-slate-200">Created</TableHead>
+                    <TableHead className="text-right text-slate-200">Actions</TableHead>
                   </TableRow>
-                ))}
-              </TableBody>
-            </Table>
+                </TableHeader>
+                <TableBody>
+                  {applications.map((app) => (
+                    <TableRow key={app.id} className="border-white/10 hover:bg-white/5">
+                      <TableCell className="font-mono font-medium text-white">{app.applicationNumber}</TableCell>
+                      <TableCell className="text-slate-200">{app.name}</TableCell>
+                      <TableCell className="text-slate-200">{app.requiredClass}</TableCell>
+                      <TableCell>
+                        <Badge variant={getStatusVariant(app.status)}>{app.status}</Badge>
+                      </TableCell>
+                      <TableCell className="text-slate-400 text-sm">
+                        {new Date(app.createdAt).toLocaleDateString()}
+                      </TableCell>
+                      <TableCell className="text-right">
+                        <Button variant="outline" size="sm" asChild className="border-white/20 text-slate-200 hover:bg-white/10 hover:text-white">
+                          <Link href={privateRoutes.applicationDetail(app.id)}>View</Link>
+                        </Button>
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            </div>
           </Card>
         )}
-      </main>
+      </div>
     </motion.div>
   );
 }

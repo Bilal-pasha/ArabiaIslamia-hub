@@ -12,9 +12,6 @@ import {
   Button,
   Input,
   Label,
-  Alert,
-  AlertDescription,
-  SecondaryLogo,
   Badge,
   Select,
   SelectContent,
@@ -156,35 +153,24 @@ export default function ApplicationDetailPage() {
       animate="visible"
       variants={fadeInUp}
       transition={defaultTransition}
-      className="min-h-screen"
+      className="space-y-6"
     >
-      <header className="sticky top-0 z-40 border-b border-white/10 bg-white/5 backdrop-blur-xl shadow-lg shadow-black/10">
-        <div className="mx-auto max-w-4xl px-4 sm:px-6 py-4">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-4">
-              <div className="flex size-12 shrink-0 items-center justify-center rounded-xl bg-white/10 border border-white/10 p-1.5 shadow-lg">
-                <SecondaryLogo width={40} height={40} className="rounded-lg" />
-              </div>
-              <div>
-                <h1 className="text-lg font-semibold text-white">{app.name} — {app.applicationNumber}</h1>
-                <div className="flex items-center gap-2 mt-0.5">
-                  <Badge variant={getStatusVariant(app.status)}>{app.status}</Badge>
-                  {app.statusReason && (
-                    <span className="text-xs text-slate-400 truncate max-w-[200px]" title={app.statusReason}>
-                      {app.statusReason}
-                    </span>
-                  )}
-                </div>
-              </div>
-            </div>
-            <Button variant="outline" size="sm" asChild className="border-white/20 text-slate-200 hover:bg-white/10 hover:text-white">
-              <Link href={privateRoutes.applications}>← All Applications</Link>
-            </Button>
-          </div>
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
+        <div className="flex items-center gap-2 flex-wrap">
+          <Badge variant={getStatusVariant(app.status)}>{app.status}</Badge>
+          <span className="text-slate-300 text-sm">{app.applicationNumber}</span>
+          {app.statusReason && (
+            <span className="text-xs text-slate-400 truncate max-w-[200px]" title={app.statusReason}>
+              {app.statusReason}
+            </span>
+          )}
         </div>
-      </header>
+        <Button variant="outline" size="sm" asChild className="border-white/20 text-slate-200 hover:bg-white/10 hover:text-white w-fit">
+          <Link href={privateRoutes.applications}>← All applications</Link>
+        </Button>
+      </div>
 
-      <main className="mx-auto max-w-4xl px-4 sm:px-6 py-8 space-y-6">
+      <div className="mx-auto max-w-4xl w-full min-w-0 space-y-6 overflow-x-hidden">
         {app.status === 'pending' && (
           <Card className="secondary-card backdrop-blur-xl border border-white/10 border-orange-400/30">
             <CardHeader>
@@ -331,7 +317,7 @@ export default function ApplicationDetailPage() {
             <FileLink label="Previous Result" fileKey={app.previousResultFileKey} />
           </CardContent>
         </Card>
-      </main>
+      </div>
     </motion.div>
   );
 }
@@ -339,9 +325,9 @@ export default function ApplicationDetailPage() {
 function Row({ label, value }: { label: string; value: string | null }) {
   if (value == null || value === '') return null;
   return (
-    <div className="flex gap-2">
-      <span className="text-slate-400 shrink-0 w-36">{label}:</span>
-      <span className="text-slate-200">{value}</span>
+    <div className="flex flex-col sm:flex-row sm:gap-2 gap-0.5 min-w-0">
+      <span className="text-slate-400 shrink-0 sm:w-36 text-sm">{label}:</span>
+      <span className="text-slate-200 break-words">{value}</span>
     </div>
   );
 }

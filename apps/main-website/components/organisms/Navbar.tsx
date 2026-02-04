@@ -40,7 +40,7 @@ export function Navbar() {
         'px-3 py-1.5 sm:px-4 md:px-6 lg:px-12'
       )}
     >
-      <div className="mx-auto flex px-8 md:px-12 items-center justify-between gap-3">
+      <div className="mx-auto flex w-full max-w-7xl items-center justify-between gap-2 sm:gap-3 min-w-0 px-4 sm:px-6 md:px-8 lg:px-12">
         {/* Mobile menu: Drawer from shared UI */}
         <Drawer open={mobileOpen} onOpenChange={setMobileOpen}>
           <button

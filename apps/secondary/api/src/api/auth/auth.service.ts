@@ -35,9 +35,33 @@ export class AuthService {
       email: registerDto.email.toLowerCase().trim(),
       name: registerDto.name.trim(),
       password: registerDto.password,
+      role: 'user',
     });
     const saved = await this.userRepository.save(user);
     return { user: this.toResponse(saved), tokens: this.generateTokens(saved) };
+  }
+
+  async createAdmin(registerDto: RegisterDto): Promise<UserResponseDto> {
+    const existing = await this.userRepository.findOne({
+      where: { email: registerDto.email.toLowerCase().trim() },
+    });
+    if (existing) throw new ConflictException('User already exists');
+
+    const user = this.userRepository.create({
+      email: registerDto.email.toLowerCase().trim(),
+      name: registerDto.name.trim(),
+      password: registerDto.password,
+      role: 'admin',
+    });
+    const saved = await this.userRepository.save(user);
+    return this.toResponse(saved);
+  }
+
+  async findAllUsers(): Promise<UserResponseDto[]> {
+    const users = await this.userRepository.find({
+      order: { createdAt: 'DESC' },
+    });
+    return users.map((u) => this.toResponse(u));
   }
 
   async login(loginDto: LoginDto) {
@@ -137,6 +161,7 @@ export class AuthService {
       name: user.name,
       email: user.email,
       avatar: user.avatar,
+      role: user.role ?? 'user',
       createdAt: user.createdAt.toISOString(),
       updatedAt: user.updatedAt.toISOString(),
     };

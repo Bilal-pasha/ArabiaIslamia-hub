@@ -17,15 +17,15 @@ export default function SecondaryHubPage() {
       <div className="relative overflow-hidden">
         <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,_rgba(77,163,199,0.15)_0%,_transparent_50%)]" />
         <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_bottom_left,_rgba(232,93,44,0.1)_0%,_transparent_50%)]" />
-        <div className="relative flex flex-col items-center justify-between mx-auto min-h-screen p-12">
-          <motion.div variants={fadeInUp} transition={defaultTransition} className="text-center gap-4 my-4 flex flex-col items-center justify-center">
-            <div className="inline-flex items-center justify-center rounded-2xl bg-white/10 backdrop-blur p-4 shadow-xl">
-              <SecondaryLogo width={120} height={120} className="rounded-xl" />
+        <div className="relative flex flex-col items-center justify-between mx-auto min-h-screen w-full max-w-7xl px-4 py-6 sm:px-6 sm:py-8 lg:p-12">
+          <motion.div variants={fadeInUp} transition={defaultTransition} className="text-center gap-4 my-4 flex flex-col items-center justify-center min-w-0">
+            <div className="inline-flex items-center justify-center rounded-2xl bg-white/10 backdrop-blur p-3 sm:p-4 shadow-xl">
+              <SecondaryLogo width={100} height={100} className="rounded-xl w-20 h-20 sm:w-24 sm:h-24 lg:w-[120px] lg:h-[120px]" />
             </div>
-            <h1 className="text-4xl sm:text-5xl font-bold tracking-tight">
+            <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold tracking-tight">
               Arabia Islamia
             </h1>
-            <p className="text-xl text-slate-300 max-w-xl mx-auto">
+            <p className="text-base sm:text-lg lg:text-xl text-slate-300 max-w-xl mx-auto px-1">
               Secondary Education — Admissions & Administration
             </p>
           </motion.div>
@@ -33,13 +33,13 @@ export default function SecondaryHubPage() {
           <motion.div
             variants={fadeInUp}
             transition={{ ...defaultTransition, delay: 0.15 }}
-            className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-fit mx-auto"
+            className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 w-full max-w-4xl lg:max-w-5xl mx-auto"
           >
             <Link href={externalUrls.registration}>
               <motion.div
                 whileHover={{ scale: 1.02, y: -4 }}
                 whileTap={{ scale: 0.98 }}
-                className="group flex flex-col items-center p-8 rounded-2xl bg-white/5 backdrop-blur border border-white/10 hover:bg-white/10 hover:border-orange-400/50 transition-all duration-300 cursor-pointer"
+                className="group flex flex-col items-center p-5 sm:p-6 lg:p-8 rounded-xl sm:rounded-2xl bg-white/5 backdrop-blur border border-white/10 hover:bg-white/10 hover:border-orange-400/50 transition-all duration-300 cursor-pointer min-w-0"
               >
                 <div className="size-14 rounded-xl bg-orange-500/20 flex items-center justify-center mb-4 group-hover:bg-orange-500/30 transition-colors">
                   <svg className="size-8 text-orange-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -58,7 +58,7 @@ export default function SecondaryHubPage() {
               <motion.div
                 whileHover={{ scale: 1.02, y: -4 }}
                 whileTap={{ scale: 0.98 }}
-                className="group flex flex-col items-center p-8 rounded-2xl bg-white/5 backdrop-blur border border-white/10 hover:bg-white/10 hover:border-emerald-400/50 transition-all duration-300 cursor-pointer"
+                className="group flex flex-col items-center p-5 sm:p-6 lg:p-8 rounded-xl sm:rounded-2xl bg-white/5 backdrop-blur border border-white/10 hover:bg-white/10 hover:border-emerald-400/50 transition-all duration-300 cursor-pointer min-w-0"
               >
                 <div className="size-14 rounded-xl bg-emerald-500/20 flex items-center justify-center mb-4 group-hover:bg-emerald-500/30 transition-colors">
                   <svg className="size-8 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -77,7 +77,7 @@ export default function SecondaryHubPage() {
               <motion.div
                 whileHover={{ scale: 1.02, y: -4 }}
                 whileTap={{ scale: 0.98 }}
-                className="group flex flex-col items-center p-8 rounded-2xl bg-white/5 backdrop-blur border border-white/10 hover:bg-white/10 hover:border-sky-400/50 transition-all duration-300 cursor-pointer"
+                className="group flex flex-col items-center p-5 sm:p-6 lg:p-8 rounded-xl sm:rounded-2xl bg-white/5 backdrop-blur border border-white/10 hover:bg-white/10 hover:border-sky-400/50 transition-all duration-300 cursor-pointer min-w-0"
               >
                 <div className="size-14 rounded-xl bg-sky-500/20 flex items-center justify-center mb-4 group-hover:bg-sky-500/30 transition-colors">
                   <svg className="size-8 text-sky-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">

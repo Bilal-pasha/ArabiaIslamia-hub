@@ -43,9 +43,9 @@ export default function AdmissionStatusPage() {
         animate="visible"
         variants={fadeInUp}
         transition={defaultTransition}
-        className="min-h-screen p-6"
+        className="min-h-screen w-full min-w-0 overflow-x-hidden px-4 py-6 sm:p-6"
       >
-        <div className="mx-auto max-w-2xl">
+        <div className="mx-auto max-w-2xl w-full min-w-0">
           <MyApplicationView application={application} />
         </div>
       </motion.div>
@@ -59,9 +59,9 @@ export default function AdmissionStatusPage() {
       animate="visible"
       variants={fadeInUp}
       transition={defaultTransition}
-      className="min-h-screen flex items-center justify-center p-6"
+      className="min-h-screen w-full min-w-0 flex items-center justify-center px-4 py-6 sm:p-6 overflow-x-hidden"
     >
-      <div className="w-full max-w-md">
+      <div className="w-full max-w-md min-w-0">
         <Button variant="ghost" size="sm" asChild className="text-slate-300 hover:text-white hover:bg-white/10 mb-6">
           <Link href={publicRoutes.form} className="gap-2 inline-flex items-center text-sm font-medium">
             <svg className="size-4 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">

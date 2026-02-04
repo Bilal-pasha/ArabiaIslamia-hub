@@ -26,7 +26,7 @@ export function MyApplicationView({ application }: MyApplicationViewProps) {
     application.oralTestPassed === true && application.writtenAdmitEligible === true;
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 w-full min-w-0 overflow-x-hidden">
       <Button variant="ghost" size="sm" asChild className="text-slate-300 hover:text-white hover:bg-white/10 mb-4">
         <Link href={publicRoutes.status} className="gap-2 inline-flex items-center">
           <svg className="size-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -79,7 +79,7 @@ export function MyApplicationView({ application }: MyApplicationViewProps) {
             </div>
           )}
 
-          <div className="flex flex-wrap gap-3">
+          <div className="flex flex-wrap gap-2 sm:gap-3">
             {canPrintOralAdmit && (
               <Button asChild className="bg-orange-500 hover:bg-orange-600">
                 <Link href={`/registration/admit-card/oral/${encodeURIComponent(application.applicationNumber)}`}>

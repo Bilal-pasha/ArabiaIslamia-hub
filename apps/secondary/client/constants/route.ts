@@ -5,8 +5,10 @@ export const publicRoutes = {
 } as const;
 
 export const privateRoutes = {
+  dashboard: '/registration/admin',
   applications: '/registration/admin/applications',
   applicationDetail: (id: string) => `/registration/admin/applications/${id}`,
+  users: '/registration/admin/users',
   signin: '/registration/admin/signin',
 } as const;
 
