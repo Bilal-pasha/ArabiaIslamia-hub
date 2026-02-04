@@ -20,6 +20,9 @@ RUN pnpm --filter scouts-portal-api build
 # Deploy creates an isolated dir with node_modules (workspace deps included); dist is in .gitignore so copy it in
 RUN pnpm --filter scouts-portal-api deploy --prod deploy && cp -r apps/scouts-portal/api/dist deploy/dist
 
+COPY apps/scouts-portal/api/scripts/entrypoint.sh deploy/entrypoint.sh
+RUN chmod +x deploy/entrypoint.sh
+
 FROM node:20-alpine
 WORKDIR /app
 
@@ -27,4 +30,4 @@ COPY --from=builder /app/deploy .
 
 ENV NODE_ENV=production
 EXPOSE 8003
-CMD ["node", "dist/main.js"]
+CMD ["./entrypoint.sh"]

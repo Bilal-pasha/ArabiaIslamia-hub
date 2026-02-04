@@ -19,6 +19,9 @@ RUN pnpm --filter secondary-api build
 # Deploy creates an isolated dir with node_modules (workspace deps included); dist is in .gitignore so copy it in
 RUN pnpm --filter secondary-api deploy --prod deploy && cp -r apps/secondary/api/dist deploy/dist
 
+COPY apps/secondary/api/scripts/entrypoint.sh deploy/entrypoint.sh
+RUN chmod +x deploy/entrypoint.sh
+
 FROM node:20-alpine
 WORKDIR /app
 
@@ -26,4 +29,4 @@ COPY --from=builder /app/deploy .
 
 ENV NODE_ENV=production
 EXPOSE 8002
-CMD ["node", "dist/main.js"]
+CMD ["./entrypoint.sh"]

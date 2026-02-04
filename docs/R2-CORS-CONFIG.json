@@ -1,0 +1,26 @@
+[
+  {
+    "AllowedOrigins": [
+      "https://jamiaarabiaislamia.com",
+      "https://secondary.jamiaarabiaislamia.com",
+      "https://huffaz.jamiaarabiaislamia.com",
+      "https://portal.scouts.jamiaarabiaislamia.com",
+      "http://localhost:3000",
+      "http://localhost:3011",
+      "http://localhost:3012"
+    ],
+    "AllowedMethods": [
+      "PUT",
+      "POST",
+      "GET",
+      "HEAD"
+    ],
+    "AllowedHeaders": [
+      "*"
+    ],
+    "ExposeHeaders": [
+      "ETag"
+    ],
+    "MaxAgeSeconds": 3600
+  }
+]

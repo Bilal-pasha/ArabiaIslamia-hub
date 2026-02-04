@@ -9,6 +9,7 @@ services:
       # Dev credentials; must match secondary-api (and pgadmin if you use it). If you get "password authentication failed", remove the postgres volume and re-up: docker compose down -v && docker compose up -d
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: arabiaaislamia_db_dev
     ports:
       - "5432:5432"
     volumes:
@@ -83,6 +84,9 @@ services:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres
       SECONDARY_DB_NAME: secondary_db_dev
+      NEXT_PUBLIC_SECONDARY_API_URL: http://localhost:8002
+      NEXT_PUBLIC_HUFFAZ_API_URL: http://localhost:8001
+      NEXT_PUBLIC_SCOUTS_API_URL: http://localhost:8003
     ports:
       - "8002:8002"
     volumes:
@@ -95,7 +99,7 @@ services:
     depends_on:
       postgres:
         condition: service_healthy
-    command: sh -c "cd /app && pnpm install && pnpm --filter @arabiaaislamia/database run build && pnpm --filter @arabiaaislamia/storage run build && cd apps/secondary/api && pnpm run start:dev"
+    command: sh -c "cd /app && pnpm install && pnpm --filter @arabiaaislamia/database run build && pnpm --filter @arabiaaislamia/database run migrate:secondary && pnpm --filter @arabiaaislamia/storage run build && cd apps/secondary/api && pnpm run start:dev"
 
   # --- Frontend (UI) containers ---
   # main-website:
@@ -171,7 +175,7 @@ services:
   #   depends_on:
   #     postgres:
   #       condition: service_healthy
-  #   command: sh -c "cd /app && pnpm install && pnpm --filter @arabiaaislamia/database run build && pnpm --filter @arabiaaislamia/storage run build && cd apps/scouts-portal/api && pnpm run start:dev"
+  #   command: sh -c "cd /app && pnpm install && pnpm --filter @arabiaaislamia/database run build && pnpm --filter @arabiaaislamia/database run migrate:scouts-portal && pnpm --filter @arabiaaislamia/storage run build && cd apps/scouts-portal/api && pnpm run start:dev"
 
   # scouts-portal-app:
   #   build:
