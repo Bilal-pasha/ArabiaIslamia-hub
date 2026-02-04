@@ -12,7 +12,7 @@ interface FormNavigationProps {
 
 export function FormNavigation({ step, isSubmitting, onPrev, onNext, onSubmit }: FormNavigationProps) {
   return (
-    <div className="fixed bottom-0 left-0 right-0 z-30 border-t border-white/15 bg-white/5 backdrop-blur-xl py-3 px-3 sm:relative sm:bottom-auto sm:left-auto sm:right-auto sm:border-0 sm:bg-transparent sm:py-6 sm:px-0">
+    <div className="fixed bottom-0 left-0 right-0 z-30 border-t border-white/15 bg-white/5 backdrop-blur-xl py-3 px-3 sm:relative sm:bottom-auto sm:left-auto sm:right-auto sm:border-0 sm:bg-transparent sm:p-4 sm:px-0">
       <div className="flex flex-wrap justify-end gap-2 sm:gap-4 sm:px-0">
         <Button
           type="button"
