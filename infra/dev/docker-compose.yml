@@ -28,6 +28,9 @@ services:
     restart: unless-stopped
     env_file:
       - ./.env
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@jamiaarabiaislamia.com
+      PGADMIN_DEFAULT_PASSWORD: admin
     ports:
       - "5050:5050"
     volumes:
@@ -95,20 +98,20 @@ services:
     command: sh -c "cd /app && pnpm install && pnpm --filter @arabiaaislamia/database run build && pnpm --filter @arabiaaislamia/storage run build && cd apps/secondary/api && pnpm run start:dev"
 
   # --- Frontend (UI) containers ---
-  main-website:
-    build:
-      context: ../..
-      dockerfile: apps/main-website/Dockerfile.dev
-    container_name: main-website-dev
-    restart: unless-stopped
-    ports:
-      - "3000:3000"
-    volumes:
-      - ../../apps/main-website:/app/apps/main-website
-      - main-website-node_modules:/app/apps/main-website/node_modules
-    networks:
-      - app-network-dev
-    command: sh -c "cd /app && pnpm install && cd apps/main-website && pnpm run dev"
+  # main-website:
+  #   build:
+  #     context: ../..
+  #     dockerfile: apps/main-website/Dockerfile.dev
+  #   container_name: main-website-dev
+  #   restart: unless-stopped
+  #   ports:
+  #     - "3000:3000"
+  #   volumes:
+  #     - ../../apps/main-website:/app/apps/main-website
+  #     - main-website-node_modules:/app/apps/main-website/node_modules
+  #   networks:
+  #     - app-network-dev
+  #   command: sh -c "cd /app && pnpm install && cd apps/main-website && pnpm run dev"
 
   # huffaz-app:
   #   build:
@@ -137,56 +140,55 @@ services:
     networks:
       - app-network-dev
     command: sh -c "cd /app && pnpm install && cd apps/secondary/client && pnpm run dev"
+  # scouts-portal-api:
+  #   build:
+  #     context: ../..
+  #     dockerfile: apps/scouts-portal/api/Dockerfile.dev
+  #   container_name: scouts-portal-api-dev
+  #   restart: unless-stopped
+  #   env_file:
+  #     - ./.env
+  #   environment:
+  #     DB_HOST: postgres
+  #     DB_PORT: 5432
+  #     POSTGRES_USER: postgres
+  #     POSTGRES_PASSWORD: postgres
+  #     SCOUTS_PORTAL_DB_NAME: scouts_portal_db_dev
+  #     SERVER_PORT: 8003
+  #     JWT_SECRET: dev-jwt-secret
+  #     JWT_EXPIRES_IN: 1h
+  #     JWT_REFRESH_SECRET: dev-refresh-secret
+  #     JWT_REFRESH_EXPIRES_IN: 7d
+  #   ports:
+  #     - "8003:8003"
+  #   volumes:
+  #     - ../../packages/database:/app/packages/database
+  #     - ../../apps/scouts-portal/api:/app/apps/scouts-portal/api
+  #     - scouts-portal-api-node_modules:/app/apps/scouts-portal/api/node_modules
+  #     - scouts-portal-database-node_modules:/app/packages/database/node_modules
+  #   networks:
+  #     - app-network-dev
+  #   depends_on:
+  #     postgres:
+  #       condition: service_healthy
+  #   command: sh -c "cd /app && pnpm install && pnpm --filter @arabiaaislamia/database run build && pnpm --filter @arabiaaislamia/storage run build && cd apps/scouts-portal/api && pnpm run start:dev"
 
-  scouts-portal-api:
-    build:
-      context: ../..
-      dockerfile: apps/scouts-portal/api/Dockerfile.dev
-    container_name: scouts-portal-api-dev
-    restart: unless-stopped
-    env_file:
-      - ./.env
-    environment:
-      DB_HOST: postgres
-      DB_PORT: 5432
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: postgres
-      SCOUTS_PORTAL_DB_NAME: scouts_portal_db_dev
-      SERVER_PORT: 8003
-      JWT_SECRET: dev-jwt-secret
-      JWT_EXPIRES_IN: 1h
-      JWT_REFRESH_SECRET: dev-refresh-secret
-      JWT_REFRESH_EXPIRES_IN: 7d
-    ports:
-      - "8003:8003"
-    volumes:
-      - ../../packages/database:/app/packages/database
-      - ../../apps/scouts-portal/api:/app/apps/scouts-portal/api
-      - scouts-portal-api-node_modules:/app/apps/scouts-portal/api/node_modules
-      - scouts-portal-database-node_modules:/app/packages/database/node_modules
-    networks:
-      - app-network-dev
-    depends_on:
-      postgres:
-        condition: service_healthy
-    command: sh -c "cd /app && pnpm install && pnpm --filter @arabiaaislamia/database run build && pnpm --filter @arabiaaislamia/storage run build && cd apps/scouts-portal/api && pnpm run start:dev"
-
-  scouts-portal-app:
-    build:
-      context: ../..
-      dockerfile: apps/scouts-portal/client/Dockerfile.dev
-    container_name: scouts-portal-app-dev
-    ports:
-      - "3012:3012"
-    restart: unless-stopped
-    environment:
-      NEXT_PUBLIC_SCOUTS_API_URL: http://localhost:8003
-    volumes:
-      - ../../apps/scouts-portal/client:/app/apps/scouts-portal/client
-      - scouts-portal-app-node_modules:/app/apps/scouts-portal/client/node_modules
-    networks:
-      - app-network-dev
-    command: sh -c "cd /app && pnpm install && cd apps/scouts-portal/client && pnpm run dev"
+  # scouts-portal-app:
+  #   build:
+  #     context: ../..
+  #     dockerfile: apps/scouts-portal/client/Dockerfile.dev
+  #   container_name: scouts-portal-app-dev
+  #   ports:
+  #     - "3012:3012"
+  #   restart: unless-stopped
+  #   environment:
+  #     NEXT_PUBLIC_SCOUTS_API_URL: http://localhost:8003
+  #   volumes:
+  #     - ../../apps/scouts-portal/client:/app/apps/scouts-portal/client
+  #     - scouts-portal-app-node_modules:/app/apps/scouts-portal/client/node_modules
+  #   networks:
+  #     - app-network-dev
+  #   command: sh -c "cd /app && pnpm install && cd apps/scouts-portal/client && pnpm run dev"
 
 networks:
   app-network-dev:

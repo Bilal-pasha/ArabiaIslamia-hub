@@ -1,9 +1,16 @@
 import { SEO_DEFAULTS } from '@/constants/seo';
 
 export const metadata = {
-  title: `About Us | ${SEO_DEFAULTS.siteName}`,
+  title: 'About Us',
   description:
-    'Learn about Jamia Arabia Islamia – our mission, vision, and dedication to Islamic education. Tahfeez ul Quran, Darse Nizami, Mahad ul Arabia. Support the next generation of scholars and leaders.',
+    'Learn about Jamia Arabia Islamia – our mission, vision, and dedication to Islamic education. Tahfeez ul Quran, Darse Nizami, Mahad ul Arabia. Support the next generation of scholars and leaders in Karachi.',
+  keywords: [
+    'about Jamia Arabia Islamia',
+    'Islamic education mission',
+    'scholars and leaders',
+    'Islamic studies Karachi',
+    'charity Islamic education',
+  ],
   openGraph: {
     title: `About Us | ${SEO_DEFAULTS.siteName}`,
     description:

@@ -6,9 +6,13 @@ export const metadata = {
     'Admissions, scholarships, downloads, and results at Jamia Arabia Islamia. Find information about applying, scholarship opportunities, and examination results.',
   keywords: [
     'Jamia Arabia Islamia admissions',
+    'madrasa admission form',
     'Islamic school scholarships',
-    'Madrasa results',
-    'Jamia Arabia Islamia downloads',
+    'scholarship for Hifz students',
+    'madrasa results',
+    'examination results',
+    'prospectus download',
+    'admission requirements',
   ],
   openGraph: {
     title: `More | ${SEO_DEFAULTS.siteName}`,

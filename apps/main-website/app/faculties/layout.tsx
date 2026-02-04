@@ -6,11 +6,15 @@ export const metadata = {
     'Explore Jamia Arabia Islamia faculties: Tahfeez ul Quran, Darse Nizami, Mahad ul Arabia, and Schooling System. Islamic education combining tradition with modern learning.',
   keywords: [
     'Tahfeez ul Quran',
+    'Hifz Quran program',
     'Darse Nizami',
+    'Dars e Nizami curriculum',
     'Mahad ul Arabia',
-    'Islamic seminary',
+    'Arabic language course',
+    'Schooling System',
+    'Islamic seminary Karachi',
     'Quran memorization',
-    'Islamic studies Karachi',
+    'Islamic studies Pakistan',
   ],
   openGraph: {
     title: `Faculties | ${SEO_DEFAULTS.siteName}`,
