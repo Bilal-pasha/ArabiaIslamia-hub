@@ -22,15 +22,17 @@ export interface NavLinkItem {
   links?: NavChildLink[];
 }
 
-/** App URLs: use env for deployed domains, fallback to relative paths for same-origin */
-const secondaryAppUrl =
-  typeof process !== 'undefined' && process.env?.NEXT_PUBLIC_SECONDARY_APP_URL
-    ? process.env.NEXT_PUBLIC_SECONDARY_APP_URL
-    : '/secondary';
-const huffazAppUrl =
-  typeof process !== 'undefined' && process.env?.NEXT_PUBLIC_HUFFAZ_APP_URL
-    ? process.env.NEXT_PUBLIC_HUFFAZ_APP_URL
-    : '/huffaz';
+/**
+ * App URLs: must come from env — base path/domain differs per app, so do not use /{app} redirects.
+ * Set NEXT_PUBLIC_SECONDARY_APP_URL, NEXT_PUBLIC_HUFFAZ_APP_URL, NEXT_PUBLIC_SCOUTS_APP_URL
+ * to full URLs (e.g. https://secondary.example.com or https://example.com/secondary).
+ */
+const getAppUrl = (key: string): string =>
+  typeof process !== 'undefined' && process.env?.[key] ? String(process.env[key]).trim() : '';
+
+const secondaryAppUrl = getAppUrl('NEXT_PUBLIC_SECONDARY_APP_URL');
+const huffazAppUrl = getAppUrl('NEXT_PUBLIC_HUFFAZ_APP_URL');
+const scoutsAppUrl = getAppUrl('NEXT_PUBLIC_SCOUTS_APP_URL');
 
 export const NAV_DATA: NavLinkItem[] = [
   {
@@ -57,7 +59,7 @@ export const NAV_DATA: NavLinkItem[] = [
   },
 ];
 
-/** Application portals (Secondary School, Huffaz) — used in header and footer */
+/** Application portals (Secondary, Huffaz, Scouts) — used in header and footer; hrefs from env only */
 export interface AppLinkItem {
   text: string;
   href: string;
@@ -67,4 +69,5 @@ export interface AppLinkItem {
 export const APP_LINKS: AppLinkItem[] = [
   { text: 'Secondary School', href: secondaryAppUrl, description: 'Portal & admissions' },
   { text: 'Huffaz', href: huffazAppUrl, description: 'Tahfeez & registration' },
-];
+  { text: 'Scouts Portal', href: scoutsAppUrl, description: 'Scouts registration & portal' },
+].filter((app) => app.href !== '');

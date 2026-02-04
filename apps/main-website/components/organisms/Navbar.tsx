@@ -125,10 +125,10 @@ export function Navbar() {
         <div className="hidden w-8 md:block md:w-0" aria-hidden />
       </div>
 
-      {/* Mobile drawer */}
+      {/* Mobile drawer: above navbar (z-[100]) so it’s visible when open */}
       <div
         className={cn(
-          'fixed inset-0 z-40 md:hidden',
+          'fixed inset-0 z-[100] md:hidden',
           mobileOpen ? 'pointer-events-auto' : 'pointer-events-none'
         )}
         aria-hidden={!mobileOpen}
@@ -144,7 +144,7 @@ export function Navbar() {
         />
         <div
           className={cn(
-            'absolute right-0 top-0 h-full w-full max-w-sm overflow-y-auto',
+            'absolute right-0 top-0 z-10 h-full w-full max-w-sm overflow-y-auto',
             'bg-gradient-to-br from-amber-50 via-white to-amber-50/80 shadow-2xl',
             'transition-transform duration-300 ease-out',
             mobileOpen ? 'translate-x-0' : 'translate-x-full'
