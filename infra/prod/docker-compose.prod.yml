@@ -1,7 +1,7 @@
 services:
   postgres:
     image: postgres:16-alpine
-    container_name: arabiaaislamia-postgres
+    container_name: arabiaislamia-hub-postgres
     restart: unless-stopped
     env_file:
       - ./.env
@@ -18,7 +18,7 @@ services:
 
   redis:
     image: redis:7-alpine
-    container_name: arabiaaislamia-redis
+    container_name: arabiaislamia-hub-redis
     restart: unless-stopped
     env_file:
       - ./.env
@@ -53,7 +53,7 @@ services:
 
   secondary-api:
     image: ${REGISTRY}/${IMAGE_NAME_LOWER}-secondary-api:latest
-    container_name: arabiaaislamia-secondary-api
+    container_name: arabiaislamia-hub-secondary-api
     restart: unless-stopped
     env_file:
       - ./.env
@@ -66,7 +66,7 @@ services:
   # --- Frontend (UI) containers ---
   main-website:
     image: ${REGISTRY}/${IMAGE_NAME_LOWER}-main-website:latest
-    container_name: arabiaaislamia-main-website
+    container_name: arabiaislamia-hub-main-website
     restart: unless-stopped
     env_file:
       - ./.env
@@ -77,7 +77,7 @@ services:
 
   # huffaz-app:
   #   image: ${REGISTRY}/${IMAGE_NAME_LOWER}-huffaz-app:latest
-  #   container_name: arabiaaislamia-huffaz-client
+  #   container_name: arabiaislamia-hub-huffaz-app
   #   restart: unless-stopped
   #   environment:
   #     NODE_ENV: production
@@ -86,7 +86,7 @@ services:
 
   secondary-app:
     image: ${REGISTRY}/${IMAGE_NAME_LOWER}-secondary-app:latest
-    container_name: arabiaaislamia-secondary-client
+    container_name: arabiaislamia-hub-secondary-app
     restart: unless-stopped
     env_file:
       - ./.env
@@ -96,7 +96,7 @@ services:
       - app-network
   caddy:
     image: caddy:2-alpine
-    container_name: arabiaaislamia-caddy
+    container_name: arabiaislamia-hub-caddy
     restart: unless-stopped
     env_file:
       - ./.env

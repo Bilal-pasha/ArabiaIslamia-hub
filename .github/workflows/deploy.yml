@@ -22,6 +22,8 @@ on:
 
 env:
   REGISTRY: ghcr.io
+  # Deployment directory on server (matches repo name ArabiaIslamia-hub)
+  DEPLOY_DIR: arabiaislamia-hub
 
 jobs:
   deploy:
@@ -43,9 +45,9 @@ jobs:
           key: ${{ secrets.EC2_SSH_KEY }}
           port: 22
           script: |
-            sudo mkdir -p /home/${{ secrets.EC2_USERNAME }}/arabiaaislamia-hub
-            sudo chown -R ${{ secrets.EC2_USERNAME }}:${{ secrets.EC2_USERNAME }} /home/${{ secrets.EC2_USERNAME }}/arabiaaislamia-hub
-            chmod -R 755 /home/${{ secrets.EC2_USERNAME }}/arabiaaislamia-hub
+            sudo mkdir -p /home/${{ secrets.EC2_USERNAME }}/${{ env.DEPLOY_DIR }}
+            sudo chown -R ${{ secrets.EC2_USERNAME }}:${{ secrets.EC2_USERNAME }} /home/${{ secrets.EC2_USERNAME }}/${{ env.DEPLOY_DIR }}
+            chmod -R 755 /home/${{ secrets.EC2_USERNAME }}/${{ env.DEPLOY_DIR }}
 
       - name: Copy Docker Compose and config
         uses: appleboy/scp-action@v0.1.7
@@ -54,7 +56,7 @@ jobs:
           username: ${{ secrets.EC2_USERNAME }}
           key: ${{ secrets.EC2_SSH_KEY }}
           source: "infra/prod/docker-compose.prod.yml,infra/prod/init-databases.sql,infra/prod/.env,infra/prod/config/Caddyfile"
-          target: "/home/${{ secrets.EC2_USERNAME }}/arabiaaislamia-hub"
+          target: "/home/${{ secrets.EC2_USERNAME }}/${{ env.DEPLOY_DIR }}"
           strip_components: 2
 
       - name: Deploy application
@@ -69,7 +71,7 @@ jobs:
           envs: REGISTRY,IMAGE_NAME_LOWER,GITHUB_TOKEN
           script: |
             set -e
-            cd /home/${{ secrets.EC2_USERNAME }}/arabiaaislamia-hub
+            cd /home/${{ secrets.EC2_USERNAME }}/${{ env.DEPLOY_DIR }}
 
             echo "$GITHUB_TOKEN" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
 
