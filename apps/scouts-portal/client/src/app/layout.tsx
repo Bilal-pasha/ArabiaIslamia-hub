@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import "./globals.css";
-import { Toaster } from "react-hot-toast";
+import { Toaster } from "@arabiaaislamia/ui";
 import { SessionWrapper } from "@/components/SessionWrapper/SessionWrapper";
 import { Suspense } from "react";
 import { FallBackComponent } from "@/components/FallBackComponent/FallBackComponent";
@@ -22,7 +22,7 @@ export default function RootLayout({
       <body className="bg-white">
         <Suspense fallback={<FallBackComponent />}>
           <SessionWrapper>
-            <Toaster position="top-right" />
+            <Toaster position="top-right" richColors />
             {children}
           </SessionWrapper>
         </Suspense>

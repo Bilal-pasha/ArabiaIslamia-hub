@@ -8,6 +8,7 @@ import { AppService } from './app.service';
 import { AuthModule } from './api/auth/auth.module';
 import { MadrasasModule } from './api/madrasas/madrasas.module';
 import { StudentsModule } from './api/students/students.module';
+import { UploadModule } from './api/upload/upload.module';
 
 @Module({
   imports: [
@@ -24,6 +25,7 @@ import { StudentsModule } from './api/students/students.module';
     AuthModule,
     MadrasasModule,
     StudentsModule,
+    UploadModule,
   ],
   controllers: [AppController],
   providers: [AppService],

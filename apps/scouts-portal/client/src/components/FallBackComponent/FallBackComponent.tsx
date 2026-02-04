@@ -1,11 +1,13 @@
 import React from 'react'
 import Image from "next/image";
-import fallbackImage from "/public/assets/FallBack.png"
+
+const FALLBACK_IMAGE = "/assets/FallBack.png";
+
 export const FallBackComponent = () => {
   return (
     <div className='h-screen w-screen flex justify-center items-center'>
          <Image
-          src={fallbackImage}
+          src={FALLBACK_IMAGE}
           alt="Jamia Arabia Islamia Logo"
           width={150}
           height={150}

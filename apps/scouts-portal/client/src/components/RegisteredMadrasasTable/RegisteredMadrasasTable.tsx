@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import Link from "next/link";
-import { TableSkeleton } from "@/components/TableSkeleton/TabelSkeleton";
+import { TableSkeleton } from "@arabiaaislamia/ui";
 import { Button } from "@/components/Button/Button";
 import { useMadrasaRegistrationContext } from "@/context/useMadrasaRegistrationContext";
 import { StatusIndicator } from "@/components/Drawer/Drawer";
@@ -9,8 +9,13 @@ import { NotificationModal } from "@/components/Modal/NotificationModal";
 import useSearchRole from "@/hooks/useSearchRole/useSearchRole";
 import { protectedRoutes } from "@/utils/routes";
 import { BsThreeDotsVertical } from "react-icons/bs";
-import { Dropdown } from "flowbite-react";
-import toast from "react-hot-toast";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@arabiaaislamia/ui";
+import { toast } from "@arabiaaislamia/ui";
 import { apiClient } from "@/utils/axios-instance";
 
 const MadrasaTable: React.FC = () => {
@@ -129,24 +134,25 @@ const MadrasaTable: React.FC = () => {
                 {userName === ROLE.ADMIN && (
                   <td className="py-3 px-5 border-l border-green-200">
                     <div className="flex items-center justify-center relative">
-                      <Dropdown
-                        label=""
-                        renderTrigger={() => (
-                          <BsThreeDotsVertical className="cursor-pointer" />
-                        )}
-                        className="absolute !left-[-60px] !top-5" // Adjust this value to move left
-                      >
-                        {dropdownOptions.map((dropdownItem, index) => (
-                          <Dropdown.Item
-                            key={index}
-                            onClick={() =>
-                              handleSelectStatus(dropdownItem, madrasa._id)
-                            }
-                          >
-                            {dropdownItem}
-                          </Dropdown.Item>
-                        ))}
-                      </Dropdown>
+                      <DropdownMenu>
+                        <DropdownMenuTrigger asChild>
+                          <button type="button" className="cursor-pointer p-1 rounded hover:bg-gray-100">
+                            <BsThreeDotsVertical className="h-5 w-5" />
+                          </button>
+                        </DropdownMenuTrigger>
+                        <DropdownMenuContent align="end" className="absolute left-[-60px] top-5">
+                          {dropdownOptions.map((dropdownItem, index) => (
+                            <DropdownMenuItem
+                              key={index}
+                              onClick={() =>
+                                handleSelectStatus(dropdownItem, madrasa._id)
+                              }
+                            >
+                              {dropdownItem}
+                            </DropdownMenuItem>
+                          ))}
+                        </DropdownMenuContent>
+                      </DropdownMenu>
                     </div>
                   </td>
                 )}
@@ -159,8 +165,8 @@ const MadrasaTable: React.FC = () => {
         openModal={openModal}
         setOpenModal={setOpenModal}
         text={`${currentStatus === "Pending"
-            ? "Your registration status is currently pending. Please wait until it is approved to proceed with your madrasa registration."
-            : "Your registration status is currently Rejected. Please Contact SupportArabia@gmail.com"
+          ? "Your registration status is currently pending. Please wait until it is approved to proceed with your madrasa registration."
+          : "Your registration status is currently Rejected. Please Contact SupportArabia@gmail.com"
           }`}
       />
     </>

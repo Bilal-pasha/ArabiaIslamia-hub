@@ -1,20 +1,19 @@
 "use client";
 import React, { useEffect, useRef, useState } from "react";
-import toast from "react-hot-toast";
+import { toast } from "@arabiaaislamia/ui";
 import { apiClient } from "@/utils/axios-instance";
 import { AddNewStudentModal } from "@/components/AddNewStudentModal/AddNewStudentModal";
 import { Button } from "@/components/Button/Button";
 import Drawer from "@/components/Drawer/Drawer";
-import { TableSkeleton } from "@/components/TableSkeleton/TabelSkeleton";
+import { TableSkeleton } from "@arabiaaislamia/ui";
 import { IoPrintSharp } from "react-icons/io5";
 import ReactToPrint from "react-to-print";
 import { STATUS, SubCamps } from "@/constant/constant";
 import Image from "next/image";
-import IqbalCampSlipImage from "/public/assets/iqbalCamp.jpeg";
-import JinnahCampSlipImage from "/public/assets/jinnahCamp.jpeg";
-import LiaqatCampSlipImage from "/public/assets/liaqatCamp.jpeg";
-import JinnahCardImage from "/public/assets/Jinnah-card.jpg";
-import IqbalCardImage from "/public/assets/Iqbal-card.jpg";
+import { PresignedImage } from "@/components/PresignedImage/PresignedImage";
+
+const JINNAH_CARD_IMAGE = "/assets/Jinnah-card.jpg";
+const IQBAL_CARD_IMAGE = "/assets/Iqbal-card.jpg";
 
 interface Student {
   studentName: string;
@@ -48,7 +47,7 @@ const PrintContent = React.forwardRef<HTMLDivElement, { students: any }>(
               {/* Background Card Image based on subCamp */}
               {student.subCamp === SubCamps.Jinnah && (
                 <Image
-                  src={JinnahCardImage}
+                  src={JINNAH_CARD_IMAGE}
                   alt="Jinnah Card Background"
                   fill
                   style={{ objectFit: "cover" }}
@@ -56,7 +55,7 @@ const PrintContent = React.forwardRef<HTMLDivElement, { students: any }>(
               )}
               {student.subCamp === SubCamps.Iqbal && (
                 <Image
-                  src={IqbalCardImage}
+                  src={IQBAL_CARD_IMAGE}
                   alt="Iqbal Card Background"
                   fill
                   style={{ objectFit: "cover" }}
@@ -65,8 +64,8 @@ const PrintContent = React.forwardRef<HTMLDivElement, { students: any }>(
 
               {/* Student Photo */}
               {student.fileUrl && (
-                <Image
-                  src={student.fileUrl}
+                <PresignedImage
+                  fileUrl={student.fileUrl}
                   alt="Student"
                   width={100}
                   height={100}

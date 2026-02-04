@@ -1,9 +1,17 @@
 "use client";
 
-import { Button, Modal } from "flowbite-react";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogFooter,
+  DialogDescription,
+  Button,
+} from "@arabiaaislamia/ui";
 import { useEffect, useState } from "react";
 
-interface NotificationModal {
+interface NotificationModalProps {
   openModal: boolean;
   setOpenModal: (value: boolean) => void;
   text: string;
@@ -13,7 +21,7 @@ export function NotificationModal({
   openModal,
   setOpenModal,
   text,
-}: NotificationModal) {
+}: NotificationModalProps) {
   const [isVisible, setIsVisible] = useState(openModal);
 
   useEffect(() => {
@@ -24,31 +32,25 @@ export function NotificationModal({
 
   const handleClose = () => {
     setOpenModal(false);
-    setTimeout(() => setIsVisible(false), 300); // Wait for the transition to finish
+    setTimeout(() => setIsVisible(false), 300);
   };
 
   return (
-    <>
-      <Modal
-        dismissible
-        show={isVisible}
-        onClose={handleClose}
-        className={`transition-opacity duration-1000 ${openModal ? 'opacity-100' : 'opacity-0'}`}
-      >
-        <Modal.Header>Notification</Modal.Header>
-        <Modal.Body>
-          <div className="space-y-6">
-            <p className="text-base leading-relaxed text-gray-500 dark:text-gray-400">
-              {text}
-            </p>
-          </div>
-        </Modal.Body>
-        <Modal.Footer>
-          <Button color="gray" onClick={handleClose}>
+    <Dialog open={isVisible} onOpenChange={(open) => !open && handleClose()}>
+      <DialogContent showClose={true} className={openModal ? "opacity-100" : "opacity-0"}>
+        <DialogHeader>
+          <DialogTitle>Notification</DialogTitle>
+          <DialogDescription>{text}</DialogDescription>
+        </DialogHeader>
+        <div className="space-y-6 py-2">
+          <p className="text-base leading-relaxed text-muted-foreground">{text}</p>
+        </div>
+        <DialogFooter>
+          <Button variant="secondary" onClick={handleClose}>
             Cancel
           </Button>
-        </Modal.Footer>
-      </Modal>
-    </>
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
   );
 }

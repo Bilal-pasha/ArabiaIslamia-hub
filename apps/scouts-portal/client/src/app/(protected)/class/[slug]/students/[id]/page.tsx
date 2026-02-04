@@ -2,9 +2,7 @@
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/Button/Button";
 import { useEffect, useRef, useState } from "react";
-import { Modal } from "@/components/Modal/Modal";
-import toast from "react-hot-toast";
-import { TableSkeleton } from "@/components/TableSkeleton/TabelSkeleton";
+import { toast, TableSkeleton, AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from "@arabiaaislamia/ui";
 import StudentModal from "@/components/StudentModal/StudenModal";
 import { FaArrowLeft } from "react-icons/fa";
 import { useReactToPrint } from "react-to-print";
@@ -22,19 +20,16 @@ export default function Page({ params }: any) {
   const invoiceRef = useRef(null);
   const { student, setStudent } = useStudentData(setIsLoading, params);
   const handleDeleteButton = async (studentId: string) => {
-    setModal(true);
     try {
       const res = await apiClient.delete(`/api/students/${studentId}`);
       if (res.data?.success ?? res.status === 200) {
+        setModal(false);
         router.back();
         toast.success(res.data?.message ?? "Deleted");
       }
     } catch (error: unknown) {
       toast.error(error instanceof Error ? error.message : "Failed to delete");
     }
-  };
-  const closeModal = () => {
-    setModal(false);
   };
   const handlePrint = useReactToPrint({
     content: () => invoiceRef.current,
@@ -77,7 +72,7 @@ export default function Page({ params }: any) {
               <div className="grid mb-4 grid-cols-3 items">
                 <h2 className="text-xl font-semibold  col-span-1">Status</h2>
                 <div className=" gap-2 mt-2 space-y-2 space-x-4 col-span-2">
-                  {student?.feesStatusChart?.map((m: any, index: number) => (
+                  {(Array.isArray(student?.feesStatusChart) ? student.feesStatusChart : []).map((m: any, index: number) => (
                     <span
                       key={m.month + index}
                       className={`inline-block py-2 px-4 rounded-lg text-sm font-semibold 
@@ -107,7 +102,20 @@ export default function Page({ params }: any) {
               </div>
             </div>
             {updateModal && <StudentModal setStudents={setStudents} students={students} setIsModalOpen={setUpdateModal} id={params.id} studentData={student} setStudent={setStudent} />}
-            {modal && <Modal closeModal={closeModal} handleFunction={handleDeleteButton} id={params.id} name={student?.name} />}
+            <AlertDialog open={modal} onOpenChange={setModal}>
+              <AlertDialogContent>
+                <AlertDialogHeader>
+                  <AlertDialogTitle>Confirm Delete</AlertDialogTitle>
+                  <AlertDialogDescription>
+                    {`Are you sure you want to delete ${student?.name ?? "this student"}?`}
+                  </AlertDialogDescription>
+                </AlertDialogHeader>
+                <AlertDialogFooter>
+                  <AlertDialogCancel>Cancel</AlertDialogCancel>
+                  <AlertDialogAction onClick={() => handleDeleteButton(params.id)}>Delete</AlertDialogAction>
+                </AlertDialogFooter>
+              </AlertDialogContent>
+            </AlertDialog>
             <Invoice ref={invoiceRef} student={student} />
           </>
         )}

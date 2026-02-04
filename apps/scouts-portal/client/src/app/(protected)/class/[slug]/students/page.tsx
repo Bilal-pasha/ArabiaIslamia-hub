@@ -2,7 +2,7 @@
 import { Button } from "@/components/Button/Button";
 import Link from "next/link";
 import React, { useRef, useState } from "react";
-import { TableSkeleton } from "@/components/TableSkeleton/TabelSkeleton";
+import { TableSkeleton } from "@arabiaaislamia/ui";
 import StudentModal from "@/components/StudentModal/StudenModal";
 import { getCurrentMonthYear, tableHead } from "@/constant/constant";
 import { useRouter } from "next/navigation";

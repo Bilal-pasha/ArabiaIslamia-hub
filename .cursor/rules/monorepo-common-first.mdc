@@ -1,0 +1,62 @@
+---
+alwaysApply: true
+---
+# Monorepo: Common Packages First
+
+## Golden rule
+
+**Before building or adding any feature, component, or utility:**
+
+1. **Check** whether it already exists or can be built from shared packages under `packages/`.
+2. **Use or extend** the common package; only add app-specific code in `apps/<school>/` when it cannot live in a package.
+3. **Prefer** one implementation in a package over duplicate logic in multiple apps.
+
+This keeps the monorepo DRY, consistent, and easier to maintain.
+
+---
+
+## Shared packages (`packages/`)
+
+| Package | Purpose | Use when you need |
+|--------|--------|--------------------|
+| **`@arabiaaislamia/ui`** | UI primitives (shadcn-style) | Buttons, inputs, dialogs, sheets, dropdowns, tables, badges, alerts, toasts, spinners, skeletons, avatars, confirm dialogs, client-only wrapper. Import from `@arabiaaislamia/ui`. Do not add a local Button/Modal/Spinner/Toast if the UI package can provide it. |
+| **`@arabiaaislamia/animations`** | Motion variants | Framer Motion variants: fadeIn, fadeInUp, staggerContainer, etc. |
+| **`@arabiaaislamia/constants`** | Shared constants | Routes, config, or enums used by more than one app. |
+| **`@arabiaaislamia/database`** | Data layer | TypeORM entities, data sources, migrations. School-specific data sources live here; apps depend on this package. |
+| **`@arabiaaislamia/storage`** | Object storage | Presigned URLs, R2 helpers. Use for upload/download flows instead of reimplementing in an app. |
+
+---
+
+## Workflow
+
+### Adding a UI element (button, modal, table, toast, etc.)
+
+1. Open `packages/ui/src/index.ts` (and `packages/ui/src/components/`) and check for an existing component.
+2. If it exists: use it from `@arabiaaislamia/ui` in the app. If the API is close but not exact, extend via props/className or suggest a small change in the package.
+3. If it does not exist and the component is **generic** (reusable across schools): add it in `packages/ui`, then use it in the app.
+4. If it is **app/school-specific** (e.g. scouts-only layout): implement in `apps/<school>/client/src/components/`.
+
+### Adding a utility or hook
+
+1. Check `packages/` first (e.g. storage helpers in `@arabiaaislamia/storage`, animation variants in `@arabiaaislamia/animations`).
+2. If the logic is shared across apps: add it to the appropriate package (or a new one if it’s a new concern).
+3. If it’s app-specific: keep it in the app (e.g. `apps/scouts-portal/client/src/utils/` or `hooks/`).
+
+### Adding API or data access
+
+1. Use `@arabiaaislamia/database` for entities and data sources. See [project-structure.mdc](mdc:project-structure.mdc) for API entry points (`apps/<school>/api/`).
+2. API docs at repo root are the source of truth for endpoints and types.
+
+---
+
+## Quick reference: `packages/ui` exports
+
+- **Layout / overlay:** Card, Dialog, Sheet, AlertDialog  
+- **Forms:** Button, Input, Label, Textarea, Select  
+- **Feedback:** Alert, Badge, Spinner, Skeleton, TableSkeleton, Toaster/toast (Sonner)  
+- **Data display:** Table (TableHeader, TableBody, TableRow, TableCell, etc.)  
+- **Menus / actions:** DropdownMenu (Trigger, Content, Item, etc.)  
+- **Media / identity:** Avatar, AvatarImage, AvatarFallback  
+- **Utilities:** ClientOnly, SecondaryLogo, buttonVariants, cn via `lib/utils`  
+
+When in doubt, read `packages/ui/src/index.ts` for the full list before creating a new component in an app.

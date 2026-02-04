@@ -1,87 +1,108 @@
 "use client";
 import React from "react";
-import { Formik, Form, Field, ErrorMessage } from "formik";
-import toast from "react-hot-toast";
+import { useForm, Controller, toast, yupResolver, type Resolver } from "@arabiaaislamia/ui";
 import { validationSchema } from "./validationSchema";
 import { activities, SubCamps } from "@/constant/constant";
 import { apiClient } from "@/utils/axios-instance";
+import { getPresignedUrl, uploadToPresignedUrl } from "@/services/upload/upload.service";
+
+type UpdateStudentFormValues = {
+  studentName: string;
+  FatherName: string;
+  ageGroup: string;
+  grade: string;
+  TshirtSize: string;
+  activity: string;
+  status: string;
+  group: string;
+  camp: string;
+  subCamp: string;
+  report: string;
+  image?: FileList | null;
+};
 
 export const UpdateStudentModal = ({
   setModalOpen,
-  // madrasaId,
   student,
   handleClose,
-}: any) => {
-  // Early return if no student data
-  if (!student) {
-    console.error("No student data provided to UpdateStudentModal");
-    return null;
-  }
+}: {
+  setModalOpen: (v: boolean) => void;
+  student: any;
+  handleClose: () => void;
+}) => {
+  if (!student) return null;
 
-  // Helper function to convert age to age group
   const getAgeGroupFromAge = (age: number | string) => {
-    const numAge = typeof age === 'string' ? parseInt(age) : age;
+    const numAge = typeof age === "string" ? parseInt(age) : age;
     if (numAge >= 13 && numAge <= 16) return "13-16";
     if (numAge >= 17 && numAge <= 20) return "17-20";
     return "";
   };
-
-  // Helper function to extract age group value from full label
   const getAgeGroupValue = (ageGroupLabel: string) => {
-    if (ageGroupLabel.includes("13-16")) return "13-16";
-    if (ageGroupLabel.includes("17-20")) return "17-20";
-    return ageGroupLabel; // Return as-is if it's already a value
+    if (ageGroupLabel?.includes("13-16")) return "13-16";
+    if (ageGroupLabel?.includes("17-20")) return "17-20";
+    return ageGroupLabel ?? "";
   };
 
-  // Initial form values - handle cases where student might be undefined or properties don't exist
-  const initialValues = {
-    studentName: student?.studentName || student?.name || "",
-    FatherName: student?.FatherName || student?.fatherName || "",
-    ageGroup: student?.ageGroup ? getAgeGroupValue(student.ageGroup) : (student?.age ? getAgeGroupFromAge(student.age) : ""), // Convert age group label to value or age to age group
-    grade: student?.grade || "",
-    TshirtSize: student?.TshirtSize || student?.tshirtSize || "",
-    activity: student?.activity || "",
-    status: student?.status || "", // New field for status
-    group: student?.group || "", // New field for group
-    camp: student?.camp || "", // New field for camp
-    subCamp: student?.subCamp || "", // New field for sub-camp
-    report: student?.report || "", // New field for student report
-  };
-
-  // Age groups
   const ageGroups = [
     { value: "13-16", label: "13-16 Junior" },
     { value: "17-20", label: "17-20 Senior" },
   ];
-
-
-
-  // Status options
   const statuses = ["Approved", "Rejected"];
-
-  // Group options
-  const groups = [
-    "A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M",
-    "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z"
-  ];
-
-  // Camp options
-
-  // Sub-camp options
+  const groups = "A B C D E F G H I J K L M N O P Q R S T U V W X Y Z".split(" ");
   const campNo = Array.from({ length: 100 }, (_, i) => `Camp ${i + 1}`);
   const subCamps = [SubCamps.Jinnah, SubCamps.Iqbal];
-  // Form validation schema
 
-  const handleSubmit = async (
-    values: Record<string, string>,
-    { setSubmitting, setErrors }: { setSubmitting: (v: boolean) => void; setErrors: (e: { submit?: string }) => void }
-  ) => {
+  const {
+    control,
+    handleSubmit,
+    setError,
+    formState: { errors, isSubmitting },
+  } = useForm<UpdateStudentFormValues>({
+    defaultValues: {
+      studentName: student?.studentName || student?.name || "",
+      FatherName: student?.FatherName || student?.fatherName || "",
+      ageGroup: student?.ageGroup ? getAgeGroupValue(student.ageGroup) : (student?.age ? getAgeGroupFromAge(student.age) : ""),
+      grade: student?.grade || "",
+      TshirtSize: student?.TshirtSize || student?.tshirtSize || "",
+      activity: student?.activity || "",
+      status: student?.status || "",
+      group: student?.group || "",
+      camp: student?.camp || "",
+      subCamp: student?.subCamp || "",
+      report: student?.report || "",
+      image: null,
+    },
+    resolver: yupResolver(validationSchema) as Resolver<UpdateStudentFormValues>,
+    values: {
+      studentName: student?.studentName || student?.name || "",
+      FatherName: student?.FatherName || student?.fatherName || "",
+      ageGroup: student?.ageGroup ? getAgeGroupValue(student.ageGroup) : (student?.age ? getAgeGroupFromAge(student.age) : ""),
+      grade: student?.grade || "",
+      TshirtSize: student?.TshirtSize || student?.tshirtSize || "",
+      activity: student?.activity || "",
+      status: student?.status || "",
+      group: student?.group || "",
+      camp: student?.camp || "",
+      subCamp: student?.subCamp || "",
+      report: student?.report || "",
+    },
+  });
+
+  const onSubmit = async (values: UpdateStudentFormValues) => {
     const studentId = student._id ?? student.id;
     if (!studentId) {
-      setErrors({ submit: "Student ID missing" });
+      setError("root", { message: "Student ID missing" });
       return;
     }
     try {
+      let fileUrl: string | undefined;
+      const file = values.image?.[0];
+      if (file?.name) {
+        const { url, key } = await getPresignedUrl("fileUrl", file.name, file.type);
+        await uploadToPresignedUrl(url, file);
+        fileUrl = key;
+      }
       const response = await apiClient.patch(`/api/students/${studentId}`, {
         studentName: values.studentName,
         FatherName: values.FatherName,
@@ -94,6 +115,7 @@ export const UpdateStudentModal = ({
         camp: values.camp,
         subCamp: values.subCamp,
         report: values.report,
+        ...(fileUrl && { fileUrl }),
       });
       if (response.data?.success) {
         toast.success(response.data.message ?? "Updated");
@@ -103,312 +125,184 @@ export const UpdateStudentModal = ({
       setModalOpen(false);
       handleClose();
     } catch (error: unknown) {
-      setErrors({ submit: error instanceof Error ? error.message : "Something went wrong" });
-    } finally {
-      setSubmitting(false);
+      setError("root", {
+        message: error instanceof Error ? error.message : "Something went wrong",
+      });
     }
   };
+
+  const inputClass = "w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500";
+  const errorClass = "text-red-600 text-sm mt-1";
 
   return (
     <div className="container mx-auto">
       <div className="fixed inset-0 z-50 flex items-center justify-center bg-gray-800 bg-opacity-75">
         <div className="bg-white rounded-lg shadow-lg w-2/3 p-6 relative">
-          <h2 className="text-2xl pb-2 font-bold mb-4 text-center">
-            Update Student
-          </h2>
-          <Formik
-            initialValues={initialValues}
-            validationSchema={validationSchema}
-            onSubmit={handleSubmit}
-            enableReinitialize={true}
-          >
-            {({ isSubmitting }) => (
-              <Form className="space-y-4">
-                <div className="grid grid-cols-3 gap-4">
-                  {/* Student Name */}
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700">
-                      Student Name
-                    </label>
-                    <Field
-                      type="text"
-                      name="studentName"
-                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"
-                    />
-                    <ErrorMessage
-                      name="studentName"
-                      component="div"
-                      className="text-red-600 text-sm mt-1"
-                    />
-                  </div>
-
-                  {/* Father Name */}
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700">
-                      Father Name
-                    </label>
-                    <Field
-                      type="text"
-                      name="FatherName"
-                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"
-                    />
-                    <ErrorMessage
-                      name="FatherName"
-                      component="div"
-                      className="text-red-600 text-sm mt-1"
-                    />
-                  </div>
-
-                  {/* Age Group */}
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700">
-                      Age Group
-                    </label>
-                    <Field
-                      as="select"
-                      name="ageGroup"
-                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"
-                    >
-                      <option value="" label="Select Age Group" />
-                      {ageGroups.map((group) => (
-                        <option key={group.value} value={group.value}>
-                          {group.label}
-                        </option>
+          <h2 className="text-2xl pb-2 font-bold mb-4 text-center">Update Student</h2>
+          <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+            <div className="grid grid-cols-3 gap-4">
+              <div>
+                <label className="block text-sm font-medium text-gray-700">Student Name</label>
+                <Controller name="studentName" control={control} render={({ field }) => <input {...field} type="text" className={inputClass} />} />
+                {errors.studentName && <div className={errorClass}>{errors.studentName.message}</div>}
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700">Father Name</label>
+                <Controller name="FatherName" control={control} render={({ field }) => <input {...field} type="text" className={inputClass} />} />
+                {errors.FatherName && <div className={errorClass}>{errors.FatherName.message}</div>}
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700">Age Group</label>
+                <Controller
+                  name="ageGroup"
+                  control={control}
+                  render={({ field }) => (
+                    <select {...field} className={inputClass}>
+                      <option value="">Select Age Group</option>
+                      {ageGroups.map((g) => (
+                        <option key={g.value} value={g.value}>{g.label}</option>
                       ))}
-                    </Field>
-                    <ErrorMessage
-                      name="ageGroup"
-                      component="div"
-                      className="text-red-600 text-sm mt-1"
-                    />
-                  </div>
-
-                  {/* Grade */}
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700">
-                      Grade
-                    </label>
-                    <Field
-                      type="text"
-                      name="grade"
-                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"
-                    />
-                    <ErrorMessage
-                      name="grade"
-                      component="div"
-                      className="text-red-600 text-sm mt-1"
-                    />
-                  </div>
-
-                  {/* T-shirt size */}
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700">
-                      T-shirt Size
-                    </label>
-                    <Field
-                      type="text"
-                      name="TshirtSize"
-                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"
-                    />
-                    <ErrorMessage
-                      name="TshirtSize"
-                      component="div"
-                      className="text-red-600 text-sm mt-1"
-                    />
-                  </div>
-
-                  {/* Activity Dropdown */}
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700">
-                      Activity
-                    </label>
-                    <Field
-                      as="select"
-                      name="activity"
-                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"
-                    >
-                      <option value="" label="Select an activity" />
-                      {activities.map((activity, index) => (
-                        <option key={activity + index} value={activity}>
-                          {activity}
-                        </option>
+                    </select>
+                  )}
+                />
+                {errors.ageGroup && <div className={errorClass}>{errors.ageGroup.message}</div>}
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700">Grade</label>
+                <Controller name="grade" control={control} render={({ field }) => <input {...field} type="text" className={inputClass} />} />
+                {errors.grade && <div className={errorClass}>{errors.grade.message}</div>}
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700">T-shirt Size</label>
+                <Controller name="TshirtSize" control={control} render={({ field }) => <input {...field} type="text" className={inputClass} />} />
+                {errors.TshirtSize && <div className={errorClass}>{errors.TshirtSize.message}</div>}
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700">Activity</label>
+                <Controller
+                  name="activity"
+                  control={control}
+                  render={({ field }) => (
+                    <select {...field} className={inputClass}>
+                      <option value="">Select an activity</option>
+                      {activities.map((a, i) => (
+                        <option key={a + i} value={a}>{a}</option>
                       ))}
-                    </Field>
-                    <ErrorMessage
-                      name="activity"
-                      component="div"
-                      className="text-red-600 text-sm mt-1"
-                    />
-                  </div>
-
-                  {/* Status Dropdown */}
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700">
-                      Status
-                    </label>
-                    <Field
-                      as="select"
-                      name="status"
-                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"
-                    >
-                      <option value="" label="Select status" />
-                      {statuses.map((status, index) => (
-                        <option key={status + index} value={status}>
-                          {status}
-                        </option>
+                    </select>
+                  )}
+                />
+                {errors.activity && <div className={errorClass}>{errors.activity.message}</div>}
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700">Status</label>
+                <Controller
+                  name="status"
+                  control={control}
+                  render={({ field }) => (
+                    <select {...field} className={inputClass}>
+                      <option value="">Select status</option>
+                      {statuses.map((s, i) => (
+                        <option key={s + i} value={s}>{s}</option>
                       ))}
-                    </Field>
-                    <ErrorMessage
-                      name="status"
-                      component="div"
-                      className="text-red-600 text-sm mt-1"
-                    />
-                  </div>
-
-                  {/* Group Dropdown */}
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700">
-                      Group
-                    </label>
-                    <Field
-                      as="select"
-                      name="group"
-                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"
-                    >
-                      <option value="" label="Select group" />
-                      {groups.map((group, index) => (
-                        <option key={group + index} value={group}>
-                          {group}
-                        </option>
+                    </select>
+                  )}
+                />
+                {errors.status && <div className={errorClass}>{errors.status.message}</div>}
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700">Group</label>
+                <Controller
+                  name="group"
+                  control={control}
+                  render={({ field }) => (
+                    <select {...field} className={inputClass}>
+                      <option value="">Select group</option>
+                      {groups.map((g, i) => (
+                        <option key={g + i} value={g}>{g}</option>
                       ))}
-                    </Field>
-                    <ErrorMessage
-                      name="group"
-                      component="div"
-                      className="text-red-600 text-sm mt-1"
-                    />
-                  </div>
-
-                  {/* Camp Dropdown */}
-                  {/* <div>
-                    <label className="block text-sm font-medium text-gray-700">
-                      Camp
-                    </label>
-                    <Field
-                      as="select"
-                      name="camp"
-                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"
-                    >
-                      <option value="" label="Select camp" />
-                      {camps.map((camp, index) => (
-                        <option key={camp + index} value={camp}>
-                          {camp}
-                        </option>
+                    </select>
+                  )}
+                />
+                {errors.group && <div className={errorClass}>{errors.group.message}</div>}
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700">Sub Camp</label>
+                <Controller
+                  name="subCamp"
+                  control={control}
+                  render={({ field }) => (
+                    <select {...field} className={inputClass}>
+                      <option value="">Select sub camp</option>
+                      {subCamps.map((s, i) => (
+                        <option key={s + i} value={s}>{s}</option>
                       ))}
-                    </Field>
-                    <ErrorMessage
-                      name="camp"
-                      component="div"
-                      className="text-red-600 text-sm mt-1"
-                    />
-                  </div> */}
-
-                  {/* Sub Camp Dropdown */}
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700">
-                      Sub Camp
-                    </label>
-                    <Field
-                      as="select"
-                      name="subCamp"
-                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"
-                    >
-                      <option value="" label="Select sub camp" />
-                      {subCamps.map((subCamp, index) => (
-                        <option key={subCamp + index} value={subCamp}>
-                          {subCamp}
-                        </option>
+                    </select>
+                  )}
+                />
+                {errors.subCamp && <div className={errorClass}>{errors.subCamp.message}</div>}
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700">Camp Number</label>
+                <Controller
+                  name="camp"
+                  control={control}
+                  render={({ field }) => (
+                    <select {...field} className={inputClass}>
+                      <option value="">Select Camp Number</option>
+                      {campNo.map((c, i) => (
+                        <option key={c + i} value={c}>{c}</option>
                       ))}
-                    </Field>
-                    <ErrorMessage
-                      name="subCamp"
-                      component="div"
-                      className="text-red-600 text-sm mt-1"
+                    </select>
+                  )}
+                />
+                {errors.camp && <div className={errorClass}>{errors.camp.message}</div>}
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700">Student Photo (optional, max 1 MB)</label>
+                <Controller
+                  name="image"
+                  control={control}
+                  render={({ field: { onChange, value, ...field } }) => (
+                    <input
+                      {...field}
+                      type="file"
+                      accept="image/jpeg, image/png, image/gif"
+                      onChange={(e) => onChange(e.target.files)}
+                      className={inputClass}
                     />
-                  </div>
-                  {/* camp no Dropdown */}
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700">
-                      Camp Number
-                    </label>
-                    <Field
-                      as="select"
-                      name="camp"
-                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"
-                    >
-                      <option value="" label="Select Camp Number" />
-                      {campNo.map((camp, index) => (
-                        <option key={camp + index} value={camp}>
-                          {camp}
-                        </option>
-                      ))}
-                    </Field>
-                    <ErrorMessage
-                      name="camp"
-                      component="div"
-                      className="text-red-600 text-sm mt-1"
-                    />
-                  </div>
-                  {/* Student Report Text Area */}
-                  <div className="col-span-3">
-                    <label className="block text-sm font-medium text-gray-700">
-                      Student Report
-                    </label>
-                    <Field
-                      as="textarea"
-                      name="report"
+                  )}
+                />
+              </div>
+              <div className="col-span-3">
+                <label className="block text-sm font-medium text-gray-700">Student Report</label>
+                <Controller
+                  name="report"
+                  control={control}
+                  render={({ field }) => (
+                    <textarea
+                      {...field}
                       className="w-full h-24 px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"
                       placeholder="Enter student report here..."
                     />
-                    <ErrorMessage
-                      name="report"
-                      component="div"
-                      className="text-red-600 text-sm mt-1"
-                    />
-                  </div>
-                </div>
-
-                {/* Submit Button */}
-                <div className="flex justify-end space-x-4 items-center">
-                  <button
-                    type="submit"
-                    disabled={isSubmitting}
-                    className={`${isSubmitting
-                        ? "bg-gray-400"
-                        : "bg-green-600 hover:bg-green-700"
-                      } text-white font-semibold py-2 px-4 rounded-lg transition-colors duration-200`}
-                  >
-                    {isSubmitting ? "Updating..." : "Update Student"}
-                  </button>
-
-                  {/* Close Modal Button */}
-                  <button
-                    type="button"
-                    onClick={() => setModalOpen(false)}
-                    className="bg-red-500 hover:bg-red-600 text-white font-semibold py-2 px-4 rounded-lg"
-                  >
-                    Cancel
-                  </button>
-                </div>
-
-                <ErrorMessage
-                  name="submit"
-                  component="div"
-                  className="text-red-600 text-sm mt-2"
+                  )}
                 />
-              </Form>
-            )}
-          </Formik>
+                {errors.report && <div className={errorClass}>{errors.report.message}</div>}
+              </div>
+            </div>
+            <div className="flex justify-end space-x-4 items-center">
+              <button
+                type="submit"
+                disabled={isSubmitting}
+                className={`${isSubmitting ? "bg-gray-400" : "bg-green-600 hover:bg-green-700"} text-white font-semibold py-2 px-4 rounded-lg transition-colors duration-200`}
+              >
+                {isSubmitting ? "Updating..." : "Update Student"}
+              </button>
+              <button type="button" onClick={() => setModalOpen(false)} className="bg-red-500 hover:bg-red-600 text-white font-semibold py-2 px-4 rounded-lg">
+                Cancel
+              </button>
+            </div>
+            {errors.root && <div className="text-red-600 text-sm mt-2">{errors.root.message}</div>}
+          </form>
         </div>
       </div>
     </div>

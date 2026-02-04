@@ -1,6 +1,6 @@
 "use client";
 import React, { useRef, useState } from "react";
-import { Drawer as FlowbiteModal } from "flowbite-react";
+import { Sheet, SheetContent, SheetHeader, SheetTitle, Avatar, AvatarImage, AvatarFallback } from "@arabiaaislamia/ui";
 import Image from "next/image";
 import { UpdateStudentModal } from "@/components/UpdateStudentModal/UpdateStudentModal";
 import { Button } from "../Button/Button";
@@ -11,31 +11,15 @@ import {
   AiOutlineClockCircle,
   AiOutlineClose,
 } from "react-icons/ai";
-import toast from "react-hot-toast";
+import { toast } from "@arabiaaislamia/ui";
 import { apiClient } from "@/utils/axios-instance";
 import { studentDrawerMappingKeys } from "./Drawer.types";
 import { IoPrintSharp } from "react-icons/io5";
 import ReactToPrint from "react-to-print";
-import JinnahCardImage from "/public/assets/Jinnah-card.jpg";
-import IqbalCardImage from "/public/assets/Iqbal-card.jpg";
-import fallbackSrc from "/public/assets/male-student.png";
-interface AvatarProps {
-  src: string;
-  alt?: string;
-}
-
-const Avatar: React.FC<AvatarProps> = ({ src, alt = "Avatar" }) => {
-  return (
-    <Image
-      src={src || fallbackSrc}
-      alt={alt}
-      className="w-24 h-24 rounded-full border-2 border-gray-300 shadow-lg"
-      width={96}
-      height={96}
-    />
-  );
-};
-
+import { usePresignedFileUrl } from "@/hooks/usePresignedFileUrl/usePresignedFileUrl";
+import { PresignedImage } from "@/components/PresignedImage/PresignedImage";
+const JINNAH_CARD_IMAGE = "/assets/Jinnah-card.jpg";
+const IQBAL_CARD_IMAGE = "/assets/Iqbal-card.jpg";
 interface IStatusIndicator {
   status: string;
 }
@@ -60,18 +44,6 @@ export const StatusIndicator: React.FC<IStatusIndicator> = ({ status }) => {
       {status}
     </div>
   );
-};
-
-const customTheme = {
-  root: {
-    base: "fixed z-40 overflow-y-auto bg-white p-4 transition-transform duration-700 dark:bg-gray-800",
-    position: {
-      right: {
-        on: "right-0 top-0 h-screen w-1/2 transform-none transition-all duration-700",
-        off: "right-0 top-0 h-screen w-1/2 translate-x-full",
-      },
-    },
-  },
 };
 
 interface IInfoCard {
@@ -126,7 +98,7 @@ const PrintContent = React.forwardRef<HTMLDivElement, { rowData: any }>(
             {/* Background Card Image based on subCamp */}
             {data.subCamp === SubCamps.Jinnah && (
               <Image
-                src={JinnahCardImage}
+                src={JINNAH_CARD_IMAGE}
                 alt="Jinnah Card Background"
                 fill
                 style={{ objectFit: "cover" }}
@@ -134,7 +106,7 @@ const PrintContent = React.forwardRef<HTMLDivElement, { rowData: any }>(
             )}
             {data.subCamp === SubCamps.Iqbal && (
               <Image
-                src={IqbalCardImage}
+                src={IQBAL_CARD_IMAGE}
                 alt="Iqbal Card Background"
                 fill
                 style={{ objectFit: "cover" }}
@@ -143,8 +115,8 @@ const PrintContent = React.forwardRef<HTMLDivElement, { rowData: any }>(
 
             {/* Student Photo */}
             {data.fileUrl && (
-              <Image
-                src={data.fileUrl}
+              <PresignedImage
+                fileUrl={data.fileUrl}
                 alt="Student"
                 width={100}
                 height={100}
@@ -189,6 +161,7 @@ const Drawer: React.FC<{
   const [isUpdateModalOpen, setUpdateModalOpen] = useState(false);
   const userName = useSearchRole();
   const printRef = useRef<HTMLDivElement>(null);
+  const fileDisplayUrl = usePresignedFileUrl(rowData?.fileUrl);
 
   if (!rowData) return null;
 
@@ -247,15 +220,12 @@ const Drawer: React.FC<{
 
   return (
     <>
-      <FlowbiteModal
-        open={isOpen}
-        onClose={handleClose}
-        position="right"
-        theme={customTheme}
-      >
-        <FlowbiteModal.Header title="Student Details" />
-        <FlowbiteModal.Items>
-          <div className="flex flex-col justify-between h-[80vh]">
+      <Sheet open={isOpen} onOpenChange={(open) => !open && handleClose()}>
+        <SheetContent side="right" className="w-full sm:max-w-xl overflow-y-auto">
+          <SheetHeader>
+            <SheetTitle>Student Details</SheetTitle>
+          </SheetHeader>
+          <div className="flex flex-col justify-between h-[80vh] pt-4">
             <div className="flex p-6">
               <div className="flex-1">
                 <h2 className="text-xl py-4 font-bold mb-4 text-center">
@@ -270,13 +240,18 @@ const Drawer: React.FC<{
                 </div>
               </div>
               <div className="ml-4">
-                <Avatar src={rowData.fileUrl} alt="Student Avatar" />
+                <Avatar className="w-24 h-24 rounded-full border-2 border-gray-300 shadow-lg">
+                  {fileDisplayUrl && <AvatarImage src={fileDisplayUrl} alt="Student Avatar" />}
+                  <AvatarFallback className="bg-primary-100 text-primary-600 text-2xl font-medium">
+                    {rowData.studentName?.slice(0, 1).toUpperCase() ?? "?"}
+                  </AvatarFallback>
+                </Avatar>
               </div>
             </div>
             {renderButton(rowData)}
           </div>
-        </FlowbiteModal.Items>
-      </FlowbiteModal>
+        </SheetContent>
+      </Sheet>
 
       {/* Hidden print content */}
       <div style={{ display: "none" }}>

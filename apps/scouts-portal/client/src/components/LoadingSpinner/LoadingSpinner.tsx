@@ -1,25 +1,18 @@
-'use client';
+"use client";
 
-import type { CustomFlowbiteTheme } from 'flowbite-react';
-import { Flowbite, Spinner } from 'flowbite-react';
+import { Spinner } from "@arabiaaislamia/ui";
 
 export interface ILoadingSpinner {
-    customClass?: string;
-    spinnerSize: string;
-  }
-  
-const customTheme: CustomFlowbiteTheme = {
-  spinner: {
-    color: {
-      primary: 'fill-primary-600',
-    },
-  },
-};
+  customClass?: string;
+  spinnerSize: "sm" | "default" | "lg";
+}
 
 export const LoadingSpinner = ({ customClass, spinnerSize }: ILoadingSpinner) => {
   return (
-    <Flowbite theme={{ theme: customTheme }}>
-      <Spinner aria-label="loading" size={spinnerSize} color="primary" className={customClass} />
-    </Flowbite>
+    <Spinner
+      size={spinnerSize}
+      className={customClass ? `text-primary-600 ${customClass}` : "text-primary-600"}
+      aria-label="loading"
+    />
   );
 };

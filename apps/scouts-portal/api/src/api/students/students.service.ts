@@ -69,6 +69,7 @@ export class StudentsService {
     if (dto.camp != null) student.camp = dto.camp;
     if (dto.subCamp != null) student.subCamp = dto.subCamp;
     if (dto.report != null) student.report = dto.report;
+    if (dto.fileUrl != null) student.fileUrl = dto.fileUrl;
     await this.studentRepository.save(student);
     return { success: true, message: 'Student updated successfully' };
   }

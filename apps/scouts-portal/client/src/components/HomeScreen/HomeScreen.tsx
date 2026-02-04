@@ -5,32 +5,34 @@ import Image from "next/image";
 import { Carousel } from "react-responsive-carousel";
 import useSearchRole from "@/hooks/useSearchRole/useSearchRole";
 
-// Import the banner images
-import banner1 from "/public/assets/banner/banner1.jpg";
-import banner2 from "/public/assets/banner/banner2.jpg";
-import banner3 from "/public/assets/banner/banner3.jpg";
-import banner4 from "/public/assets/banner/banner4.jpg";
-import banner5 from "/public/assets/banner/banner5.jpg";
-import banner6 from "/public/assets/banner/banner6.jpg";
-import banner7 from "/public/assets/banner/banner7.jpg";
+const BANNER_IMAGES = [
+  "/assets/banner/banner1.jpg",
+  "/assets/banner/banner2.jpg",
+  "/assets/banner/banner3.jpg",
+  "/assets/banner/banner4.jpg",
+  "/assets/banner/banner5.jpg",
+  "/assets/banner/banner6.jpg",
+  "/assets/banner/banner7.jpg",
+];
 
 import { Button } from "@/components/Button/Button";
 import Link from "next/link";
 import { protectedRoutes } from "@/utils/routes";
 import { ROLE } from "@/constant/constant";
-// import banner6 from "/public/assets/banner/banner6.jpeg";
 
 const HomeScreen: React.FC = () => {
   const userName = useSearchRole();
   return (
     <>
       <Carousel showArrows={true} infiniteLoop={true} autoPlay={true}>
-        {[banner1, banner2, banner3, banner4, banner5, banner6, banner7].map((banner, index) => (
+        {BANNER_IMAGES.map((banner, index) => (
           <div key={index}>
             <Image
               src={banner}
               alt={`Banner ${index + 1}`}
-              layout="responsive"
+              width={1200}
+              height={400}
+              className="w-full h-auto object-cover"
             />
           </div>
         ))}

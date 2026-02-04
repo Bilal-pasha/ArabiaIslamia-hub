@@ -2,10 +2,9 @@
 import React, { useState, useEffect } from "react";
 import { usePathname } from "next/navigation";
 import Link from "next/link";
-import toast from "react-hot-toast";
+import { toast } from "@arabiaaislamia/ui";
 import { useAuth } from "@/context/AuthContext";
 import { apiClient } from "@/utils/axios-instance";
-import { Avatar } from "../Avatar/Avatar";
 import Image from "next/image";
 import { protectedRoutes, publicRoutes } from "@/utils/routes";
 import {
@@ -22,7 +21,9 @@ import {
   CalendarDaysIcon,
   PhotoIcon,
 } from "@heroicons/react/24/outline";
-import scoutsImage from "/public/assets/signinLogo.png";
+
+// Public assets: use URL path (not import) so Next.js build resolves
+const SCOUTS_IMAGE = "/assets/signinLogo.png";
 
 type ButtonName = "Home" | "Intro And Services" | "Guidelines" | "Camping Guide" | "Schedule" | "Gallery" | "Registration" | "Sign Out";
 
@@ -144,7 +145,7 @@ const Sidebar: React.FC = () => {
           <div className="border-b-2 border-green-200 bg-white flex justify-center">
             <Link href={protectedRoutes.HOME}>
               <Image
-                src={scoutsImage}
+                src={SCOUTS_IMAGE}
                 alt="Scouts Camp Logo"
                 width={300}
                 height={120}
@@ -164,8 +165,8 @@ const Sidebar: React.FC = () => {
                   <button
                     onClick={() => handleItemClick(item.name)}
                     className={`w-full flex items-center space-x-3 px-4 py-3 rounded-lg font-medium text-sm transition-all duration-200 ${isActive
-                        ? "bg-green-600 text-white shadow-lg"
-                        : "text-gray-700 hover:bg-green-50 hover:text-green-800"
+                      ? "bg-green-600 text-white shadow-lg"
+                      : "text-gray-700 hover:bg-green-50 hover:text-green-800"
                       }`}
                   >
                     <Icon className="h-5 w-5 flex-shrink-0" />

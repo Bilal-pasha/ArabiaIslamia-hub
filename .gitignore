@@ -43,3 +43,4 @@ Thumbs.db
 # Misc
 *.tsbuildinfo
 .cache/
+.pnpm-store/

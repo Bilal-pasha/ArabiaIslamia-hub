@@ -1,8 +1,10 @@
 /* eslint-disable react/display-name */
 import React from "react";
 import Image from "next/image";
-import StudentCardFront from "/public/assets/StudentCardFront.jpg";
-import StudentCardBack from "/public/assets/StudentCardBack.jpg";
+import { PresignedImage } from "@/components/PresignedImage/PresignedImage";
+
+const STUDENT_CARD_FRONT = "/assets/StudentCardFront.jpg";
+const STUDENT_CARD_BACK = "/assets/StudentCardBack.jpg";
 const PrintContent = React.forwardRef<HTMLDivElement, { students: any }>(
   ({ students }, ref) => {
     return (
@@ -28,7 +30,7 @@ const PrintContent = React.forwardRef<HTMLDivElement, { students: any }>(
               {/* Top Half - Background Image */}
               <div className="relative w-full h-3/5">
                 <Image
-                  src={StudentCardFront}
+                  src={STUDENT_CARD_FRONT}
                   alt="Background Image"
                   layout="fill"
                   objectFit="cover"
@@ -40,14 +42,15 @@ const PrintContent = React.forwardRef<HTMLDivElement, { students: any }>(
               <div
                 className={`absolute mt-[4.4rem] left-[4.4rem] w-[6.5rem] h-36`}
               >
-                <Image
-                  src={student.fileUrl}
-                  alt="Student Image"
-                  layout="fill"
-                  objectFit="cover"
-                  objectPosition="center"
-                  className="w-full h-full"
-                />
+                {student.fileUrl && (
+                  <PresignedImage
+                    fileUrl={student.fileUrl}
+                    alt="Student Image"
+                    fill
+                    style={{ objectFit: "cover", objectPosition: "center" }}
+                    className="w-full h-full"
+                  />
+                )}
               </div>
 
               {/* Bottom Half - Content */}
@@ -90,7 +93,7 @@ const PrintContent = React.forwardRef<HTMLDivElement, { students: any }>(
               {/* Top Half - Background Image */}
               <div className="relative w-full h-96">
                 <Image
-                  src={StudentCardBack}
+                  src={STUDENT_CARD_BACK}
                   alt="Background Image"
                   layout="fill"
                   objectFit="cover"

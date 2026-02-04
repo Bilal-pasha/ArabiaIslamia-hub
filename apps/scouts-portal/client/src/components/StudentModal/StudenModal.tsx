@@ -1,10 +1,21 @@
-import React from "react";
-import { useFormik } from "formik";
+"use client";
+import React, { useEffect } from "react";
+import { useForm, Controller, toast, yupResolver, type Resolver } from "@arabiaaislamia/ui";
 import { Button } from "@/components/Button/Button";
-import { toast } from "react-hot-toast";
 import { feesStatus } from "@/constant/constant";
 import { StudentSchema } from "./StudentModel.Schema";
 import { apiClient } from "@/utils/axios-instance";
+import { getPresignedUrl, uploadToPresignedUrl } from "@/services/upload/upload.service";
+
+type StudentFormValues = {
+  name: string;
+  fatherName: string;
+  GRNumber: number;
+  fees: number;
+  feesStatus: Array<{ month: string; status: string }>;
+  status: string;
+  image: File | null;
+};
 
 const StudentModal = ({
   setIsModalOpen,
@@ -17,69 +28,104 @@ const StudentModal = ({
   studentData,
   setStudent,
 }: any) => {
-  const formik = useFormik({
-    initialValues: {
-      name: !create ? studentData?.name : "",
-      fatherName: !create ? studentData?.fatherName : "",
-      GRNumber: !create ? studentData?.GRNumber : "",
-      fees: !create ? studentData?.fees : "",
-      feesStatus: !create ? studentData?.feesStatusChart : feesStatus,
+  const {
+    control,
+    handleSubmit,
+    setValue,
+    watch,
+    reset,
+    formState: { errors },
+  } = useForm<StudentFormValues>({
+    defaultValues: {
+      name: "",
+      fatherName: "",
+      GRNumber: 0,
+      fees: 0,
+      feesStatus: feesStatus,
       status: "Unpaid",
-      image: null, // New field for the image
+      image: null,
     },
-    validationSchema: StudentSchema,
-    onSubmit: async (values, { resetForm }) => {
-      create
-        ? await CreateStudent(values, resetForm)
-        : await UpdateStudent(values, resetForm, id);
-    },
+    resolver: yupResolver(StudentSchema) as Resolver<StudentFormValues>,
   });
 
-  const CreateStudent = async (formValues: Record<string, unknown>, resetForm: () => void) => {
+  useEffect(() => {
+    if (!create && studentData) {
+      reset({
+        name: studentData?.name ?? "",
+        fatherName: studentData?.fatherName ?? "",
+        GRNumber: Number(studentData?.GRNumber) || 0,
+        fees: Number(studentData?.fees) || 0,
+        feesStatus: Array.isArray(studentData?.feesStatusChart) ? studentData.feesStatusChart : feesStatus,
+        status: studentData?.status ?? "Unpaid",
+        image: null,
+      });
+    }
+  }, [create, studentData, reset]);
+
+  const watchedFeesStatus = watch("feesStatus");
+
+  const CreateStudent = async (values: StudentFormValues) => {
     try {
+      let fileUrl: string | undefined;
+      if (values.image?.name) {
+        const { url, key } = await getPresignedUrl("fileUrl", values.image.name, values.image.type);
+        await uploadToPresignedUrl(url, values.image);
+        fileUrl = key;
+      }
       const response = await apiClient.post(`/api/classes/${classSlug}/students`, {
-        name: formValues.name,
-        fatherName: formValues.fatherName,
-        GRNumber: formValues.GRNumber,
-        fees: formValues.fees,
-        feesStatusChart: formValues.feesStatus,
-        status: formValues.status ?? "Unpaid",
+        name: values.name,
+        fatherName: values.fatherName,
+        GRNumber: values.GRNumber,
+        fees: values.fees,
+        feesStatusChart: values.feesStatus,
+        status: values.status ?? "Unpaid",
         classSlug,
+        ...(fileUrl && { fileUrl }),
       });
       const result = response.data?.result ?? response.data?.data;
       if (result) setStudents([...students, result]);
       toast.success("Student Added Successfully");
       setIsModalOpen(false);
-      resetForm();
+      reset();
     } catch (error) {
       console.error("Fetch error: ", error);
       toast.error("Failed to add student");
     }
   };
 
-  const UpdateStudent = async (
-    formValues: Record<string, unknown>,
-    resetForm: () => void,
-    StudentID: string
-  ) => {
+  const UpdateStudent = async (values: StudentFormValues, studentId: string) => {
     try {
-      const response = await apiClient.patch(`/api/students/${StudentID}`, {
-        name: formValues.name,
-        fatherName: formValues.fatherName,
-        GRNumber: formValues.GRNumber,
-        fees: formValues.fees,
-        feesStatusChart: formValues.feesStatus,
-        status: formValues.status,
+      let fileUrl: string | undefined;
+      if (values.image?.name) {
+        const { url, key } = await getPresignedUrl("fileUrl", values.image.name, values.image.type);
+        await uploadToPresignedUrl(url, values.image);
+        fileUrl = key;
+      }
+      const response = await apiClient.patch(`/api/students/${studentId}`, {
+        name: values.name,
+        fatherName: values.fatherName,
+        GRNumber: values.GRNumber,
+        fees: values.fees,
+        feesStatusChart: values.feesStatus,
+        status: values.status,
+        ...(fileUrl && { fileUrl }),
       });
       if (response.data && setStudent) setStudent(response.data);
       toast.success(response.data?.message ?? "Updated");
       setIsModalOpen(false);
-      resetForm();
+      reset();
     } catch (error) {
       console.error("Fetch error: ", error);
       toast.error("Failed to update student");
     }
   };
+
+  const onSubmit = (values: StudentFormValues) => {
+    create ? CreateStudent(values) : UpdateStudent(values, id);
+  };
+
+  const inputClass = (hasError: boolean) =>
+    `mb-2 w-full px-3 py-2 border rounded ${hasError ? "border-red-500" : ""}`;
 
   return (
     <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
@@ -87,97 +133,105 @@ const StudentModal = ({
         <h2 className="text-xl font-bold mb-4">
           {create ? "Add New" : "Update"} Student
         </h2>
-        <form onSubmit={formik.handleSubmit}>
-          {/* Name Input */}
-          <input
-            type="text"
+        <form onSubmit={handleSubmit(onSubmit)}>
+          <Controller
             name="name"
-            placeholder="Name"
-            value={formik.values.name}
-            onChange={formik.handleChange}
-            onBlur={formik.handleBlur}
-            className={`mb-2 w-full px-3 py-2 border rounded ${formik.touched.name && formik.errors.name ? "border-red-500" : ""
-              }`}
+            control={control}
+            render={({ field }) => (
+              <>
+                <input
+                  {...field}
+                  type="text"
+                  placeholder="Name"
+                  className={inputClass(!!errors.name)}
+                />
+                {errors.name && (
+                  <p className="text-red-500 text-sm">{errors.name.message}</p>
+                )}
+              </>
+            )}
           />
-          {typeof formik.errors.name === "string" && (
-            <p className="text-red-500 text-sm">{formik.errors.name}</p>
-          )}
 
-          {/* Father Name Input */}
-          <input
-            type="text"
+          <Controller
             name="fatherName"
-            placeholder="Father Name"
-            value={formik.values.fatherName}
-            onChange={formik.handleChange}
-            onBlur={formik.handleBlur}
-            className={`mb-2 w-full px-3 py-2 border rounded ${formik.touched.fatherName && formik.errors.fatherName
-                ? "border-red-500"
-                : ""
-              }`}
+            control={control}
+            render={({ field }) => (
+              <>
+                <input
+                  {...field}
+                  type="text"
+                  placeholder="Father Name"
+                  className={inputClass(!!errors.fatherName)}
+                />
+                {errors.fatherName && (
+                  <p className="text-red-500 text-sm">{errors.fatherName.message}</p>
+                )}
+              </>
+            )}
           />
-          {formik.touched.fatherName &&
-            typeof formik.errors.fatherName === "string" ? (
-            <p className="text-red-500 text-sm">{formik.errors.fatherName}</p>
-          ) : null}
 
-          {/* GR Number Input */}
-          <input
-            type="text"
+          <Controller
             name="GRNumber"
-            placeholder="GR Number"
-            value={formik.values.GRNumber}
-            onChange={formik.handleChange}
-            onBlur={formik.handleBlur}
-            className={`mb-2 w-full px-3 py-2 border rounded ${formik.touched.GRNumber && formik.errors.GRNumber
-                ? "border-red-500"
-                : ""
-              }`}
+            control={control}
+            render={({ field }) => (
+              <>
+                <input
+                  {...field}
+                  type="number"
+                  placeholder="GR Number"
+                  onChange={(e) => field.onChange(e.target.valueAsNumber || 0)}
+                  className={inputClass(!!errors.GRNumber)}
+                />
+                {errors.GRNumber && (
+                  <p className="text-red-500 text-sm">{errors.GRNumber.message}</p>
+                )}
+              </>
+            )}
           />
-          {formik.touched.GRNumber &&
-            typeof formik.errors.GRNumber === "string" ? (
-            <p className="text-red-500 text-sm">{formik.errors.GRNumber}</p>
-          ) : null}
 
-          {/* Fees Input */}
-          <input
-            type="text"
+          <Controller
             name="fees"
-            placeholder="Fees"
-            value={formik.values.fees}
-            onChange={formik.handleChange}
-            onBlur={formik.handleBlur}
-            className={`mb-2 w-full px-3 py-2 border rounded ${formik.touched.fees && formik.errors.fees ? "border-red-500" : ""
-              }`}
+            control={control}
+            render={({ field }) => (
+              <>
+                <input
+                  {...field}
+                  type="number"
+                  placeholder="Fees"
+                  onChange={(e) => field.onChange(e.target.valueAsNumber || 0)}
+                  className={inputClass(!!errors.fees)}
+                />
+                {errors.fees && (
+                  <p className="text-red-500 text-sm">{errors.fees.message}</p>
+                )}
+              </>
+            )}
           />
-          {formik.touched.fees && typeof formik.errors.fees === "string" ? (
-            <p className="text-red-500 text-sm">{formik.errors.fees}</p>
-          ) : null}
-
-          {/* Image Upload Field */}
 
           <div className="mb-4">
-            <label
-              htmlFor="image"
-              className="block text-gray-700 font-semibold mb-2"
-            >
+            <label htmlFor="image" className="block text-gray-700 font-semibold mb-2">
               Upload Image
             </label>
-            <input
-              id="image"
+            <Controller
               name="image"
-              type="file"
-              accept="image/*"
-              onChange={(event) =>
-                formik.setFieldValue("image", event.currentTarget.files?.[0])
-              }
-              className="w-full px-3 py-2 border rounded"
+              control={control}
+              render={({ field }) => (
+                <>
+                  <input
+                    id="image"
+                    type="file"
+                    accept="image/*"
+                    onChange={(e) => field.onChange(e.target.files?.[0] ?? null)}
+                    className="w-full px-3 py-2 border rounded"
+                  />
+                  {errors.image && (
+                    <p className="text-red-500 text-sm">{errors.image.message}</p>
+                  )}
+                </>
+              )}
             />
-            {formik.errors.image && formik.touched.image && (
-              <p className="text-red-500 text-sm">{formik.errors.image}</p>
-            )}
           </div>
-          {/* Monthly Fees Status Checkboxes */}
+
           <div className="mt-4 mb-4">
             <h3 className="text-lg font-semibold mb-2">Monthly Fees Status</h3>
             <div className="flex flex-wrap gap-3">
@@ -185,39 +239,26 @@ const StudentModal = ({
                 <div key={month} className="flex items-center mb-2">
                   <input
                     type="checkbox"
-                    name={`feesStatus.${month}`}
-                    checked={
-                      formik?.values?.feesStatus[index]?.status === "Paid"
-                    }
-                    onChange={(e) =>
-                      formik.setFieldValue(
-                        `feesStatus`,
-                        formik.values.feesStatus.map((fee: any, i: number) =>
-                          i === index
-                            ? {
-                              ...fee,
-                              status: e.target.checked ? "Paid" : "Not Paid",
-                            }
-                            : fee
-                        )
-                      )
-                    }
+                    checked={watchedFeesStatus?.[index]?.status === "Paid"}
+                    onChange={(e) => {
+                      const next = [...(watchedFeesStatus ?? feesStatus)];
+                      next[index] = {
+                        ...next[index],
+                        status: e.target.checked ? "Paid" : "Not Paid",
+                      };
+                      setValue("feesStatus", next);
+                    }}
                     className="mr-2"
                   />
-                  <label
-                    htmlFor={`feesStatus.${month}`}
-                    className="text-gray-700"
-                  >
-                    {month}
-                  </label>
+                  <label className="text-gray-700">{month}</label>
                 </div>
               ))}
             </div>
           </div>
 
-          {/* Submit and Cancel Buttons */}
           <div className="flex justify-end space-x-6">
             <Button
+              type="button"
               onClick={() => setIsModalOpen(false)}
               variant="secondary"
               size="md"

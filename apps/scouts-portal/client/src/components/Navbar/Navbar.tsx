@@ -2,10 +2,10 @@
 import React, { useState, useRef, useEffect } from "react";
 import { usePathname } from "next/navigation";
 import Link from "next/link";
-import toast from "react-hot-toast";
+import { toast } from "@arabiaaislamia/ui";
 import { useAuth } from "@/context/AuthContext";
 import { apiClient } from "@/utils/axios-instance";
-import { Avatar } from "../Avatar/Avatar";
+import { Avatar, AvatarFallback } from "@arabiaaislamia/ui";
 import { protectedRoutes, publicRoutes } from "@/utils/routes";
 
 type ButtonName = "Home" | "Class" | "Work" | "Registration" | "Sign Out";
@@ -117,7 +117,11 @@ const Navbar: React.FC = () => {
           ))}
         </nav>
         <div className="hidden md:flex">
-          <Avatar height={40} width={40} name={user?.username} />
+          <Avatar className="h-10 w-10">
+              <AvatarFallback className="bg-primary-100 text-primary-600 text-sm font-medium">
+                {user?.username?.slice(0, 1).toUpperCase() ?? "?"}
+              </AvatarFallback>
+            </Avatar>
         </div>
       </div>
     </header>

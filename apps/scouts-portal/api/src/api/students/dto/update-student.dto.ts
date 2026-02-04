@@ -80,4 +80,9 @@ export class UpdateStudentDto {
   @IsOptional()
   @IsString()
   report?: string;
+
+  @ApiPropertyOptional()
+  @IsOptional()
+  @IsString()
+  fileUrl?: string;
 }

@@ -6,7 +6,7 @@ import React, {
   useState,
   ReactNode,
 } from "react";
-import { toast } from "react-hot-toast";
+import { toast } from "@arabiaaislamia/ui";
 import { apiClient } from "@/utils/axios-instance";
 
 interface Madrasa {

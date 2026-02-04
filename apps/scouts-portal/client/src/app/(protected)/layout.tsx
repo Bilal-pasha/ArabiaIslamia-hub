@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "../globals.css";
-import { Toaster } from "react-hot-toast";
+import { Toaster } from "@arabiaaislamia/ui";
 import { SessionWrapper } from "@/components/SessionWrapper/SessionWrapper";
 import Sidebar from "@/components/Sidebar/Sidebar";
 import { Suspense } from "react";
@@ -27,7 +27,7 @@ export default function RootLayout({
           <MadrasaRegistrationProvider>
             <Suspense fallback={<FallBackComponent />}>
               <SessionWrapper>
-                <Toaster position="top-right" />
+                <Toaster position="top-right" richColors />
                 <Sidebar />
                 {/* <FullScreenPoster /> Add the FullScreenPoster here */}
                 <main className="lg:ml-64 min-h-screen bg-gray-50">

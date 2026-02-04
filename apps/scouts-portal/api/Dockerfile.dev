@@ -4,11 +4,13 @@ RUN corepack enable && corepack prepare pnpm@9.14.2 --activate
 
 COPY pnpm-workspace.yaml package.json pnpm-lock.yaml* ./
 COPY packages/database/package.json ./packages/database/
+COPY packages/storage/package.json ./packages/storage/
 COPY apps/scouts-portal/api/package.json ./apps/scouts-portal/api/
 
 RUN pnpm install --frozen-lockfile || pnpm install
 
 COPY packages/database ./packages/database
+COPY packages/storage ./packages/storage
 COPY apps/scouts-portal/api ./apps/scouts-portal/api
 
 WORKDIR /app/apps/scouts-portal/api
