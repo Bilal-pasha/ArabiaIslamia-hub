@@ -17,7 +17,7 @@ export default function SecondaryHubPage() {
       <div className="relative overflow-hidden">
         <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,_rgba(77,163,199,0.15)_0%,_transparent_50%)]" />
         <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_bottom_left,_rgba(232,93,44,0.1)_0%,_transparent_50%)]" />
-        <div className="relative flex flex-col items-center justify-between mx-auto min-h-screen w-full max-w-7xl px-4 py-6 sm:px-6 sm:py-8 lg:p-12">
+        <div className="relative flex flex-col items-center justify-between mx-auto min-h-screen w-full px-4 py-6 sm:px-6 sm:py-8 lg:p-12">
           <motion.div variants={fadeInUp} transition={defaultTransition} className="text-center gap-4 my-4 flex flex-col items-center justify-center min-w-0">
             <div className="inline-flex items-center justify-center rounded-2xl bg-white/10 backdrop-blur p-3 sm:p-4 shadow-xl">
               <SecondaryLogo width={100} height={100} className="rounded-xl w-20 h-20 sm:w-24 sm:h-24 lg:w-[120px] lg:h-[120px]" />
@@ -33,7 +33,7 @@ export default function SecondaryHubPage() {
           <motion.div
             variants={fadeInUp}
             transition={{ ...defaultTransition, delay: 0.15 }}
-            className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 w-full max-w-4xl lg:max-w-5xl mx-auto"
+            className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 w-full mx-auto"
           >
             <Link href={externalUrls.registration}>
               <motion.div
