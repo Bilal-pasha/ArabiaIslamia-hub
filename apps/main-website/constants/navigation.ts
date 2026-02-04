@@ -9,6 +9,7 @@ import {
   Download,
   ClipboardList,
 } from 'lucide-react';
+import { SECONDARY_APP_URL, HUFFAZ_APP_URL, SCOUTS_APP_URL } from './env';
 
 export interface NavChildLink {
   text: string;
@@ -21,20 +22,6 @@ export interface NavLinkItem {
   href: string;
   links?: NavChildLink[];
 }
-
-/**
- * App URLs: from env when set — base path/domain differs per app.
- * Set NEXT_PUBLIC_SECONDARY_APP_URL, NEXT_PUBLIC_HUFFAZ_APP_URL, NEXT_PUBLIC_SCOUTS_APP_URL
- * to full URLs (e.g. https://secondary.example.com). If unset, links use '#' so the section still shows.
- */
-const getAppUrl = (key: string): string => {
-  if (typeof process === 'undefined' || !process.env?.[key]) return '';
-  return String(process.env[key]).trim();
-};
-
-const secondaryAppUrl = getAppUrl('NEXT_PUBLIC_SECONDARY_APP_URL') || '#';
-const huffazAppUrl = getAppUrl('NEXT_PUBLIC_HUFFAZ_APP_URL') || '#';
-const scoutsAppUrl = getAppUrl('NEXT_PUBLIC_SCOUTS_APP_URL') || '#';
 
 export const NAV_DATA: NavLinkItem[] = [
   {
@@ -69,7 +56,7 @@ export interface AppLinkItem {
 }
 
 export const APP_LINKS: AppLinkItem[] = [
-  { text: 'Secondary School', href: secondaryAppUrl, description: 'Portal & admissions' },
-  { text: 'Huffaz', href: huffazAppUrl, description: 'Tahfeez & registration' },
-  { text: 'Scouts Portal', href: scoutsAppUrl, description: 'Scouts registration & portal' },
+  { text: 'Secondary School', href: SECONDARY_APP_URL, description: 'Portal & admissions' },
+  { text: 'Huffaz', href: HUFFAZ_APP_URL, description: 'Tahfeez & registration' },
+  { text: 'Scouts Portal', href: SCOUTS_APP_URL, description: 'Scouts registration & portal' },
 ];
