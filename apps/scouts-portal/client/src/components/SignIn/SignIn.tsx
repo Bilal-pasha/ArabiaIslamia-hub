@@ -8,6 +8,7 @@ const ARABIA_LOGO = "/assets/JamiaArabiaLogo.png";
 import { protectedRoutes, publicRoutes } from "@/utils/routes";
 import { useRouter } from "next/navigation";
 import { apiClient } from "@/utils/axios-instance";
+import { useAuth } from "@/context/AuthContext";
 import * as Yup from "yup";
 
 const signInSchema = Yup.object({
@@ -21,6 +22,7 @@ type SignInFormValues = Yup.InferType<typeof signInSchema>;
 const SignIn = () => {
   const [showPassword, setShowPassword] = useState(false);
   const router = useRouter();
+  const { refetch } = useAuth();
 
   const {
     control,
@@ -37,8 +39,9 @@ const SignIn = () => {
         username: values.username,
         password: values.password,
       });
-      router.push(protectedRoutes.HOME);
+      await refetch();
       toast.success("Signed in successfully");
+      router.push(protectedRoutes.HOME);
     } catch {
       toast.error("User Id / Password Incorrect");
     }

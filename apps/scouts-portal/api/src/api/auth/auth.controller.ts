@@ -30,8 +30,10 @@ export class AuthController {
 
   private cookieConfig() {
     const isProd = this.config.get('NODE_ENV') === 'production';
+    const cookieDomain = this.config.get<string>('COOKIE_DOMAIN');
     return {
       isProd,
+      cookieDomain: cookieDomain || undefined,
       accessExp: this.config.get('JWT_EXPIRES_IN', '1h'),
       refreshExp: this.config.get('JWT_REFRESH_EXPIRES_IN', '7d'),
     };
@@ -41,8 +43,8 @@ export class AuthController {
   @HttpCode(HttpStatus.CREATED)
   async register(@Body() dto: RegisterDto, @Res({ passthrough: true }) res: Response) {
     const { user, tokens } = await this.authService.register(dto);
-    const { isProd, accessExp, refreshExp } = this.cookieConfig();
-    setAuthCookies(res, tokens.accessToken, tokens.refreshToken, isProd, accessExp, refreshExp);
+    const { isProd, cookieDomain, accessExp, refreshExp } = this.cookieConfig();
+    setAuthCookies(res, tokens.accessToken, tokens.refreshToken, isProd, accessExp, refreshExp, cookieDomain);
     return { success: true, message: 'Account created', data: { user } } satisfies AuthResponseDto;
   }
 
@@ -50,8 +52,8 @@ export class AuthController {
   @HttpCode(HttpStatus.OK)
   async login(@Body() dto: LoginDto, @Res({ passthrough: true }) res: Response) {
     const { user, tokens } = await this.authService.login(dto);
-    const { isProd, accessExp, refreshExp } = this.cookieConfig();
-    setAuthCookies(res, tokens.accessToken, tokens.refreshToken, isProd, accessExp, refreshExp);
+    const { isProd, cookieDomain, accessExp, refreshExp } = this.cookieConfig();
+    setAuthCookies(res, tokens.accessToken, tokens.refreshToken, isProd, accessExp, refreshExp, cookieDomain);
     return { success: true, message: 'Login successful', data: { user } } satisfies AuthResponseDto;
   }
 
@@ -61,8 +63,8 @@ export class AuthController {
     const token = req.cookies?.[COOKIE_NAMES.REFRESH_TOKEN] ?? body?.refreshToken;
     if (!token) throw new UnauthorizedException('Refresh token required');
     const tokens = await this.authService.refreshToken(token);
-    const { isProd, accessExp, refreshExp } = this.cookieConfig();
-    setAuthCookies(res, tokens.accessToken, tokens.refreshToken, isProd, accessExp, refreshExp);
+    const { isProd, cookieDomain, accessExp, refreshExp } = this.cookieConfig();
+    setAuthCookies(res, tokens.accessToken, tokens.refreshToken, isProd, accessExp, refreshExp, cookieDomain);
     return { success: true, message: 'Token refreshed' };
   }
 
@@ -70,7 +72,8 @@ export class AuthController {
   @UseGuards(JwtAuthGuard)
   @HttpCode(HttpStatus.OK)
   async logout(@Res({ passthrough: true }) res: Response) {
-    clearAuthCookies(res);
+    const { cookieDomain } = this.cookieConfig();
+    clearAuthCookies(res, cookieDomain);
     return { success: true, message: 'Logout successful' };
   }
 

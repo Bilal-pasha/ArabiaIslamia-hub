@@ -5,6 +5,7 @@ import SignIn from "@/components/SignIn/SignIn";
 import { useRouter } from "next/navigation";
 import { protectedRoutes } from "@/utils/routes";
 import { useEffect } from "react";
+import { FallBackComponent } from "@/components/FallBackComponent/FallBackComponent";
 
 const AuthLayout: React.FC = () => {
   const { user, loading } = useAuth();
@@ -14,8 +15,8 @@ const AuthLayout: React.FC = () => {
     if (!loading && user) router.push(protectedRoutes.HOME);
   }, [user, loading, router]);
 
-  if (loading) return null;
-  if (user) return null;
+  if (loading) return <FallBackComponent />;
+  if (user) return <FallBackComponent />;
   return <SignIn />;
 };
 
