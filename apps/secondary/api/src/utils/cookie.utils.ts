@@ -21,24 +21,28 @@ export function setAuthCookies(
   isProd: boolean,
   accessExp: string,
   refreshExp: string,
+  cookieDomain?: string,
 ): void {
-  res.cookie(COOKIE_NAMES.ACCESS_TOKEN, accessToken, {
+  const baseOptions = {
     httpOnly: true,
     secure: isProd,
-    sameSite: isProd ? 'strict' : 'lax',
-    maxAge: parseExpiresMs(accessExp),
+    sameSite: (isProd ? 'strict' : 'lax') as 'lax' | 'strict' | 'none',
     path: '/',
+  };
+  res.cookie(COOKIE_NAMES.ACCESS_TOKEN, accessToken, {
+    ...baseOptions,
+    maxAge: parseExpiresMs(accessExp),
+    ...(cookieDomain && { domain: cookieDomain }),
   });
   res.cookie(COOKIE_NAMES.REFRESH_TOKEN, refreshToken, {
-    httpOnly: true,
-    secure: isProd,
-    sameSite: isProd ? 'strict' : 'lax',
+    ...baseOptions,
     maxAge: parseExpiresMs(refreshExp),
-    path: '/',
+    ...(cookieDomain && { domain: cookieDomain }),
   });
 }
 
-export function clearAuthCookies(res: Response): void {
-  res.clearCookie(COOKIE_NAMES.ACCESS_TOKEN, { path: '/' });
-  res.clearCookie(COOKIE_NAMES.REFRESH_TOKEN, { path: '/' });
+export function clearAuthCookies(res: Response, cookieDomain?: string): void {
+  const opts = { path: '/', ...(cookieDomain && { domain: cookieDomain }) };
+  res.clearCookie(COOKIE_NAMES.ACCESS_TOKEN, opts);
+  res.clearCookie(COOKIE_NAMES.REFRESH_TOKEN, opts);
 }

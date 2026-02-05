@@ -59,6 +59,8 @@ services:
     restart: unless-stopped
     env_file:
       - ./.env
+    environment:
+      COOKIE_DOMAIN: .secondary.jamiaarabiaislamia.com
     networks:
       - app-network
     depends_on:
@@ -70,10 +72,13 @@ services:
     image: ${REGISTRY}/${IMAGE_NAME_LOWER}-main-website:latest
     container_name: arabiaislamia-hub-main-website
     restart: unless-stopped
+    environment:
+      - NEXT_PUBLIC_SECONDARY_APP_URL=${NEXT_PUBLIC_SECONDARY_APP_URL}
+      - NEXT_PUBLIC_HUFFAZ_APP_URL=${NEXT_PUBLIC_HUFFAZ_APP_URL}
+      - NEXT_PUBLIC_SCOUTS_APP_URL=${NEXT_PUBLIC_SCOUTS_APP_URL}
+      - NODE_ENV: production
     env_file:
       - ./.env
-    environment:
-      NODE_ENV: production
     networks:
       - app-network
 
@@ -103,6 +108,8 @@ services:
     restart: unless-stopped
     env_file:
       - ./.env
+    environment:
+      COOKIE_DOMAIN: .scouts.jamiaarabiaislamia.com
     networks:
       - app-network
     depends_on:
