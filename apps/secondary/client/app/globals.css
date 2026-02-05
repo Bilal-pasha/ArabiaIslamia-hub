@@ -225,3 +225,15 @@
 [data-theme="secondary"] .fixed button:not(.bg-orange-500) {
   color: hsl(0 0% 95%) !important;
 }
+
+/* Skeleton / shimmer: dark-theme friendly (no white flash) */
+[data-theme="secondary"] .animate-pulse,
+[data-theme="secondary"] [class*="animate-pulse"] {
+  background-color: rgba(255 255 255 / 0.1) !important;
+}
+
+[data-theme="secondary"] .animate-pulse.bg-muted,
+[data-theme="secondary"] [class*="animate-pulse"].bg-muted,
+[data-theme="secondary"] .bg-muted.animate-pulse {
+  background-color: rgba(255 255 255 / 0.12) !important;
+}

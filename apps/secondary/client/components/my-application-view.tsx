@@ -6,16 +6,22 @@ import { Button, Badge } from '@arabiaaislamia/ui';
 import { SecondaryLogo } from '@arabiaaislamia/ui';
 import { publicRoutes } from '@/constants/route';
 import type { AdmissionApplication } from '@/services/admission/admission.service';
-import { ApplicationStepTimeline } from './application-step-timeline';
+import { ApplicationStepTimeline, getLastStatusLabel } from './application-step-timeline';
 
 interface MyApplicationViewProps {
   application: AdmissionApplication;
 }
 
 function getStatusVariant(status: string): 'pending' | 'approved' | 'rejected' {
-  if (status === 'approved') return 'approved';
-  if (status === 'rejected') return 'rejected';
+  if (status === 'approved' || status === 'student') return 'approved';
+  if (status === 'rejected' || status === 'quran_test_failed') return 'rejected';
   return 'pending';
+}
+
+function formatStatusBadge(status: string): string {
+  if (status === 'student') return 'Admission complete';
+  if (status === 'quran_test_failed') return 'Quran test failed';
+  return status.replace(/_/g, ' ').replace(/\b\w/g, (c) => c.toUpperCase());
 }
 
 export function MyApplicationView({ application }: MyApplicationViewProps) {
@@ -48,10 +54,13 @@ export function MyApplicationView({ application }: MyApplicationViewProps) {
                 <p className="text-sm text-slate-300">
                   {application.applicationNumber} · {application.requiredClass}
                 </p>
+                <p className="text-xs text-slate-400 mt-1">
+                  Last status: {getLastStatusLabel(application)}
+                </p>
               </div>
             </div>
             <Badge variant={getStatusVariant(application.status)} className="shrink-0">
-              {application.status}
+              {formatStatusBadge(application.status)}
             </Badge>
           </div>
         </CardHeader>
@@ -60,7 +69,7 @@ export function MyApplicationView({ application }: MyApplicationViewProps) {
             <div className="rounded-lg border border-emerald-400/40 bg-emerald-500/10 p-4 mb-6">
               <p className="font-medium text-emerald-200">Application approved</p>
               <p className="text-sm text-emerald-100/90 mt-1">
-                You can print your oral test admit card below. After passing the oral test, you will be able to download the written test admit card.
+                Admin has approved your admission application. Each step (Quran test, oral test, written test) is updated separately. You can print your oral test admit card below once eligible; after passing the oral test you can download the written test admit card.
               </p>
             </div>
           )}
@@ -72,9 +81,9 @@ export function MyApplicationView({ application }: MyApplicationViewProps) {
           )}
           {application.status === 'pending' && (
             <div className="rounded-lg border border-amber-400/40 bg-amber-500/10 p-4 mb-6">
-              <p className="font-medium text-amber-200">Under review</p>
+              <p className="font-medium text-amber-200">Admission submitted</p>
               <p className="text-sm text-amber-100/90 mt-1">
-                Your application is being reviewed. Check back later for updates.
+                Your application has been submitted. Admin will approve the admission application; then each step (Quran test, oral test, written test) will be updated separately. Check back later for updates.
               </p>
             </div>
           )}

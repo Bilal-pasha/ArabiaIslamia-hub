@@ -22,6 +22,24 @@ export interface StudentByRollDto {
   lastClassName?: string;
 }
 
+/** Plain DTO for renewal list/detail to avoid circular refs when serializing to JSON */
+export interface RenewalDto {
+  id: string;
+  studentId: string;
+  academicSessionId: string;
+  classId: string;
+  sectionId: string;
+  contactOverride: string | null;
+  addressOverride: string | null;
+  status: string;
+  statusReason: string | null;
+  createdAt: Date;
+  student?: { id: string; name: string; rollNumber: string | null };
+  academicSession?: { id: string; name: string };
+  class?: { id: string; name: string };
+  section?: { id: string; name: string };
+}
+
 @Injectable()
 export class AdmissionService {
   constructor(
@@ -286,28 +304,53 @@ export class AdmissionService {
     return { id: renewal.id, message: 'Renewal application submitted successfully' };
   }
 
-  async findAllRenewals(): Promise<RenewalApplication[]> {
-    return this.renewalRepo.find({
+  async findAllRenewals(): Promise<RenewalDto[]> {
+    const list = await this.renewalRepo.find({
       relations: ['student', 'academicSession', 'class', 'section'],
       order: { createdAt: 'DESC' },
     });
+    return list.map((r) => this.toRenewalDto(r));
   }
 
-  async findOneRenewal(id: string): Promise<RenewalApplication | null> {
-    return this.renewalRepo.findOne({
+  async findOneRenewal(id: string): Promise<RenewalDto | null> {
+    const renewal = await this.renewalRepo.findOne({
       where: { id },
       relations: ['student', 'academicSession', 'class', 'section'],
     });
+    return renewal ? this.toRenewalDto(renewal) : null;
+  }
+
+  private toRenewalDto(r: RenewalApplication): RenewalDto {
+    return {
+      id: r.id,
+      studentId: r.studentId,
+      academicSessionId: r.academicSessionId,
+      classId: r.classId,
+      sectionId: r.sectionId,
+      contactOverride: r.contactOverride,
+      addressOverride: r.addressOverride,
+      status: r.status,
+      statusReason: r.statusReason,
+      createdAt: r.createdAt,
+      student: r.student
+        ? { id: r.student.id, name: r.student.name, rollNumber: r.student.rollNumber }
+        : undefined,
+      academicSession: r.academicSession
+        ? { id: r.academicSession.id, name: r.academicSession.name }
+        : undefined,
+      class: r.class ? { id: r.class.id, name: r.class.name } : undefined,
+      section: r.section ? { id: r.section.id, name: r.section.name } : undefined,
+    };
   }
 
   async updateRenewalStatus(
     id: string,
     status: 'approved' | 'rejected',
     reason?: string,
-  ): Promise<RenewalApplication> {
+  ): Promise<RenewalDto> {
     const renewal = await this.renewalRepo.findOne({
       where: { id },
-      relations: ['student'],
+      relations: ['student', 'academicSession', 'class', 'section'],
     });
     if (!renewal) throw new NotFoundException('Renewal application not found');
 
@@ -335,7 +378,7 @@ export class AdmissionService {
     renewal.status = status;
     renewal.statusReason = reason ?? null;
     await this.renewalRepo.save(renewal);
-    return renewal;
+    return this.toRenewalDto(renewal);
   }
 
   private generateApplicationNumber(): string {

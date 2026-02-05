@@ -9,40 +9,88 @@ interface ApplicationStepTimelineProps {
 
 type StepStatus = 'completed' | 'pending' | 'rejected' | 'upcoming';
 
+interface StepResult {
+  status: StepStatus;
+  reason: string | null;
+  detail?: string; // e.g. marks or extra info
+}
+
 function getStepStatus(
   app: AdmissionApplication,
-  stepId: 'submitted' | 'approved' | 'oral' | 'written'
-): { status: StepStatus; reason: string | null } {
+  stepId: 'submitted' | 'approved' | 'quran' | 'oral' | 'written_admit' | 'written_test'
+): StepResult {
   switch (stepId) {
     case 'submitted':
       return { status: 'completed', reason: null };
 
     case 'approved':
       if (app.status === 'approved') return { status: 'completed', reason: null };
-      if (app.status === 'rejected') return { status: 'rejected', reason: app.statusReason ?? null };
-      return { status: 'pending', reason: null };
+      if (app.status === 'rejected' || app.status === 'quran_test_failed')
+        return { status: 'rejected', reason: app.statusReason ?? null };
+      return { status: 'pending', reason: 'Admin will review your application' };
+
+    case 'quran':
+      if (app.status !== 'approved') return { status: 'upcoming', reason: 'Application must be approved first' };
+      if (app.quranTestPassed === true)
+        return {
+          status: 'completed',
+          reason: null,
+          detail: app.quranTestMarks ? `Marks: ${app.quranTestMarks}` : undefined,
+        };
+      if (app.quranTestPassed === false)
+        return {
+          status: 'rejected',
+          reason: app.quranTestReason ?? 'Not passed',
+          detail: app.quranTestMarks ? `Marks: ${app.quranTestMarks}` : undefined,
+        };
+      return { status: 'pending', reason: 'Quran test result not yet updated' };
 
     case 'oral':
-      if (app.status !== 'approved') return { status: 'upcoming', reason: 'Complete application approval first' };
-      if (app.oralTestPassed === true) return { status: 'completed', reason: null };
+      if (app.status !== 'approved') return { status: 'upcoming', reason: null };
+      if (app.quranTestPassed !== true) return { status: 'upcoming', reason: 'Pass Quran test first' };
+      if (app.oralTestPassed === true)
+        return {
+          status: 'completed',
+          reason: null,
+          detail: app.oralTestMarks ? `Marks: ${app.oralTestMarks}` : undefined,
+        };
       if (app.oralTestPassed === false) return { status: 'rejected', reason: null };
       return { status: 'pending', reason: 'Print admit card and attend oral test' };
 
-    case 'written':
+    case 'written_admit':
       if (app.oralTestPassed !== true) return { status: 'upcoming', reason: 'Pass oral test first' };
       if (app.writtenAdmitEligible === true) return { status: 'completed', reason: null };
       return { status: 'pending', reason: 'Eligibility updated after oral test' };
+
+    case 'written_test':
+      if (app.writtenAdmitEligible !== true) return { status: 'upcoming', reason: 'Become eligible for written test first' };
+      if (app.status === 'student') return { status: 'completed', reason: null, detail: 'Admission complete' };
+      if (app.writtenTestPassed === true)
+        return {
+          status: 'completed',
+          reason: null,
+          detail: app.writtenTestMarks ? `Marks: ${app.writtenTestMarks}` : undefined,
+        };
+      if (app.writtenTestPassed === false)
+        return {
+          status: 'rejected',
+          reason: app.writtenTestReason ?? null,
+          detail: app.writtenTestMarks ? `Marks: ${app.writtenTestMarks}` : undefined,
+        };
+      return { status: 'pending', reason: 'Written test result not yet updated' };
 
     default:
       return { status: 'pending', reason: null };
   }
 }
 
-const STEPS: { id: 'submitted' | 'approved' | 'oral' | 'written'; title: string }[] = [
-  { id: 'submitted', title: 'Application submitted' },
+const STEPS: { id: 'submitted' | 'approved' | 'quran' | 'oral' | 'written_admit' | 'written_test'; title: string }[] = [
+  { id: 'submitted', title: 'Admission submitted' },
   { id: 'approved', title: 'Application approved' },
+  { id: 'quran', title: 'Quran test' },
   { id: 'oral', title: 'Oral test' },
-  { id: 'written', title: 'Written test admit' },
+  { id: 'written_admit', title: 'Written test admit' },
+  { id: 'written_test', title: 'Written test' },
 ];
 
 export function ApplicationStepTimeline({ application }: ApplicationStepTimelineProps) {
@@ -57,7 +105,8 @@ export function ApplicationStepTimeline({ application }: ApplicationStepTimeline
         <h3 className="font-semibold mb-4 text-white">Status</h3>
         <ul className="space-y-0">
           {STEPS.map((step, idx) => {
-            const { status, reason } = getStepStatus(application, step.id);
+            const result = getStepStatus(application, step.id);
+            const { status, reason, detail } = result;
             const isNextStep = idx === nextStepIndex;
             const showConnector = idx < STEPS.length - 1;
 
@@ -118,13 +167,14 @@ export function ApplicationStepTimeline({ application }: ApplicationStepTimeline
                         : status === 'rejected'
                           ? 'Rejected'
                           : status === 'pending'
-                            ? (isNextStep ? 'Next step' : 'Pending')
+                            ? isNextStep
+                              ? 'Next step'
+                              : 'Pending'
                             : 'Upcoming'}
                     </span>
                   </div>
-                  {reason && (
-                    <p className="text-sm text-slate-400 mt-1">{reason}</p>
-                  )}
+                  {reason && <p className="text-sm text-slate-400 mt-1">{reason}</p>}
+                  {detail && <p className="text-sm text-slate-300 mt-0.5">{detail}</p>}
                 </div>
               </li>
             );
@@ -133,4 +183,20 @@ export function ApplicationStepTimeline({ application }: ApplicationStepTimeline
       </CardContent>
     </Card>
   );
+}
+
+/** Returns a short "last status" label for the application (e.g. for header or summary). */
+export function getLastStatusLabel(application: AdmissionApplication): string {
+  if (application.status === 'student') return 'Admission complete';
+  if (application.status === 'rejected' || application.status === 'quran_test_failed')
+    return `Application ${application.status === 'quran_test_failed' ? 'Quran test failed' : 'rejected'}`;
+  if (application.writtenTestPassed === false) return 'Written test – not passed';
+  if (application.writtenTestPassed === true) return 'Written test passed';
+  if (application.writtenAdmitEligible) return 'Written test admit ready';
+  if (application.oralTestPassed === false) return 'Oral test – not passed';
+  if (application.oralTestPassed === true) return 'Oral test passed';
+  if (application.quranTestPassed === false) return 'Quran test – not passed';
+  if (application.quranTestPassed === true) return 'Quran test passed';
+  if (application.status === 'approved') return 'Application approved';
+  return 'Admission submitted';
 }
