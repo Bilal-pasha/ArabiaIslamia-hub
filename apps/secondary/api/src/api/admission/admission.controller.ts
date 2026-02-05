@@ -1,6 +1,8 @@
-import { Body, Controller, Get, Param, Patch, Post, UseGuards } from '@nestjs/common';
+import { Body, Controller, Get, Param, Patch, Post, Query, UseGuards } from '@nestjs/common';
 import { AdmissionService } from './admission.service';
 import { SubmitAdmissionDto } from './dto/submit-admission.dto';
+import { SubmitRenewalDto } from './dto/submit-renewal.dto';
+import { UpdateRenewalStatusDto } from './dto/update-renewal-status.dto';
 import { UpdateStatusDto } from './dto/update-status.dto';
 import { UpdateQuranTestDto } from './dto/update-quran-test.dto';
 import { UpdateOralTestDto } from './dto/update-oral-test.dto';
@@ -23,6 +25,59 @@ export class AdmissionController {
     const app = await this.admissionService.findByApplicationNumber(applicationNumber);
     if (!app) return null;
     return app;
+  }
+
+  @Get('academic-sessions')
+  async getAcademicSessions() {
+    return this.admissionService.getAcademicSessions();
+  }
+
+  @Get('classes')
+  async getClasses() {
+    return this.admissionService.getClasses();
+  }
+
+  @Get('sections')
+  async getSections(@Query('classId') classId?: string) {
+    return this.admissionService.getSections(classId);
+  }
+
+  @Get('student-by-roll/:rollNumber')
+  async findStudentByRoll(@Param('rollNumber') rollNumber: string) {
+    const student = await this.admissionService.findStudentByRollNumber(rollNumber);
+    if (!student) return null;
+    return student;
+  }
+
+  @Post('renewal')
+  async submitRenewal(@Body() dto: SubmitRenewalDto) {
+    return this.admissionService.submitRenewal(dto);
+  }
+
+  @Get('renewals')
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles('admin', 'superadmin')
+  async findAllRenewals() {
+    return this.admissionService.findAllRenewals();
+  }
+
+  @Get('renewals/:id')
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles('admin', 'superadmin')
+  async findOneRenewal(@Param('id') id: string) {
+    const renewal = await this.admissionService.findOneRenewal(id);
+    if (!renewal) return null;
+    return renewal;
+  }
+
+  @Patch('renewals/:id/status')
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles('admin', 'superadmin')
+  async updateRenewalStatus(
+    @Param('id') id: string,
+    @Body() dto: UpdateRenewalStatusDto,
+  ) {
+    return this.admissionService.updateRenewalStatus(id, dto.status, dto.reason);
   }
 
   @Get()

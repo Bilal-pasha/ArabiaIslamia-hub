@@ -11,6 +11,7 @@ import {
   Menu,
   X,
   GraduationCap,
+  RefreshCw,
 } from 'lucide-react';
 import { Button, SecondaryLogo } from '@arabiaaislamia/ui';
 import { apiClient } from '@/utils/axios-instance';
@@ -32,6 +33,8 @@ function getPageTitle(pathname: string): string {
   if (pathname.startsWith(privateRoutes.users)) return 'Users';
   if (pathname === privateRoutes.applications) return 'Applications';
   if (pathname.match(/\/applications\/[^/]+$/)) return 'Application detail';
+  if (pathname === privateRoutes.renewals) return 'Renewals';
+  if (pathname.match(/\/renewals\/[^/]+$/)) return 'Renewal detail';
   if (pathname === privateRoutes.students) return 'Students';
   if (pathname.match(/\/students\/[^/]+$/)) return 'Student detail';
   return 'Admin';
@@ -71,6 +74,7 @@ export function AdminDashboardLayout({
   const navItems = [
     { href: privateRoutes.dashboard, label: 'Dashboard', icon: LayoutDashboard },
     { href: privateRoutes.applications, label: 'Applications', icon: ClipboardList },
+    { href: privateRoutes.renewals, label: 'Renewals', icon: RefreshCw },
     { href: privateRoutes.students, label: 'Students', icon: GraduationCap },
     ...(user?.role === 'superadmin'
       ? [{ href: privateRoutes.users, label: 'Users', icon: Users }]

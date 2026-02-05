@@ -33,7 +33,7 @@ export default function SecondaryHubPage() {
           <motion.div
             variants={fadeInUp}
             transition={{ ...defaultTransition, delay: 0.15 }}
-            className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 w-full mx-auto"
+            className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 w-full mx-auto"
           >
             <Link href={externalUrls.registration}>
               <motion.div
@@ -69,6 +69,25 @@ export default function SecondaryHubPage() {
                 <p className="text-slate-400 text-sm text-center">Check status with your application number</p>
                 <span className="mt-4 text-emerald-400 text-sm font-medium group-hover:underline">
                   Check Status →
+                </span>
+              </motion.div>
+            </Link>
+
+            <Link href={externalUrls.renew}>
+              <motion.div
+                whileHover={{ scale: 1.02, y: -4 }}
+                whileTap={{ scale: 0.98 }}
+                className="group flex flex-col items-center p-5 sm:p-6 lg:p-8 rounded-xl sm:rounded-2xl bg-white/5 backdrop-blur border border-white/10 hover:bg-white/10 hover:border-amber-400/50 transition-all duration-300 cursor-pointer min-w-0"
+              >
+                <div className="size-14 rounded-xl bg-amber-500/20 flex items-center justify-center mb-4 group-hover:bg-amber-500/30 transition-colors">
+                  <svg className="size-8 text-amber-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+                  </svg>
+                </div>
+                <h2 className="text-xl font-semibold mb-2">Renew admission</h2>
+                <p className="text-slate-400 text-sm text-center">Renew your enrollment for the next academic year</p>
+                <span className="mt-4 text-amber-400 text-sm font-medium group-hover:underline">
+                  Renew →
                 </span>
               </motion.div>
             </Link>

@@ -17,6 +17,16 @@ export const admissionEndpoints = {
   fullyApprove: (id: string) => `/admission/${id}/fully-approve`,
   studentsList: '/admission/students',
   studentDetail: (id: string) => `/admission/students/${id}`,
+  academicSessions: '/admission/academic-sessions',
+  classes: '/admission/classes',
+  sections: (classId?: string) =>
+    classId ? `/admission/sections?classId=${encodeURIComponent(classId)}` : '/admission/sections',
+  studentByRoll: (rollNumber: string) =>
+    `/admission/student-by-roll/${encodeURIComponent(rollNumber)}`,
+  submitRenewal: '/admission/renewal',
+  renewalsList: '/admission/renewals',
+  renewalDetail: (id: string) => `/admission/renewals/${id}`,
+  renewalStatus: (id: string) => `/admission/renewals/${id}/status`,
 } as const;
 
 export const uploadEndpoints = {

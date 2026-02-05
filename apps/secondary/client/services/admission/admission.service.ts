@@ -162,3 +162,121 @@ export async function getFileViewUrl(key: string): Promise<string> {
   const { data } = await apiClient.get<{ url: string }>(uploadEndpoints.presignGet(key));
   return data.url;
 }
+
+// Renewal – reference data and student lookup (public)
+export interface AcademicSessionDto {
+  id: string;
+  name: string;
+  startDate: string;
+  endDate: string;
+  isActive: boolean;
+}
+
+export interface ClassDto {
+  id: string;
+  name: string;
+  sortOrder: number;
+}
+
+export interface SectionDto {
+  id: string;
+  name: string;
+  classId: string;
+  sortOrder: number;
+}
+
+export interface StudentByRollDto {
+  id: string;
+  name: string;
+  rollNumber: string | null;
+  guardianName: string | null;
+  lastSessionName?: string;
+  lastClassName?: string;
+}
+
+export async function fetchAcademicSessions(): Promise<AcademicSessionDto[]> {
+  const { data } = await apiClient.get<AcademicSessionDto[]>(admissionEndpoints.academicSessions);
+  return data;
+}
+
+export async function fetchClasses(): Promise<ClassDto[]> {
+  const { data } = await apiClient.get<ClassDto[]>(admissionEndpoints.classes);
+  return data;
+}
+
+export async function fetchSections(classId?: string): Promise<SectionDto[]> {
+  const url = admissionEndpoints.sections(classId);
+  const { data } = await apiClient.get<SectionDto[]>(url);
+  return data;
+}
+
+export async function findStudentByRoll(rollNumber: string): Promise<StudentByRollDto | null> {
+  const { data } = await apiClient.get<StudentByRollDto | null>(
+    admissionEndpoints.studentByRoll(rollNumber)
+  );
+  return data;
+}
+
+export interface SubmitRenewalPayload {
+  studentId: string;
+  academicSessionId: string;
+  classId: string;
+  sectionId: string;
+  contactOverride?: string;
+  addressOverride?: string;
+}
+
+export interface SubmitRenewalResponse {
+  id: string;
+  message: string;
+}
+
+export async function submitRenewal(payload: SubmitRenewalPayload): Promise<SubmitRenewalResponse> {
+  const { data } = await apiClient.post<SubmitRenewalResponse>(
+    admissionEndpoints.submitRenewal,
+    payload
+  );
+  return data;
+}
+
+// Renewal – admin
+export interface RenewalApplicationDto {
+  id: string;
+  studentId: string;
+  academicSessionId: string;
+  classId: string;
+  sectionId: string;
+  contactOverride: string | null;
+  addressOverride: string | null;
+  status: string;
+  statusReason: string | null;
+  createdAt: string;
+  student?: Student;
+  academicSession?: AcademicSessionDto;
+  class?: ClassDto;
+  section?: SectionDto;
+}
+
+export async function fetchRenewals(): Promise<RenewalApplicationDto[]> {
+  const { data } = await apiClient.get<RenewalApplicationDto[]>(admissionEndpoints.renewalsList);
+  return data;
+}
+
+export async function fetchRenewal(id: string): Promise<RenewalApplicationDto | null> {
+  const { data } = await apiClient.get<RenewalApplicationDto | null>(
+    admissionEndpoints.renewalDetail(id)
+  );
+  return data;
+}
+
+export async function updateRenewalStatus(
+  id: string,
+  status: 'approved' | 'rejected',
+  reason?: string
+): Promise<RenewalApplicationDto> {
+  const { data } = await apiClient.patch<RenewalApplicationDto>(
+    admissionEndpoints.renewalStatus(id),
+    { status, reason }
+  );
+  return data;
+}

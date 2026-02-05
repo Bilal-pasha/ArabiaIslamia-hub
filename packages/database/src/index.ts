@@ -9,6 +9,7 @@ export { Parent } from './entities/parent.entity';
 export { Registration } from './entities/registration.entity';
 export { Attendance, type AttendanceStatus } from './entities/attendance.entity';
 export { AdmissionApplication } from './entities/admission-application.entity';
+export { RenewalApplication } from './entities/renewal-application.entity';
 export { FeeType } from './entities/fee-type.entity';
 export { FeeStructure } from './entities/fee-structure.entity';
 export { FeePayment, type FeePaymentStatus } from './entities/fee-payment.entity';
