@@ -15,6 +15,7 @@ import {
   FeeStructure,
   FeePayment,
   AdmissionApplication,
+  RenewalApplication,
 } from '@arabiaaislamia/database';
 
 export function getTypeOrmOptions(): TypeOrmModuleOptions {
@@ -36,6 +37,7 @@ export function getTypeOrmOptions(): TypeOrmModuleOptions {
       FeeStructure,
       FeePayment,
       AdmissionApplication,
+      RenewalApplication,
     ],
     migrations: [],
     synchronize: process.env.NODE_ENV !== 'production',

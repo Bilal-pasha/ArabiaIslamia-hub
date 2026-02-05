@@ -184,6 +184,42 @@ The workflow triggers on:
    - Executes deployment script
    - Verifies deployment
 
+## Database migrations
+
+The APIs use TypeORM with `synchronize: false` in production, so **schema changes require running migrations manually** after deployment. If you add new entities or migrations (e.g. `renewal_applications` for the secondary API), run the corresponding migration once the new code is deployed.
+
+### Running migrations
+
+From the **repository root**, with environment variables set for the **target database** (e.g. production):
+
+```bash
+# Secondary API (e.g. renewal_applications and other secondary migrations)
+pnpm --filter @arabiaaislamia/database migrate:secondary
+
+# Huffaz API
+pnpm --filter @arabiaaislamia/database migrate:huffaz
+
+# Scouts portal API
+pnpm --filter @arabiaaislamia/database migrate:scouts-portal
+```
+
+**Production:** Set `DB_HOST`, `DB_PORT`, `POSTGRES_USER`, `POSTGRES_PASSWORD` (and `SECONDARY_DB_NAME` if you override the default `secondary_db`) so the command connects to the production DB, then run the command from a machine that can reach that database (e.g. your laptop with VPN, or the GCE instance if the DB is there).
+
+**Example (production secondary DB):**
+
+```bash
+export DB_HOST=your-db-host
+export DB_PORT=5432
+export POSTGRES_USER=postgres
+export POSTGRES_PASSWORD=your-password
+# Optional: export SECONDARY_DB_NAME=secondary_db
+pnpm --filter @arabiaaislamia/database migrate:secondary
+```
+
+If `GET /admission/renewals` (or other new endpoints) returns **500** after a deploy, the most likely cause is that the new table(s) do not exist yet—run the migration for that app as above.
+
+---
+
 ## Troubleshooting
 
 ### SSH Connection Issues
