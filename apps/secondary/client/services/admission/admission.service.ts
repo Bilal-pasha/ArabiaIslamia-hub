@@ -1,4 +1,5 @@
 import { apiClient } from '@/utils/axios-instance';
+import { admissionEndpoints, uploadEndpoints } from '@/constants/api-endpoints';
 
 export interface AdmissionApplication {
   id: string;
@@ -49,19 +50,19 @@ export async function submitAdmission(
   data: Record<string, string>
 ): Promise<SubmitAdmissionResponse> {
   const { data: response } = await apiClient.post<SubmitAdmissionResponse>(
-    '/admission/submit',
+    admissionEndpoints.submit,
     data
   );
   return response;
 }
 
 export async function fetchApplications(): Promise<AdmissionApplication[]> {
-  const { data } = await apiClient.get<AdmissionApplication[]>('/admission');
+  const { data } = await apiClient.get<AdmissionApplication[]>(admissionEndpoints.list);
   return data;
 }
 
 export async function fetchApplication(id: string): Promise<AdmissionApplication> {
-  const { data } = await apiClient.get<AdmissionApplication>(`/admission/${id}`);
+  const { data } = await apiClient.get<AdmissionApplication>(admissionEndpoints.detail(id));
   return data;
 }
 
@@ -69,7 +70,7 @@ export async function findByApplicationNumber(
   applicationNumber: string
 ): Promise<AdmissionApplication | null> {
   const { data } = await apiClient.get<AdmissionApplication | null>(
-    `/admission/by-number/${encodeURIComponent(applicationNumber)}`
+    admissionEndpoints.byNumber(applicationNumber)
   );
   return data;
 }
@@ -79,7 +80,7 @@ export async function updateStatus(
   status: 'approved' | 'rejected',
   reason?: string
 ): Promise<AdmissionApplication> {
-  const { data } = await apiClient.patch<AdmissionApplication>(`/admission/${id}/status`, {
+  const { data } = await apiClient.patch<AdmissionApplication>(admissionEndpoints.status(id), {
     status,
     reason,
   });
@@ -90,18 +91,18 @@ export async function updateOralTest(
   id: string,
   payload: { marks?: string; passed: boolean; reason?: string }
 ): Promise<AdmissionApplication> {
-  const { data } = await apiClient.patch<AdmissionApplication>(`/admission/${id}/oral-test`, payload);
+  const { data } = await apiClient.patch<AdmissionApplication>(admissionEndpoints.oralTest(id), payload);
   return data;
 }
 
 export async function setWrittenAdmitEligible(id: string): Promise<AdmissionApplication> {
   const { data } = await apiClient.patch<AdmissionApplication>(
-    `/admission/${id}/written-admit-eligible`
+    admissionEndpoints.writtenAdmitEligible(id)
   );
   return data;
 }
 
 export async function getFileViewUrl(key: string): Promise<string> {
-  const { data } = await apiClient.get<{ url: string }>(`/upload/presign-get?key=${encodeURIComponent(key)}`);
+  const { data } = await apiClient.get<{ url: string }>(uploadEndpoints.presignGet(key));
   return data.url;
 }

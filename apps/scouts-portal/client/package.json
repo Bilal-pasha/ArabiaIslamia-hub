@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "@arabiaaislamia/ui": "workspace:*",
+    "@tanstack/react-query": "^5.62.0",
     "@arabiaaislamia/animations": "workspace:*",
     "@heroicons/react": "^2.1.5",
     "axios": "^1.7.0",

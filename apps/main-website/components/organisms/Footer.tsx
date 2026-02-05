@@ -21,9 +21,6 @@ const SOCIAL_LINKS = [
   { Icon: Youtube, href: '#', label: 'YouTube' },
 ];
 
-function isExternal(href: string) {
-  return href.startsWith('http');
-}
 
 export function Footer() {
   const ref = useRef(null);
@@ -79,12 +76,12 @@ export function Footer() {
                   <li key={app.href + app.text}>
                     <a
                       href={app.href}
-                      target={isExternal(app.href) ? '_blank' : undefined}
-                      rel={isExternal(app.href) ? 'noopener noreferrer' : undefined}
+                      target={'_blank'}
+                      rel={'noopener noreferrer'}
                       className="inline-flex items-center gap-1.5 text-sm text-amber-900/90 transition-colors hover:text-amber-700 focus:outline-none focus:ring-2 focus:ring-amber-400 focus:ring-offset-2 rounded"
                     >
                       {app.text}
-                      {isExternal(app.href) && <ExternalLink className="h-3.5 w-3.5 opacity-70" />}
+                      <ExternalLink className="h-3.5 w-3.5 opacity-70" />
                     </a>
                   </li>
                 ))}

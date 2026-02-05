@@ -8,7 +8,7 @@ import { getCurrentMonthYear, tableHead } from "@/constant/constant";
 import { useRouter } from "next/navigation";
 import { FaArrowLeft, FaPlus } from "react-icons/fa";
 import { CheckCircleIcon, XCircleIcon } from "@heroicons/react/24/solid";
-import useFetchStudents from "@/utils/hooks/useFetchStudents";
+import { useStudents } from "@/hooks/useStudentQueries";
 import { protectedRoutes } from "@/utils/routes";
 import { PrinterIcon } from "@heroicons/react/24/outline";
 import PrintComponent from "@/components/PrintStudentIdCard/PrintStudentIdCard";
@@ -17,13 +17,10 @@ import { useReactToPrint } from "react-to-print";
 const StudentTable = ({ params }: { params: { slug: string } }) => {
   const classSlug = params.slug;
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [tableLoading, setTableLoading] = useState<boolean>(true);
   const router = useRouter();
   const currentMonthYear = getCurrentMonthYear();
-  const { students, setStudents } = useFetchStudents(
-    classSlug,
-    setTableLoading
-  );
+  const { data: students = [], isLoading: tableLoading, refetch } = useStudents(classSlug);
+  const setStudents = (_?: unknown) => { refetch(); };
 
   // Ref for react-to-print
   const printRef = useRef<HTMLDivElement>(null);

@@ -1,31 +1,31 @@
 "use client";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/Button/Button";
-import { useEffect, useRef, useState } from "react";
+import { useRef, useState } from "react";
 import { toast, TableSkeleton, AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from "@arabiaaislamia/ui";
 import StudentModal from "@/components/StudentModal/StudenModal";
 import { FaArrowLeft } from "react-icons/fa";
 import { useReactToPrint } from "react-to-print";
 import Invoice from "@/components/Invoice/Invoice";
 import { FaPrint, FaTrash, FaEdit } from "react-icons/fa";
-import { useStudentData } from "@/utils/hooks/useStudentData";
-import { apiClient } from "@/utils/axios-instance";
+import { useStudent, useDeleteStudent } from "@/hooks/useStudentQueries";
 
-export default function Page({ params }: any) {
-  const [isLoading, setIsLoading] = useState<boolean>(true)
-  const [modal, setModal] = useState(false)
-  const [updateModal, setUpdateModal] = useState<boolean>(false)
-  const [students, setStudents] = useState([]);
+export default function Page({ params }: { params: { id: string } }) {
+  const [modal, setModal] = useState(false);
+  const [updateModal, setUpdateModal] = useState<boolean>(false);
+  const [students, setStudents] = useState<unknown[]>([]);
   const router = useRouter();
   const invoiceRef = useRef(null);
-  const { student, setStudent } = useStudentData(setIsLoading, params);
+  const { data: student, isLoading, refetch } = useStudent(params?.id ?? null);
+  const setStudent = () => { refetch(); };
+  const deleteMutation = useDeleteStudent();
   const handleDeleteButton = async (studentId: string) => {
     try {
-      const res = await apiClient.delete(`/api/students/${studentId}`);
-      if (res.data?.success ?? res.status === 200) {
+      const res = await deleteMutation.mutateAsync(studentId);
+      if (res?.success ?? true) {
         setModal(false);
         router.back();
-        toast.success(res.data?.message ?? "Deleted");
+        toast.success(res?.message ?? "Deleted");
       }
     } catch (error: unknown) {
       toast.error(error instanceof Error ? error.message : "Failed to delete");

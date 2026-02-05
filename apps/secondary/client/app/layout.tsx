@@ -1,5 +1,6 @@
 import './globals.css';
 import { PageFadeUp } from '@/components/page-fade-up';
+import { Providers } from '@/components/providers';
 
 export const metadata = {
   title: {
@@ -26,9 +27,11 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         />
       </head>
       <body className="font-sans antialiased overflow-x-hidden" suppressHydrationWarning>
-        <PageFadeUp className="min-h-screen w-full min-w-0">
-          {children}
-        </PageFadeUp>
+        <Providers>
+          <PageFadeUp className="min-h-screen w-full min-w-0">
+            {children}
+          </PageFadeUp>
+        </Providers>
       </body>
     </html>
   );

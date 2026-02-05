@@ -1,4 +1,5 @@
 import { apiClient } from '@/utils/axios-instance';
+import { uploadEndpoints } from '@/constants/api-endpoints';
 
 export interface PresignResponse {
   url: string;
@@ -10,7 +11,7 @@ export async function getPresignedUrl(
   filename: string,
   contentType?: string
 ): Promise<PresignResponse> {
-  const { data } = await apiClient.post<PresignResponse>('/upload/presign', {
+  const { data } = await apiClient.post<PresignResponse>(uploadEndpoints.presign, {
     field,
     filename,
     contentType,
