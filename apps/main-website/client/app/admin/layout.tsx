@@ -1,7 +1,7 @@
 'use client';
 
 import { usePathname } from 'next/navigation';
-import { AdminDashboardLayout } from '@/client/components/admin-dashboard-layout';
+import { AdminDashboardLayout } from '@/components/admin-dashboard-layout';
 import { adminRoutes } from '@/constants/route';
 
 function isSigninPath(pathname: string) {

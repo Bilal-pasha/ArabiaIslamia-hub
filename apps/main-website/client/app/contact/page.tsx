@@ -1,7 +1,7 @@
 'use client';
 
 import { motion } from 'framer-motion';
-import { DonateFormSection } from '@/client/components/organisms';
+import { DonateFormSection } from '@/components/organisms';
 
 export default function ContactPage() {
   return (

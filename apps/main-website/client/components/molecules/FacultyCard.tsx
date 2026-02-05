@@ -4,8 +4,8 @@ import Link from 'next/link';
 import { motion } from 'framer-motion';
 import { useInView } from 'framer-motion';
 import { useRef } from 'react';
-import { Button } from '@/client/components/atoms';
-import { Card, CardContent, CardFooter } from '@/client/components/atoms';
+import { Button } from '@/components/atoms';
+import { Card, CardContent, CardFooter } from '@/components/atoms';
 import { cn } from '@/lib/utils';
 
 interface FacultyCardProps {

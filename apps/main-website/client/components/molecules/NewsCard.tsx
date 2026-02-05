@@ -2,8 +2,8 @@
 
 import Image from 'next/image';
 import { motion } from 'framer-motion';
-import { Button } from '@/client/components/atoms';
-import { Card, CardContent, CardFooter } from '@/client/components/atoms';
+import { Button } from '@/components/atoms';
+import { Card, CardContent, CardFooter } from '@/components/atoms';
 import { fadeInUp } from '@arabiaaislamia/animations';
 
 interface NewsCardProps {

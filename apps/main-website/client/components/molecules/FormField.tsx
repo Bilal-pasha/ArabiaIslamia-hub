@@ -1,9 +1,9 @@
 'use client';
 
 import type { FieldValues, Path, UseFormRegister } from 'react-hook-form';
-import { Input } from '@/client/components/atoms';
-import { Label } from '@/client/components/atoms';
-import { Textarea } from '@/client/components/atoms';
+import { Input } from '@/components/atoms';
+import { Label } from '@/components/atoms';
+import { Textarea } from '@/components/atoms';
 import { cn } from '@/lib/utils';
 
 interface FormFieldProps<TFieldValues extends FieldValues = FieldValues> {

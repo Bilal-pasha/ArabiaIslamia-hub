@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { HeroCarousel, WhiteSection, FacultiesSection, StatisticSection, NewsSection, DonateFormSection } from '@/client/components/organisms';
+import { HeroCarousel, WhiteSection, FacultiesSection, StatisticSection, NewsSection, DonateFormSection } from '@/components/organisms';
 import { getPublicHome } from '@/services/cms.service';
 import type { PublicHomeDto } from '@/services/cms.service';
 

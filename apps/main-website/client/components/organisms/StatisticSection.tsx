@@ -1,7 +1,7 @@
 'use client';
 
 import { motion } from 'framer-motion';
-import { StatCard } from '@/client/components/molecules';
+import { StatCard } from '@/components/molecules';
 
 const STATS = [
   { value: 1500, label: 'Total Pass outs' },
