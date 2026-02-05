@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react';
 import { useParams } from 'next/navigation';
 import Link from 'next/link';
-import { Button, SecondaryLogo } from '@arabiaaislamia/ui';
+import { Button, SecondaryLogo, toast } from '@arabiaaislamia/ui';
 import { AdmitCardSkeleton } from '@/components/AdmitCardSkeleton';
 import { findByApplicationNumber } from '@/services/admission/admission.service';
 import { publicRoutes } from '@/constants/route';
@@ -40,9 +40,15 @@ export default function OralAdmitCardPage() {
     findByApplicationNumber(decodeURIComponent(applicationNumber))
       .then((app) => {
         if (app && app.status === 'approved') setApplication(app);
-        else setError('Application not found or not approved');
+        else {
+          setError('Application not found or not approved');
+          toast.error('Application not found or not approved');
+        }
       })
-      .catch(() => setError('Failed to load'))
+      .catch(() => {
+        setError('Failed to load');
+        toast.error('Failed to load');
+      })
       .finally(() => setLoading(false));
   }, [applicationNumber]);
 

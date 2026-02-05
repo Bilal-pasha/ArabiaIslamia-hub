@@ -15,6 +15,7 @@ import {
   TableRow,
   Badge,
   TableSkeleton,
+  toast,
 } from '@arabiaaislamia/ui';
 import { fetchApplications, type AdmissionApplication } from '@/services/admission/admission.service';
 import { fadeInUp, defaultTransition } from '@arabiaaislamia/animations';
@@ -40,7 +41,11 @@ export default function AdminApplicationsPage() {
   useEffect(() => {
     fetchApplications()
       .then(setApplications)
-      .catch((err) => setError(err instanceof Error ? err.message : 'Failed to load'))
+      .catch((err) => {
+        const msg = err instanceof Error ? err.message : 'Failed to load';
+        setError(msg);
+        toast.error(msg);
+      })
       .finally(() => setLoading(false));
   }, []);
 

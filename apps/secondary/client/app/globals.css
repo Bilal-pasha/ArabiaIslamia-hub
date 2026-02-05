@@ -237,3 +237,18 @@
 [data-theme="secondary"] .bg-muted.animate-pulse {
   background-color: rgba(255 255 255 / 0.12) !important;
 }
+
+/* Print: application detail — white page, only print content visible */
+@media print {
+
+  body,
+  html {
+    background: white !important;
+  }
+
+  #application-print {
+    display: block !important;
+    background: white !important;
+    color: black !important;
+  }
+}

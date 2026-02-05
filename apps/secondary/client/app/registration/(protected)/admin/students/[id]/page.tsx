@@ -11,6 +11,7 @@ import {
   CardTitle,
   Button,
   DetailPageSkeleton,
+  toast,
 } from '@arabiaaislamia/ui';
 import { fetchStudent, getFileViewUrl, type Student } from '@/services/admission/admission.service';
 import { privateRoutes } from '@/constants/route';
@@ -56,7 +57,11 @@ export default function StudentDetailPage() {
   useEffect(() => {
     fetchStudent(id)
       .then(setStudent)
-      .catch((err) => setError(err instanceof Error ? err.message : 'Failed to load'))
+      .catch((err) => {
+        const msg = err instanceof Error ? err.message : 'Failed to load';
+        setError(msg);
+        toast.error(msg);
+      })
       .finally(() => setLoading(false));
   }, [id]);
 

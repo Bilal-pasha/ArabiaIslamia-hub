@@ -14,6 +14,7 @@ import {
   Label,
   Badge,
   DetailPageSkeleton,
+  toast,
 } from '@arabiaaislamia/ui';
 import {
   fetchRenewal,
@@ -48,7 +49,11 @@ export default function RenewalDetailPage() {
     setLoading(true);
     fetchRenewal(id)
       .then(setRenewal)
-      .catch((err) => setError(err instanceof Error ? err.message : 'Failed to load'))
+      .catch((err) => {
+        const msg = err instanceof Error ? err.message : 'Failed to load';
+        setError(msg);
+        toast.error(msg);
+      })
       .finally(() => setLoading(false));
   };
 
@@ -61,8 +66,11 @@ export default function RenewalDetailPage() {
     try {
       await updateRenewalStatus(id, 'approved');
       refetch();
+      toast.success('Renewal approved — registration created');
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Failed to update');
+      const msg = err instanceof Error ? err.message : 'Failed to update';
+      setError(msg);
+      toast.error(msg);
     } finally {
       setActionLoading(false);
     }
@@ -75,8 +83,11 @@ export default function RenewalDetailPage() {
       setShowRejectInput(false);
       setRejectReason('');
       refetch();
+      toast.success('Renewal rejected');
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Failed to update');
+      const msg = err instanceof Error ? err.message : 'Failed to update';
+      setError(msg);
+      toast.error(msg);
     } finally {
       setActionLoading(false);
     }

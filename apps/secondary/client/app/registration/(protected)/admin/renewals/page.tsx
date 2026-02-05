@@ -15,6 +15,7 @@ import {
   TableRow,
   Badge,
   TableSkeleton,
+  toast,
 } from '@arabiaaislamia/ui';
 import { fetchRenewals, type RenewalApplicationDto } from '@/services/admission/admission.service';
 import { fadeInUp, defaultTransition } from '@arabiaaislamia/animations';
@@ -39,7 +40,11 @@ export default function AdminRenewalsPage() {
   useEffect(() => {
     fetchRenewals()
       .then(setRenewals)
-      .catch((err) => setError(err instanceof Error ? err.message : 'Failed to load'))
+      .catch((err) => {
+        const msg = err instanceof Error ? err.message : 'Failed to load';
+        setError(msg);
+        toast.error(msg);
+      })
       .finally(() => setLoading(false));
   }, []);
 

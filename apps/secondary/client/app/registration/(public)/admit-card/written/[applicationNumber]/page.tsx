@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react';
 import { useParams } from 'next/navigation';
 import Link from 'next/link';
-import { Button, SecondaryLogo } from '@arabiaaislamia/ui';
+import { Button, SecondaryLogo, toast } from '@arabiaaislamia/ui';
 import { AdmitCardSkeleton } from '@/components/AdmitCardSkeleton';
 import { findByApplicationNumber } from '@/services/admission/admission.service';
 import { publicRoutes } from '@/constants/route';
@@ -41,9 +41,16 @@ export default function WrittenAdmitCardPage() {
       .then((app) => {
         if (app && app.oralTestPassed === true && app.writtenAdmitEligible === true)
           setApplication(app);
-        else setError('Application not found or not eligible for written test admit card');
+        else {
+          const msg = 'Application not found or not eligible for written test admit card';
+          setError(msg);
+          toast.error(msg);
+        }
       })
-      .catch(() => setError('Failed to load'))
+      .catch(() => {
+        setError('Failed to load');
+        toast.error('Failed to load');
+      })
       .finally(() => setLoading(false));
   }, [applicationNumber]);
 

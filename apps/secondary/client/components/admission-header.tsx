@@ -1,7 +1,7 @@
 'use client';
 
 import Link from 'next/link';
-import { ClipboardList, Building2 } from 'lucide-react';
+import { ClipboardList, Building2, Home } from 'lucide-react';
 import { SecondaryLogo, Button } from '@arabiaaislamia/ui';
 import { publicRoutes, privateRoutes } from '@/constants/route';
 
@@ -20,6 +20,12 @@ export function AdmissionHeader() {
             </div>
           </div>
           <div className="flex gap-2 shrink-0 flex-wrap">
+            <Button variant="outline" size="sm" asChild>
+              <Link href={publicRoutes.home} className="inline-flex items-center gap-2 text-current">
+                <Home className="size-4" />
+                Back to main menu
+              </Link>
+            </Button>
             <Button variant="outline" size="sm" asChild>
               <Link href={publicRoutes.status} className="inline-flex items-center gap-2 text-current">
                 <ClipboardList className="size-4" />

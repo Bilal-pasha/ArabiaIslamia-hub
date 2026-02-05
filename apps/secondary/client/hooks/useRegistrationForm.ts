@@ -9,6 +9,7 @@ import {
 import { INITIAL_FORM_DATA } from '@/lib/admission-constants';
 import { submitAdmission } from '@/services/admission/admission.service';
 import { getPresignedUrl, uploadToPresignedUrl } from '@/services/upload/upload.service';
+import { toast } from '@arabiaaislamia/ui';
 import type { DocumentFileKey } from '@/components/form-step-documents';
 
 const DOCUMENT_KEYS: DocumentFileKey[] = ['photoFile', 'idFile', 'authorityLetterFile', 'previousResultFile'];
@@ -95,9 +96,12 @@ export function useRegistrationForm() {
         const { applicationNumber: appNum } = await submitAdmission(submitData);
         setApplicationNumber(appNum);
         setSubmitted(true);
+        toast.success('Application submitted successfully. Save your application number.');
       } catch (err) {
-        setErrors({ _form: err instanceof Error ? err.message : 'Submission failed. Please try again.' });
+        const msg = err instanceof Error ? err.message : 'Submission failed. Please try again.';
+        setErrors({ _form: msg });
         setStep(4);
+        toast.error(msg);
       } finally {
         setIsSubmitting(false);
       }

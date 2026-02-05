@@ -19,6 +19,7 @@ import {
   TableRow,
   Badge,
   TableSkeleton,
+  toast,
 } from '@arabiaaislamia/ui';
 import { fadeInUp, defaultTransition } from '@arabiaaislamia/animations';
 import { apiClient } from '@/utils/axios-instance';
@@ -53,7 +54,11 @@ export default function AdminUsersPage() {
       .catch((err) => {
         const status = (err as { response?: { status?: number } })?.response?.status;
         if (status === 403) router.replace(privateRoutes.dashboard);
-        else setError(err instanceof Error ? err.message : 'Failed to load');
+        else {
+          const msg = err instanceof Error ? err.message : 'Failed to load';
+          setError(msg);
+          toast.error(msg);
+        }
       })
       .finally(() => setLoading(false));
   };
@@ -73,8 +78,11 @@ export default function AdminUsersPage() {
       setPassword('');
       setShowForm(false);
       fetchUsers();
+      toast.success('Admin created');
     } catch (err) {
-      setFormError(err instanceof Error ? err.message : 'Failed to create admin');
+      const msg = err instanceof Error ? err.message : 'Failed to create admin';
+      setFormError(msg);
+      toast.error(msg);
     } finally {
       setSubmitting(false);
     }

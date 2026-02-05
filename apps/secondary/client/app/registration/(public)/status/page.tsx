@@ -4,7 +4,7 @@ import { useState } from 'react';
 import Link from 'next/link';
 import { motion, AnimatePresence } from 'framer-motion';
 import { publicRoutes } from '@/constants/route';
-import { SecondaryLogo, Button, Input, Label, Card, CardContent, CardTitle } from '@arabiaaislamia/ui';
+import { SecondaryLogo, Button, Input, Label, Card, CardContent, CardTitle, toast } from '@arabiaaislamia/ui';
 import { fadeInUp, defaultTransition } from '@arabiaaislamia/animations';
 import { findByApplicationNumber } from '@/services/admission/admission.service';
 import { MyApplicationView } from '@/components/my-application-view';
@@ -28,10 +28,13 @@ export default function AdmissionStatusPage() {
         setStatus('found');
       } else {
         setStatus('not-found');
+        toast.error('No application found with this number.');
       }
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Something went wrong');
+      const msg = err instanceof Error ? err.message : 'Something went wrong';
+      setError(msg);
       setStatus('not-found');
+      toast.error(msg);
     }
   };
 

@@ -16,6 +16,7 @@ import {
   SelectTrigger,
   SelectValue,
   SecondaryLogo,
+  toast,
 } from '@arabiaaislamia/ui';
 import { fadeInUp, defaultTransition } from '@arabiaaislamia/animations';
 import { publicRoutes } from '@/constants/route';
@@ -85,9 +86,12 @@ export default function RenewAdmissionPage() {
         setStudent(s);
       } else {
         setLookupError('No student found with this roll number.');
+        toast.error('No student found with this roll number.');
       }
     } catch (err) {
-      setLookupError(err instanceof Error ? err.message : 'Lookup failed.');
+      const msg = err instanceof Error ? err.message : 'Lookup failed.';
+      setLookupError(msg);
+      toast.error(msg);
     } finally {
       setLookupLoading(false);
     }
@@ -113,8 +117,11 @@ export default function RenewAdmissionPage() {
       });
       setRenewalId(res.id);
       setStep('success');
+      toast.success('Renewal application submitted');
     } catch (err) {
-      setSubmitError(err instanceof Error ? err.message : 'Submission failed.');
+      const msg = err instanceof Error ? err.message : 'Submission failed.';
+      setSubmitError(msg);
+      toast.error(msg);
     } finally {
       setSubmitLoading(false);
     }

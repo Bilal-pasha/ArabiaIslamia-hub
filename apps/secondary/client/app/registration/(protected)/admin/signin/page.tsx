@@ -3,7 +3,7 @@
 import { Suspense, useState } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import Link from 'next/link';
-import { Card, CardContent, CardTitle, Skeleton } from '@arabiaaislamia/ui';
+import { Card, CardContent, CardTitle, Skeleton, toast } from '@arabiaaislamia/ui';
 import { Button, Input, Label } from '@arabiaaislamia/ui';
 import { SecondaryLogo } from '@arabiaaislamia/ui';
 import { publicRoutes, privateRoutes } from '@/constants/route';
@@ -24,10 +24,13 @@ function AdminSigninContent() {
     setLoading(true);
     try {
       await apiClient.post('/api/auth/login', { email, password });
+      toast.success('Signed in successfully');
       router.push(redirect);
       router.refresh();
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Login failed');
+      const msg = err instanceof Error ? err.message : 'Login failed';
+      setError(msg);
+      toast.error(msg);
     } finally {
       setLoading(false);
     }

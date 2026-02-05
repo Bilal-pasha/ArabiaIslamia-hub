@@ -14,6 +14,7 @@ import {
   TableRow,
   Button,
   TableSkeleton,
+  toast,
 } from '@arabiaaislamia/ui';
 import { fetchStudents, type Student } from '@/services/admission/admission.service';
 import { fadeInUp, defaultTransition } from '@arabiaaislamia/animations';
@@ -27,7 +28,11 @@ export default function AdminStudentsPage() {
   useEffect(() => {
     fetchStudents()
       .then(setStudents)
-      .catch((err) => setError(err instanceof Error ? err.message : 'Failed to load'))
+      .catch((err) => {
+        const msg = err instanceof Error ? err.message : 'Failed to load';
+        setError(msg);
+        toast.error(msg);
+      })
       .finally(() => setLoading(false));
   }, []);
 

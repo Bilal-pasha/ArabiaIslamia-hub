@@ -13,7 +13,7 @@ import {
   GraduationCap,
   RefreshCw,
 } from 'lucide-react';
-import { Button, SecondaryLogo } from '@arabiaaislamia/ui';
+import { Button, SecondaryLogo, toast } from '@arabiaaislamia/ui';
 import { apiClient } from '@/utils/axios-instance';
 import { publicRoutes, privateRoutes } from '@/constants/route';
 
@@ -60,8 +60,10 @@ export function AdminDashboardLayout({
   const handleSignOut = async () => {
     try {
       await apiClient.post('/api/auth/logout');
+      toast.success('Signed out');
       window.location.href = privateRoutes.signin;
     } catch {
+      toast.error('Sign out failed');
       window.location.href = privateRoutes.signin;
     }
   };
