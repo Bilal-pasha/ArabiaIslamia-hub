@@ -204,6 +204,30 @@ echo "YOUR_GITHUB_TOKEN" | docker login ghcr.io -u YOUR_GITHUB_USERNAME --passwo
 # Settings → Developer settings → Personal access tokens → Tokens (classic)
 ```
 
+### GHCR 403 Forbidden when pushing images
+
+If the build fails with:
+
+```text
+failed to push ghcr.io/.../arabiaislamia-hub-scouts-portal-app:latest: 403 Forbidden
+```
+
+the workflow’s token doesn’t have permission to push to GitHub Container Registry. Fix it in one of these ways:
+
+1. **Link the package to the repository (recommended)**  
+   - Go to **GitHub** → your profile or org → **Packages**.  
+   - Open the package (e.g. `arabiaislamia-hub-scouts-portal-app`).  
+   - **Package settings** → **Manage Actions access** → **Add repository** and select this repo.  
+   This allows the repo’s `GITHUB_TOKEN` to push to that package. Repeat for each image (main-website, secondary-api, secondary-app, scouts-portal-api, scouts-portal-app) if they appear as separate packages.
+
+2. **Use a Personal Access Token (PAT)**  
+   If the package is under an organization that restricts `GITHUB_TOKEN`:  
+   - Create a PAT: **Settings** → **Developer settings** → **Personal access tokens** → **Tokens (classic)** with scopes `write:packages` and `read:packages`.  
+   - In the repo: **Settings** → **Secrets and variables** → **Actions** → **New repository secret**, name it `CR_PAT`, value = the PAT.  
+   - The build workflow is set up to use `CR_PAT` for GHCR login when the secret exists; no workflow edit needed.
+
+After linking the repo or adding `CR_PAT`, re-run the **Build Docker Images** workflow.
+
 ### Permission Errors
 
 Ensure the service account has:
