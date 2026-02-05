@@ -49,6 +49,12 @@ export class AdmissionApplication {
   @Column({ type: 'varchar', length: 100, nullable: true })
   city: string | null;
 
+  @Column({ type: 'varchar', length: 150, nullable: true })
+  area: string | null;
+
+  @Column({ type: 'varchar', length: 100, nullable: true })
+  language: string | null;
+
   @Column({ type: 'varchar', length: 150, name: 'guardian_name', default: '' })
   guardianName: string;
 
@@ -84,9 +90,6 @@ export class AdmissionApplication {
 
   @Column({ type: 'varchar', length: 50, name: 'accommodation_type', default: '' })
   accommodationType: string;
-
-  @Column({ type: 'varchar', length: 50, nullable: true })
-  madhab: string | null;
 
   @Column({ type: 'varchar', length: 500, name: 'photo_file_key', nullable: true })
   photoFileKey: string | null;

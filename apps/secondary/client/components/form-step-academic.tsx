@@ -2,7 +2,7 @@
 
 import { Input, Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@arabiaaislamia/ui';
 import { FormField } from './form-field';
-import { CLASSES, MADHABS } from '@/lib/admission-constants';
+import { CLASSES } from '@/lib/admission-constants';
 import type { AdmissionFormDataWithEmptyEnums } from '@/lib/admission-schema';
 
 interface FormStepAcademicProps {
@@ -74,20 +74,6 @@ export function FormStepAcademic({ data, errors, onUpdate }: FormStepAcademicPro
           <SelectContent>
             <SelectItem value="residential">Residential</SelectItem>
             <SelectItem value="non-residential">Non-Residential</SelectItem>
-          </SelectContent>
-        </Select>
-      </FormField>
-      <FormField label="Madhab">
-        <Select value={data.madhab ?? ''} onValueChange={(v) => onUpdate('madhab', v)}>
-          <SelectTrigger className="h-10">
-            <SelectValue placeholder="Select" />
-          </SelectTrigger>
-          <SelectContent>
-            {MADHABS.map((m) => (
-              <SelectItem key={m} value={m}>
-                {m}
-              </SelectItem>
-            ))}
           </SelectContent>
         </Select>
       </FormField>

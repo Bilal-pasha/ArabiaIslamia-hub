@@ -25,8 +25,6 @@ export const CLASSES = [
   'Matriculation',
 ];
 
-export const MADHABS = ['Hanafi', "Shafi'i", 'Maliki', 'Hanbali'];
-
 export const OCCUPATIONS = [
   'Teacher',
   'Trader',
@@ -68,6 +66,8 @@ export const INITIAL_FORM_DATA: AdmissionFormDataWithEmptyEnums = {
   country: '',
   state: '',
   city: '',
+  area: '',
+  language: '',
   guardianName: '',
   guardianRelation: '',
   guardianPhone: '',
@@ -80,7 +80,6 @@ export const INITIAL_FORM_DATA: AdmissionFormDataWithEmptyEnums = {
   previousGrade: '',
   isHafiz: '',
   accommodationType: '',
-  madhab: '',
   photoFile: '',
   idFile: '',
   authorityLetterFile: '',

@@ -9,7 +9,7 @@ export class AdmissionService {
   constructor(
     @InjectRepository(AdmissionApplication)
     private readonly repo: Repository<AdmissionApplication>,
-  ) {}
+  ) { }
 
   async submit(dto: SubmitAdmissionDto) {
     const applicationNumber = this.generateApplicationNumber();
@@ -27,6 +27,8 @@ export class AdmissionService {
       country: dto.country,
       state: dto.state || null,
       city: dto.city || null,
+      area: dto.area || null,
+      language: dto.language || null,
       guardianName: dto.guardianName,
       guardianRelation: dto.guardianRelation,
       guardianPhone: dto.guardianPhone,
@@ -39,7 +41,6 @@ export class AdmissionService {
       previousGrade: dto.previousGrade || null,
       isHafiz: dto.isHafiz || null,
       accommodationType: dto.accommodationType,
-      madhab: dto.madhab || null,
       photoFileKey: dto.photoFile || null,
       idFileKey: dto.idFile || null,
       authorityLetterFileKey: dto.authorityLetterFile || null,

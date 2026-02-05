@@ -65,7 +65,7 @@ export function FormStepPersonal({ data, errors, onUpdate }: FormStepPersonalPro
           className={`h-10 ${errors.email ? 'border-destructive' : ''}`}
         />
       </FormField>
-      <FormField label="ID / Passport" className="sm:col-span-2">
+      <FormField label="ID / Passport / CRC" className="sm:col-span-2">
         <Input value={data.idNumber ?? ''} onChange={(e) => onUpdate('idNumber', e.target.value)} className="h-10" />
       </FormField>
       <FormField label="Current Address" required error={errors.address} className="sm:col-span-2">
@@ -102,6 +102,12 @@ export function FormStepPersonal({ data, errors, onUpdate }: FormStepPersonalPro
       </FormField>
       <FormField label="City">
         <Input value={data.city ?? ''} onChange={(e) => onUpdate('city', e.target.value)} className="h-10" />
+      </FormField>
+      <FormField label="Area">
+        <Input value={data.area ?? ''} onChange={(e) => onUpdate('area', e.target.value)} className="h-10" placeholder="e.g. region or locality" />
+      </FormField>
+      <FormField label="Language">
+        <Input value={data.language ?? ''} onChange={(e) => onUpdate('language', e.target.value)} className="h-10" placeholder="e.g. Urdu, Arabic, English" />
       </FormField>
     </div>
   );

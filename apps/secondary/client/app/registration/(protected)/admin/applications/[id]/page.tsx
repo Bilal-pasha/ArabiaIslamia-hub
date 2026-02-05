@@ -18,6 +18,7 @@ import {
   SelectItem,
   SelectTrigger,
   SelectValue,
+  DetailPageSkeleton,
 } from '@arabiaaislamia/ui';
 import {
   fetchApplication,
@@ -132,8 +133,8 @@ export default function ApplicationDetailPage() {
 
   if (loading && !app) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="size-10 animate-spin rounded-full border-2 border-primary border-t-transparent" />
+      <div className="min-h-screen w-full min-w-0 flex justify-center p-6">
+        <DetailPageSkeleton cards={5} linesPerCard={5} />
       </div>
     );
   }
@@ -274,6 +275,8 @@ export default function ApplicationDetailPage() {
             <Row label="Country" value={app.country} />
             <Row label="State" value={app.state} />
             <Row label="City" value={app.city} />
+            <Row label="Area" value={app.area} />
+            <Row label="Language" value={app.language} />
           </CardContent>
         </Card>
 
@@ -302,7 +305,6 @@ export default function ApplicationDetailPage() {
             <Row label="Previous Grade" value={app.previousGrade} />
             <Row label="Is Hafiz" value={app.isHafiz} />
             <Row label="Accommodation" value={app.accommodationType} />
-            <Row label="Madhab" value={app.madhab} />
           </CardContent>
         </Card>
 
@@ -312,7 +314,7 @@ export default function ApplicationDetailPage() {
           </CardHeader>
           <CardContent className="flex flex-wrap gap-2">
             <FileLink label="Photo" fileKey={app.photoFileKey} />
-            <FileLink label="ID / Passport" fileKey={app.idFileKey} />
+            <FileLink label="ID / Passport / CRC" fileKey={app.idFileKey} />
             <FileLink label="Authority Letter" fileKey={app.authorityLetterFileKey} />
             <FileLink label="Previous Result" fileKey={app.previousResultFileKey} />
           </CardContent>

@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 import { useParams } from 'next/navigation';
 import Link from 'next/link';
 import { Button, SecondaryLogo } from '@arabiaaislamia/ui';
+import { AdmitCardSkeleton } from '@/components/AdmitCardSkeleton';
 import { findByApplicationNumber } from '@/services/admission/admission.service';
 import { publicRoutes } from '@/constants/route';
 import type { AdmissionApplication } from '@/services/admission/admission.service';
@@ -48,11 +49,7 @@ export default function OralAdmitCardPage() {
   const handlePrint = () => window.print();
 
   if (loading) {
-    return (
-      <div className="min-h-screen flex items-center justify-center p-6">
-        <div className="size-10 animate-spin rounded-full border-2 border-primary border-t-transparent" />
-      </div>
-    );
+    return <AdmitCardSkeleton />;
   }
 
   if (error || !application) {

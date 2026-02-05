@@ -75,7 +75,7 @@ export {
 } from './components/dropdown-menu';
 export { Spinner } from './components/spinner';
 export { Toaster, toast } from './components/sonner';
-export { Skeleton, TableSkeleton } from './components/skeleton';
+export { Skeleton, TableSkeleton, CardSkeleton, DetailPageSkeleton } from './components/skeleton';
 export { Avatar, AvatarImage, AvatarFallback } from './components/avatar';
 export {
   AlertDialog,

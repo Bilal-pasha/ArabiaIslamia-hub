@@ -14,6 +14,7 @@ import {
   TableHeader,
   TableRow,
   Badge,
+  TableSkeleton,
 } from '@arabiaaislamia/ui';
 import { fetchApplications, type AdmissionApplication } from '@/services/admission/admission.service';
 import { fadeInUp, defaultTransition } from '@arabiaaislamia/animations';
@@ -51,11 +52,11 @@ export default function AdminApplicationsPage() {
           <Link href={publicRoutes.form}>← Public form</Link>
         </Button>
       </div>
-      <div className="mx-auto">
+      <div className="mx-auto w-full min-w-0">
         {loading && (
-          <div className="flex justify-center py-16">
-            <div className="size-10 animate-spin rounded-full border-2 border-orange-400 border-t-transparent" />
-          </div>
+          <Card className="secondary-card backdrop-blur-xl border border-white/10 overflow-hidden w-full min-w-0">
+            <TableSkeleton numberOfRows={8} />
+          </Card>
         )}
         {error && (
           <div className="rounded-lg border border-red-400/50 bg-red-500/10 px-4 py-3 text-red-200">

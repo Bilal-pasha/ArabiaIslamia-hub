@@ -41,6 +41,14 @@ export class SubmitAdmissionDto {
   @IsString()
   city?: string;
 
+  @IsOptional()
+  @IsString()
+  area?: string;
+
+  @IsOptional()
+  @IsString()
+  language?: string;
+
   @IsString()
   guardianName: string;
 
@@ -83,10 +91,6 @@ export class SubmitAdmissionDto {
 
   @IsString()
   accommodationType: string;
-
-  @IsOptional()
-  @IsString()
-  madhab?: string;
 
   @IsOptional()
   @IsString()

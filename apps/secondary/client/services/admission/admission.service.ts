@@ -16,6 +16,8 @@ export interface AdmissionApplication {
   country: string;
   state: string | null;
   city: string | null;
+  area: string | null;
+  language: string | null;
   guardianName: string;
   guardianRelation: string;
   guardianPhone: string;
@@ -28,7 +30,6 @@ export interface AdmissionApplication {
   previousGrade: string | null;
   isHafiz: string | null;
   accommodationType: string;
-  madhab: string | null;
   photoFileKey: string | null;
   idFileKey: string | null;
   authorityLetterFileKey: string | null;

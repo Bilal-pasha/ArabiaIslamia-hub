@@ -18,6 +18,7 @@ import {
   TableHeader,
   TableRow,
   Badge,
+  TableSkeleton,
 } from '@arabiaaislamia/ui';
 import { fadeInUp, defaultTransition } from '@arabiaaislamia/animations';
 import { apiClient } from '@/utils/axios-instance';
@@ -171,9 +172,7 @@ export default function AdminUsersPage() {
 
       <Card className="secondary-card border border-white/10 backdrop-blur-xl overflow-hidden">
         {loading ? (
-          <CardContent className="py-16 flex justify-center">
-            <div className="size-10 animate-spin rounded-full border-2 border-orange-400 border-t-transparent" />
-          </CardContent>
+          <TableSkeleton numberOfRows={6} className="border-0" />
         ) : error ? (
           <CardContent className="py-8">
             <p className="text-red-300">{error}</p>

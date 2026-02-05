@@ -42,4 +42,48 @@ function TableSkeleton({ numberOfRows = 5, className }: TableSkeletonProps) {
 }
 TableSkeleton.displayName = 'TableSkeleton';
 
-export { Skeleton, TableSkeleton };
+export interface CardSkeletonProps {
+  /** Number of content lines below the header. Default 4. */
+  lines?: number;
+  className?: string;
+}
+
+function CardSkeleton({ lines = 4, className }: CardSkeletonProps) {
+  return (
+    <div className={cn('rounded-lg border border-border p-4 space-y-3', className)}>
+      <Skeleton className="h-5 w-1/3" />
+      <div className="space-y-2">
+        {Array.from({ length: lines }, (_, i) => (
+          <Skeleton key={i} className="h-4 w-full" style={{ maxWidth: i === lines - 1 ? '75%' : undefined }} />
+        ))}
+      </div>
+    </div>
+  );
+}
+CardSkeleton.displayName = 'CardSkeleton';
+
+/** Shimmer for detail pages: multiple card-shaped blocks (e.g. application detail). */
+export interface DetailPageSkeletonProps {
+  /** Number of card blocks. Default 5. */
+  cards?: number;
+  /** Lines per card. Default 4. */
+  linesPerCard?: number;
+  className?: string;
+}
+
+function DetailPageSkeleton({ cards = 5, linesPerCard = 4, className }: DetailPageSkeletonProps) {
+  return (
+    <div className={cn('space-y-6 max-w-4xl w-full min-w-0', className)}>
+      <div className="flex items-center gap-2 flex-wrap">
+        <Skeleton className="h-6 w-20 rounded-full" />
+        <Skeleton className="h-4 w-28" />
+      </div>
+      {Array.from({ length: cards }, (_, i) => (
+        <CardSkeleton key={i} lines={linesPerCard} />
+      ))}
+    </div>
+  );
+}
+DetailPageSkeleton.displayName = 'DetailPageSkeleton';
+
+export { Skeleton, TableSkeleton, CardSkeleton, DetailPageSkeleton };

@@ -44,6 +44,8 @@ export const personalInfoSchema = z.object({
   country: z.string().min(1, 'Please select your country'),
   state: z.string().optional().or(z.literal('')),
   city: z.string().optional().or(z.literal('')),
+  area: z.string().max(150).optional().or(z.literal('')),
+  language: z.string().max(100).optional().or(z.literal('')),
 });
 
 // Step 2: Guardian Information
@@ -83,10 +85,6 @@ export const academicInfoSchema = z.object({
       (val) => val === 'residential' || val === 'non-residential',
       'Please select accommodation type'
     ),
-  madhab: z
-    .enum(['Hanafi', "Shafi'i", 'Maliki', 'Hanbali'])
-    .optional()
-    .or(z.literal('')),
 });
 
 // Step 4: Documents (files optional for now - can be required later)

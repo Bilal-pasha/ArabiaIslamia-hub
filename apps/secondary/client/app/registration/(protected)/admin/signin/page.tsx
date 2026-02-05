@@ -3,7 +3,7 @@
 import { Suspense, useState } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import Link from 'next/link';
-import { Card, CardContent, CardTitle } from '@arabiaaislamia/ui';
+import { Card, CardContent, CardTitle, Skeleton } from '@arabiaaislamia/ui';
 import { Button, Input, Label } from '@arabiaaislamia/ui';
 import { SecondaryLogo } from '@arabiaaislamia/ui';
 import { publicRoutes, privateRoutes } from '@/constants/route';
@@ -89,14 +89,26 @@ function AdminSigninContent() {
 
 function SigninFallback() {
   return (
-    <div className="min-h-screen w-full flex items-center justify-center px-4 py-6 sm:p-6">
+    <div className="min-h-screen w-full min-w-0 flex items-center justify-center px-4 py-6 sm:p-6 overflow-x-hidden">
       <div className="w-full max-w-md min-w-0">
-        <Card className="secondary-card backdrop-blur-xl border border-white/10">
-          <CardContent className="pt-8 pb-8">
+        <Card className="secondary-card backdrop-blur-xl border border-white/10 w-full">
+          <CardContent className="pt-6 sm:pt-8 pb-6 sm:pb-8 px-4 sm:px-6">
             <div className="flex justify-center mb-6">
-              <SecondaryLogo width={80} height={80} />
+              <Skeleton className="size-20 rounded-lg bg-white/10" />
             </div>
-            <p className="text-slate-300 text-sm text-center">Loading...</p>
+            <Skeleton className="h-7 w-3/4 mx-auto mb-2 bg-white/10" />
+            <Skeleton className="h-4 w-1/2 mx-auto mb-6 bg-white/10" />
+            <div className="space-y-4">
+              <div>
+                <Skeleton className="h-4 w-16 mb-2 bg-white/10" />
+                <Skeleton className="h-10 w-full rounded-md bg-white/10" />
+              </div>
+              <div>
+                <Skeleton className="h-4 w-20 mb-2 bg-white/10" />
+                <Skeleton className="h-10 w-full rounded-md bg-white/10" />
+              </div>
+              <Skeleton className="h-10 w-full rounded-md bg-white/10" />
+            </div>
           </CardContent>
         </Card>
       </div>
