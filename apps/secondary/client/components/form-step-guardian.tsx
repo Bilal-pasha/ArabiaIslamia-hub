@@ -42,11 +42,12 @@ export function FormStepGuardian({ data, errors, onUpdate }: FormStepGuardianPro
           className={`h-10 ${errors.guardianPhone ? 'border-destructive' : ''}`}
         />
       </FormField>
-      <FormField label="Guardian Email" error={errors.guardianEmail}>
+      <FormField label="Guardian Email (optional)" error={errors.guardianEmail}>
         <Input
           type="email"
           value={data.guardianEmail ?? ''}
           onChange={(e) => onUpdate('guardianEmail', e.target.value)}
+          placeholder="Optional"
           className={`h-10 ${errors.guardianEmail ? 'border-destructive' : ''}`}
         />
       </FormField>

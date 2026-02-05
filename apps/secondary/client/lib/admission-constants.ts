@@ -41,7 +41,6 @@ export const OCCUPATIONS = [
 
 export const COUNTRIES = [
   'Pakistan',
-  'India',
   'Bangladesh',
   'Afghanistan',
   'Saudi Arabia',

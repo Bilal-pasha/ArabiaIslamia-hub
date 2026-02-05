@@ -16,8 +16,9 @@ export class SubmitAdmissionDto {
   @IsString()
   phone: string;
 
+  @IsOptional()
   @IsString()
-  email: string;
+  email?: string;
 
   @IsOptional()
   @IsString()
@@ -33,21 +34,17 @@ export class SubmitAdmissionDto {
   @IsString()
   country: string;
 
-  @IsOptional()
   @IsString()
-  state?: string;
+  state: string;
 
-  @IsOptional()
   @IsString()
-  city?: string;
+  city: string;
 
-  @IsOptional()
   @IsString()
-  area?: string;
+  area: string;
 
-  @IsOptional()
   @IsString()
-  language?: string;
+  language: string;
 
   @IsString()
   guardianName: string;

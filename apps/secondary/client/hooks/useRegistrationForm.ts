@@ -12,7 +12,7 @@ import { getPresignedUrl, uploadToPresignedUrl } from '@/services/upload/upload.
 import type { DocumentFileKey } from '@/components/form-step-documents';
 
 const DOCUMENT_KEYS: DocumentFileKey[] = ['photoFile', 'idFile', 'authorityLetterFile', 'previousResultFile'];
-const PERSONAL_FIELDS = ['name', 'fatherName', 'dateOfBirth', 'gender', 'phone', 'email', 'address', 'country'];
+const PERSONAL_FIELDS = ['name', 'fatherName', 'dateOfBirth', 'gender', 'phone', 'email', 'address', 'country', 'state', 'city', 'area', 'language'];
 const GUARDIAN_FIELDS = ['guardianName', 'guardianRelation', 'guardianPhone'];
 const ACADEMIC_FIELDS = ['requiredClass', 'accommodationType'];
 

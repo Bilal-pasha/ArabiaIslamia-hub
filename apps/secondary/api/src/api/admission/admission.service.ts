@@ -20,7 +20,7 @@ export class AdmissionService {
       dateOfBirth: dto.dateOfBirth,
       gender: dto.gender,
       phone: dto.phone,
-      email: dto.email,
+      email: dto.email ?? '',
       idNumber: dto.idNumber || null,
       address: dto.address,
       permanentAddress: dto.permanentAddress || null,

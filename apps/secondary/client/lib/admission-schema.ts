@@ -33,8 +33,8 @@ export const personalInfoSchema = z.object({
     .regex(phoneRegex, 'Please enter a valid phone number'),
   email: z
     .string()
-    .min(1, 'Email is required')
-    .email('Please enter a valid email address'),
+    .optional()
+    .refine((val) => !val || val === '' || emailRegex.test(val), 'Please enter a valid email address'),
   idNumber: z.string().optional().or(z.literal('')),
   address: z
     .string()
@@ -42,10 +42,10 @@ export const personalInfoSchema = z.object({
     .max(500, 'Address must be at most 500 characters'),
   permanentAddress: z.string().max(500).optional().or(z.literal('')),
   country: z.string().min(1, 'Please select your country'),
-  state: z.string().optional().or(z.literal('')),
-  city: z.string().optional().or(z.literal('')),
-  area: z.string().max(150).optional().or(z.literal('')),
-  language: z.string().max(100).optional().or(z.literal('')),
+  state: z.string().min(1, 'State / Province is required').max(150, 'State must be at most 150 characters'),
+  city: z.string().min(1, 'City is required').max(150, 'City must be at most 150 characters'),
+  area: z.string().min(1, 'Area is required').max(150, 'Area must be at most 150 characters'),
+  language: z.string().min(1, 'Language is required').max(100, 'Language must be at most 100 characters'),
 });
 
 // Step 2: Guardian Information
