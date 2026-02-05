@@ -22,6 +22,28 @@ export interface StudentByRollDto {
   lastClassName?: string;
 }
 
+/** Plain DTOs for reference data to avoid circular refs when serializing to JSON */
+export interface AcademicSessionDto {
+  id: string;
+  name: string;
+  startDate: Date;
+  endDate: Date;
+  isActive: boolean;
+}
+
+export interface ClassDto {
+  id: string;
+  name: string;
+  sortOrder: number;
+}
+
+export interface SectionDto {
+  id: string;
+  name: string;
+  classId: string;
+  sortOrder: number;
+}
+
 /** Plain DTO for renewal list/detail to avoid circular refs when serializing to JSON */
 export interface RenewalDto {
   id: string;
@@ -224,28 +246,45 @@ export class AdmissionService {
     return { application: app, student };
   }
 
-  async getAcademicSessions(): Promise<AcademicSession[]> {
-    return this.academicSessionRepo.find({
+  async getAcademicSessions(): Promise<AcademicSessionDto[]> {
+    const list = await this.academicSessionRepo.find({
       order: { startDate: 'DESC' },
     });
+    return list.map((s) => ({
+      id: s.id,
+      name: s.name,
+      startDate: s.startDate,
+      endDate: s.endDate,
+      isActive: s.isActive,
+    }));
   }
 
-  async getClasses(): Promise<Class[]> {
-    return this.classRepo.find({
+  async getClasses(): Promise<ClassDto[]> {
+    const list = await this.classRepo.find({
       order: { sortOrder: 'ASC', name: 'ASC' },
     });
+    return list.map((c) => ({
+      id: c.id,
+      name: c.name,
+      sortOrder: c.sortOrder,
+    }));
   }
 
-  async getSections(classId?: string): Promise<Section[]> {
-    if (classId) {
-      return this.sectionRepo.find({
+  async getSections(classId?: string): Promise<SectionDto[]> {
+    const list = classId
+      ? await this.sectionRepo.find({
         where: { classId },
         order: { sortOrder: 'ASC', name: 'ASC' },
+      })
+      : await this.sectionRepo.find({
+        order: { sortOrder: 'ASC', name: 'ASC' },
       });
-    }
-    return this.sectionRepo.find({
-      order: { sortOrder: 'ASC', name: 'ASC' },
-    });
+    return list.map((s) => ({
+      id: s.id,
+      name: s.name,
+      classId: s.classId,
+      sortOrder: s.sortOrder,
+    }));
   }
 
   async findStudentByRollNumber(rollNumber: string): Promise<StudentByRollDto | null> {
@@ -379,6 +418,42 @@ export class AdmissionService {
     renewal.statusReason = reason ?? null;
     await this.renewalRepo.save(renewal);
     return this.toRenewalDto(renewal);
+  }
+
+  async getStats(): Promise<{
+    applications: { total: number; pending: number; approved: number; rejected: number; student: number };
+    renewals: { total: number; pending: number; approved: number; rejected: number };
+    students: number;
+  }> {
+    const [applications, renewals, studentsCount] = await Promise.all([
+      this.repo.find({ select: ['status'] }),
+      this.renewalRepo.find({ select: ['status'] }),
+      this.studentRepo.count(),
+    ]);
+    const appByStatus = { pending: 0, approved: 0, rejected: 0, student: 0 };
+    for (const a of applications) {
+      if (a.status === 'pending') appByStatus.pending++;
+      else if (a.status === 'approved') appByStatus.approved++;
+      else if (a.status === 'rejected' || a.status === 'quran_test_failed') appByStatus.rejected++;
+      else if (a.status === 'student') appByStatus.student++;
+    }
+    const renByStatus = { pending: 0, approved: 0, rejected: 0 };
+    for (const r of renewals) {
+      if (r.status === 'pending') renByStatus.pending++;
+      else if (r.status === 'approved') renByStatus.approved++;
+      else renByStatus.rejected++;
+    }
+    return {
+      applications: {
+        total: applications.length,
+        ...appByStatus,
+      },
+      renewals: {
+        total: renewals.length,
+        ...renByStatus,
+      },
+      students: studentsCount,
+    };
   }
 
   private generateApplicationNumber(): string {

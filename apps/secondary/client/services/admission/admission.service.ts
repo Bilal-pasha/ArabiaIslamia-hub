@@ -239,6 +239,18 @@ export async function submitRenewal(payload: SubmitRenewalPayload): Promise<Subm
   return data;
 }
 
+// Dashboard stats (admin)
+export interface AdmissionStatsDto {
+  applications: { total: number; pending: number; approved: number; rejected: number; student: number };
+  renewals: { total: number; pending: number; approved: number; rejected: number };
+  students: number;
+}
+
+export async function fetchAdmissionStats(): Promise<AdmissionStatsDto> {
+  const { data } = await apiClient.get<AdmissionStatsDto>(admissionEndpoints.stats);
+  return data;
+}
+
 // Renewal – admin
 export interface RenewalApplicationDto {
   id: string;

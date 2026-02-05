@@ -27,6 +27,7 @@ export const admissionEndpoints = {
   renewalsList: '/admission/renewals',
   renewalDetail: (id: string) => `/admission/renewals/${id}`,
   renewalStatus: (id: string) => `/admission/renewals/${id}/status`,
+  stats: '/admission/stats',
 } as const;
 
 export const uploadEndpoints = {

@@ -80,6 +80,13 @@ export class AdmissionController {
     return this.admissionService.updateRenewalStatus(id, dto.status, dto.reason);
   }
 
+  @Get('stats')
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles('admin', 'superadmin')
+  async getStats() {
+    return this.admissionService.getStats();
+  }
+
   @Get()
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles('admin', 'superadmin')
