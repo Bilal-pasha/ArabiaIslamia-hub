@@ -7,10 +7,10 @@ import { motion, AnimatePresence } from 'framer-motion';
 import type { AdmissionFormDataWithEmptyEnums } from '@/lib/admission-schema';
 
 const DOCUMENT_FIELDS = [
-  { key: 'photoFile' as const, label: 'Photograph', accept: 'image/*' },
-  { key: 'idFile' as const, label: 'Passport / ID', accept: 'image/*,.pdf' },
-  { key: 'authorityLetterFile' as const, label: 'Authority Letter', accept: 'image/*,.pdf' },
-  { key: 'previousResultFile' as const, label: 'Previous Result', accept: 'image/*,.pdf' },
+  { key: 'photoFile' as const, label: 'Photograph', accept: 'image/*', required: true },
+  { key: 'idFile' as const, label: 'Passport / ID', accept: 'image/*,.pdf', required: true },
+  { key: 'authorityLetterFile' as const, label: 'Authority Letter', accept: 'image/*,.pdf', required: false },
+  { key: 'previousResultFile' as const, label: 'Previous Result', accept: 'image/*,.pdf', required: false },
 ];
 
 const DOCUMENT_KEYS = ['photoFile', 'idFile', 'authorityLetterFile', 'previousResultFile'] as const;
@@ -20,11 +20,12 @@ export type DocumentFileKey = (typeof DOCUMENT_KEYS)[number];
 interface FormStepDocumentsProps {
   data: AdmissionFormDataWithEmptyEnums;
   files: Partial<Record<DocumentFileKey, File | null>>;
+  errors: Record<string, string>;
   onUpdate: (key: keyof AdmissionFormDataWithEmptyEnums, value: string) => void;
   onFileSelect: (key: DocumentFileKey, file: File | null) => void;
 }
 
-export function FormStepDocuments({ data, files, onUpdate, onFileSelect }: FormStepDocumentsProps) {
+export function FormStepDocuments({ data, files, errors, onUpdate, onFileSelect }: FormStepDocumentsProps) {
   const inputRefs = useRef<Record<string, HTMLInputElement | null>>({});
   return (
     <div className="space-y-6 w-full min-w-0">
@@ -32,10 +33,10 @@ export function FormStepDocuments({ data, files, onUpdate, onFileSelect }: FormS
         1. Photo &nbsp; 2. Passport/ID &nbsp; 3. Authority Letter &nbsp; 4. Previous Result
       </p>
       <div className="grid gap-4 sm:gap-5 sm:grid-cols-2 min-w-0 w-full">
-        {DOCUMENT_FIELDS.map(({ key, label, accept }) => {
+        {DOCUMENT_FIELDS.map(({ key, label, accept, required }) => {
           const hasFile = !!data[key];
           return (
-            <FormField key={key} label={label}>
+            <FormField key={key} label={label} required={required} error={errors[key]}>
               <div className="relative">
                 <label
                   className={`
@@ -44,6 +45,7 @@ export function FormStepDocuments({ data, files, onUpdate, onFileSelect }: FormS
                       ? 'border-primary/50 bg-primary/5 cursor-default'
                       : 'border-input hover:border-primary/50 hover:bg-primary/5 cursor-pointer group'
                     }
+                    ${errors[key] ? 'border-destructive' : ''}
                   `}
                 >
                   <input

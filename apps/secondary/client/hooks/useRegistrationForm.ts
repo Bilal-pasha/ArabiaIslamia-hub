@@ -15,11 +15,13 @@ const DOCUMENT_KEYS: DocumentFileKey[] = ['photoFile', 'idFile', 'authorityLette
 const PERSONAL_FIELDS = ['name', 'fatherName', 'dateOfBirth', 'gender', 'phone', 'email', 'address', 'country', 'state', 'city', 'area', 'language'];
 const GUARDIAN_FIELDS = ['guardianName', 'guardianRelation', 'guardianPhone'];
 const ACADEMIC_FIELDS = ['requiredClass', 'accommodationType'];
+const DOCUMENT_FIELDS = ['photoFile', 'idFile'];
 
 function getErrorStep(fieldErrors: Record<string, string>): number {
   if (Object.keys(fieldErrors).some((k) => PERSONAL_FIELDS.includes(k))) return 1;
   if (Object.keys(fieldErrors).some((k) => GUARDIAN_FIELDS.includes(k))) return 2;
   if (Object.keys(fieldErrors).some((k) => ACADEMIC_FIELDS.includes(k))) return 3;
+  if (Object.keys(fieldErrors).some((k) => DOCUMENT_FIELDS.includes(k))) return 4;
   return 4;
 }
 

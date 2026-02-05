@@ -24,11 +24,21 @@ import {
   fetchApplication,
   getFileViewUrl,
   updateStatus,
+  updateQuranTest,
   updateOralTest,
+  updateWrittenTest,
+  setWrittenAdmitEligible,
+  fullyApprove,
   type AdmissionApplication,
 } from '@/services/admission/admission.service';
 import { privateRoutes } from '@/constants/route';
 import { fadeInUp, defaultTransition } from '@arabiaaislamia/animations';
+
+function capitalizeStatus(s: string): string {
+  if (!s) return s;
+  const lower = s.replace(/_/g, ' ');
+  return lower.charAt(0).toUpperCase() + lower.slice(1).toLowerCase();
+}
 
 function FileLink({
   label,
@@ -56,8 +66,8 @@ function FileLink({
 }
 
 function getStatusVariant(status: string): 'pending' | 'approved' | 'rejected' {
-  if (status === 'approved') return 'approved';
-  if (status === 'rejected') return 'rejected';
+  if (status === 'approved' || status === 'student') return 'approved';
+  if (status === 'rejected' || status === 'quran_test_failed') return 'rejected';
   return 'pending';
 }
 
@@ -71,10 +81,20 @@ export default function ApplicationDetailPage() {
   const [rejectReason, setRejectReason] = useState('');
   const [showRejectInput, setShowRejectInput] = useState(false);
   const [actionLoading, setActionLoading] = useState(false);
+  const [quranMarks, setQuranMarks] = useState('');
+  const [quranPassed, setQuranPassed] = useState<string>('');
+  const [quranReason, setQuranReason] = useState('');
+  const [quranSubmitLoading, setQuranSubmitLoading] = useState(false);
   const [oralMarks, setOralMarks] = useState('');
   const [oralPassed, setOralPassed] = useState<string>('');
   const [oralReason, setOralReason] = useState('');
   const [oralSubmitLoading, setOralSubmitLoading] = useState(false);
+  const [writtenMarks, setWrittenMarks] = useState('');
+  const [writtenPassed, setWrittenPassed] = useState<string>('');
+  const [writtenReason, setWrittenReason] = useState('');
+  const [writtenSubmitLoading, setWrittenSubmitLoading] = useState(false);
+  const [writtenEligibleLoading, setWrittenEligibleLoading] = useState(false);
+  const [fullyApproveLoading, setFullyApproveLoading] = useState(false);
 
   const refetch = () => {
     fetchApplication(id)
@@ -115,6 +135,22 @@ export default function ApplicationDetailPage() {
     }
   };
 
+  const handleQuranSubmit = async () => {
+    const passed = quranPassed === 'yes';
+    setQuranSubmitLoading(true);
+    try {
+      await updateQuranTest(id, { marks: quranMarks || undefined, passed, reason: quranReason || undefined });
+      setQuranMarks('');
+      setQuranPassed('');
+      setQuranReason('');
+      refetch();
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Failed to update Quran test');
+    } finally {
+      setQuranSubmitLoading(false);
+    }
+  };
+
   const handleOralSubmit = async () => {
     const passed = oralPassed === 'yes';
     setOralSubmitLoading(true);
@@ -128,6 +164,46 @@ export default function ApplicationDetailPage() {
       setError(err instanceof Error ? err.message : 'Failed to update oral test');
     } finally {
       setOralSubmitLoading(false);
+    }
+  };
+
+  const handleWrittenEligible = async () => {
+    setWrittenEligibleLoading(true);
+    try {
+      await setWrittenAdmitEligible(id);
+      refetch();
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Failed to set written eligible');
+    } finally {
+      setWrittenEligibleLoading(false);
+    }
+  };
+
+  const handleWrittenSubmit = async () => {
+    const passed = writtenPassed === 'yes';
+    setWrittenSubmitLoading(true);
+    try {
+      await updateWrittenTest(id, { marks: writtenMarks || undefined, passed, reason: writtenReason || undefined });
+      setWrittenMarks('');
+      setWrittenPassed('');
+      setWrittenReason('');
+      refetch();
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Failed to update written test');
+    } finally {
+      setWrittenSubmitLoading(false);
+    }
+  };
+
+  const handleFullyApprove = async () => {
+    setFullyApproveLoading(true);
+    try {
+      await fullyApprove(id);
+      refetch();
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Failed to fully approve');
+    } finally {
+      setFullyApproveLoading(false);
     }
   };
 
@@ -158,7 +234,7 @@ export default function ApplicationDetailPage() {
     >
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
         <div className="flex items-center gap-2 flex-wrap">
-          <Badge variant={getStatusVariant(app.status)}>{app.status}</Badge>
+          <Badge variant={getStatusVariant(app.status)}>{capitalizeStatus(app.status)}</Badge>
           <span className="text-slate-300 text-sm">{app.applicationNumber}</span>
           {app.statusReason && (
             <span className="text-xs text-slate-400 truncate max-w-[200px]" title={app.statusReason}>
@@ -207,7 +283,62 @@ export default function ApplicationDetailPage() {
           </Card>
         )}
 
-        {app.status === 'approved' && (
+        {app.status === 'quran_test_failed' && (
+          <Card className="secondary-card backdrop-blur-xl border border-white/10 border-destructive/30">
+            <CardHeader>
+              <CardTitle className="text-white">Quran test — Failed</CardTitle>
+              <p className="text-sm text-slate-300">{app.statusReason ?? 'Applicant did not pass the Quran test.'}</p>
+            </CardHeader>
+          </Card>
+        )}
+
+        {app.status === 'approved' && app.quranTestPassed === null && (
+          <Card className="secondary-card backdrop-blur-xl border border-white/10">
+            <CardHeader>
+              <CardTitle className="text-white">Quran test</CardTitle>
+              <p className="text-sm text-slate-300">Record Quran test marks and result. If failed, application will show as failed.</p>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <div>
+                <Label htmlFor="quran-marks" className="mb-1.5 block text-slate-200">Marks (optional)</Label>
+                <Input
+                  id="quran-marks"
+                  value={quranMarks}
+                  onChange={(e) => setQuranMarks(e.target.value)}
+                  placeholder="e.g. 85"
+                  className="max-w-[120px] bg-white/5 border-white/20 text-white placeholder:text-slate-500"
+                />
+              </div>
+              <div>
+                <Label className="mb-1.5 block text-slate-200">Result</Label>
+                <Select value={quranPassed} onValueChange={setQuranPassed}>
+                  <SelectTrigger className="max-w-[180px] bg-white/5 border-white/20 text-white">
+                    <SelectValue placeholder="Select" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="yes">Passed</SelectItem>
+                    <SelectItem value="no">Failed</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+              <div>
+                <Label htmlFor="quran-reason" className="mb-1.5 block text-slate-200">Remarks (optional)</Label>
+                <Input
+                  id="quran-reason"
+                  value={quranReason}
+                  onChange={(e) => setQuranReason(e.target.value)}
+                  placeholder="Optional notes or fail reason"
+                  className="bg-white/5 border-white/20 text-white placeholder:text-slate-500"
+                />
+              </div>
+              <Button onClick={handleQuranSubmit} disabled={!quranPassed || quranSubmitLoading} className="bg-orange-500 hover:bg-orange-600">
+                {quranSubmitLoading ? 'Saving...' : 'Save Quran test result'}
+              </Button>
+            </CardContent>
+          </Card>
+        )}
+
+        {app.status === 'approved' && app.quranTestPassed === true && app.oralTestPassed === null && (
           <Card className="secondary-card backdrop-blur-xl border border-white/10">
             <CardHeader>
               <CardTitle className="text-white">Oral test</CardTitle>
@@ -255,6 +386,94 @@ export default function ApplicationDetailPage() {
                 </p>
               )}
             </CardContent>
+          </Card>
+        )}
+
+        {app.status === 'approved' && app.oralTestPassed === true && !app.writtenAdmitEligible && (
+          <Card className="secondary-card backdrop-blur-xl border border-white/10">
+            <CardHeader>
+              <CardTitle className="text-white">Written test</CardTitle>
+              <p className="text-sm text-slate-300">Mark applicant eligible to take the written test, then record written test result below.</p>
+            </CardHeader>
+            <CardContent>
+              <Button onClick={handleWrittenEligible} disabled={writtenEligibleLoading} className="bg-orange-500 hover:bg-orange-600">
+                {writtenEligibleLoading ? 'Saving...' : 'Mark written test eligible'}
+              </Button>
+            </CardContent>
+          </Card>
+        )}
+
+        {app.status === 'approved' && app.writtenAdmitEligible && app.writtenTestPassed === null && (
+          <Card className="secondary-card backdrop-blur-xl border border-white/10">
+            <CardHeader>
+              <CardTitle className="text-white">Written test result</CardTitle>
+              <p className="text-sm text-slate-300">Record written test marks and result.</p>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <div>
+                <Label htmlFor="written-marks" className="mb-1.5 block text-slate-200">Marks (optional)</Label>
+                <Input
+                  id="written-marks"
+                  value={writtenMarks}
+                  onChange={(e) => setWrittenMarks(e.target.value)}
+                  placeholder="e.g. 85"
+                  className="max-w-[120px] bg-white/5 border-white/20 text-white placeholder:text-slate-500"
+                />
+              </div>
+              <div>
+                <Label className="mb-1.5 block text-slate-200">Result</Label>
+                <Select value={writtenPassed} onValueChange={setWrittenPassed}>
+                  <SelectTrigger className="max-w-[180px] bg-white/5 border-white/20 text-white">
+                    <SelectValue placeholder="Select" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="yes">Passed</SelectItem>
+                    <SelectItem value="no">Failed</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+              <div>
+                <Label htmlFor="written-reason" className="mb-1.5 block text-slate-200">Remarks (optional)</Label>
+                <Input
+                  id="written-reason"
+                  value={writtenReason}
+                  onChange={(e) => setWrittenReason(e.target.value)}
+                  placeholder="Optional notes"
+                  className="bg-white/5 border-white/20 text-white placeholder:text-slate-500"
+                />
+              </div>
+              <Button onClick={handleWrittenSubmit} disabled={!writtenPassed || writtenSubmitLoading} className="bg-orange-500 hover:bg-orange-600">
+                {writtenSubmitLoading ? 'Saving...' : 'Save written test result'}
+              </Button>
+              {(app.writtenTestPassed !== null || app.writtenTestMarks) && (
+                <p className="text-sm text-slate-400">
+                  Current: {app.writtenTestMarks ?? '—'} · {app.writtenTestPassed === true ? 'Passed' : app.writtenTestPassed === false ? 'Failed' : 'Not recorded'}
+                </p>
+              )}
+            </CardContent>
+          </Card>
+        )}
+
+        {app.status === 'approved' && app.writtenTestPassed === true && (
+          <Card className="secondary-card backdrop-blur-xl border border-white/10 border-emerald-500/30">
+            <CardHeader>
+              <CardTitle className="text-white">Final approval</CardTitle>
+              <p className="text-sm text-slate-300">All tests passed. Convert this application into a student record.</p>
+            </CardHeader>
+            <CardContent>
+              <Button onClick={handleFullyApprove} disabled={fullyApproveLoading} className="bg-emerald-600 hover:bg-emerald-500">
+                {fullyApproveLoading ? 'Processing...' : 'Fully approve & create student'}
+              </Button>
+            </CardContent>
+          </Card>
+        )}
+
+        {app.status === 'student' && (
+          <Card className="secondary-card backdrop-blur-xl border border-white/10 border-emerald-500/30">
+            <CardHeader>
+              <CardTitle className="text-white">Student</CardTitle>
+              <p className="text-sm text-slate-300">This application has been converted to a student. View in Students.</p>
+            </CardHeader>
           </Card>
         )}
 

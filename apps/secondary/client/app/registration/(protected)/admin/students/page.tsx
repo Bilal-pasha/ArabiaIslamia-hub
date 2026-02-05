@@ -6,40 +6,27 @@ import { motion } from 'framer-motion';
 import {
   Card,
   CardContent,
-  Button,
   Table,
   TableBody,
   TableCell,
   TableHead,
   TableHeader,
   TableRow,
-  Badge,
+  Button,
   TableSkeleton,
 } from '@arabiaaislamia/ui';
-import { fetchApplications, type AdmissionApplication } from '@/services/admission/admission.service';
+import { fetchStudents, type Student } from '@/services/admission/admission.service';
 import { fadeInUp, defaultTransition } from '@arabiaaislamia/animations';
-import { publicRoutes, privateRoutes } from '@/constants/route';
+import { privateRoutes } from '@/constants/route';
 
-function getStatusVariant(status: string): 'pending' | 'approved' | 'rejected' {
-  if (status === 'approved' || status === 'student') return 'approved';
-  if (status === 'rejected' || status === 'quran_test_failed') return 'rejected';
-  return 'pending';
-}
-
-function capitalizeStatus(s: string): string {
-  if (!s) return s;
-  const lower = s.replace(/_/g, ' ');
-  return lower.charAt(0).toUpperCase() + lower.slice(1).toLowerCase();
-}
-
-export default function AdminApplicationsPage() {
-  const [applications, setApplications] = useState<AdmissionApplication[]>([]);
+export default function AdminStudentsPage() {
+  const [students, setStudents] = useState<Student[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    fetchApplications()
-      .then(setApplications)
+    fetchStudents()
+      .then(setStudents)
       .catch((err) => setError(err instanceof Error ? err.message : 'Failed to load'))
       .finally(() => setLoading(false));
   }, []);
@@ -52,12 +39,7 @@ export default function AdminApplicationsPage() {
       transition={defaultTransition}
       className="space-y-6"
     >
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-        <p className="text-slate-400 text-sm">View and manage admission applications.</p>
-        <Button variant="outline" size="sm" asChild className="w-fit">
-          <Link href={publicRoutes.form}>← Public form</Link>
-        </Button>
-      </div>
+      <p className="text-slate-400 text-sm">All approved students (converted from applications).</p>
       <div className="mx-auto w-full min-w-0">
         {loading && (
           <Card className="secondary-card backdrop-blur-xl border border-white/10 overflow-hidden w-full min-w-0">
@@ -69,42 +51,40 @@ export default function AdminApplicationsPage() {
             {error}
           </div>
         )}
-        {!loading && !error && applications.length === 0 && (
+        {!loading && !error && students.length === 0 && (
           <Card className="secondary-card backdrop-blur-xl border border-white/10">
             <CardContent className="py-16 text-center text-slate-300">
-              No applications yet.
+              No students yet. Fully approve an application to create a student.
             </CardContent>
           </Card>
         )}
-        {!loading && !error && applications.length > 0 && (
+        {!loading && !error && students.length > 0 && (
           <Card className="secondary-card backdrop-blur-xl border border-white/10 overflow-hidden w-full min-w-0">
             <div className="overflow-x-auto">
               <Table>
                 <TableHeader>
                   <TableRow className="border-white/10 hover:bg-white/5">
-                    <TableHead className="text-slate-200">Application #</TableHead>
+                    <TableHead className="text-slate-200">Roll #</TableHead>
                     <TableHead className="text-slate-200">Name</TableHead>
-                    <TableHead className="text-slate-200">Class</TableHead>
-                    <TableHead className="text-slate-200">Status</TableHead>
+                    <TableHead className="text-slate-200">Guardian</TableHead>
+                    <TableHead className="text-slate-200">Contact</TableHead>
                     <TableHead className="text-slate-200">Created</TableHead>
                     <TableHead className="text-right text-slate-200">Actions</TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
-                  {applications.map((app) => (
-                    <TableRow key={app.id} className="border-white/10 hover:bg-white/5">
-                      <TableCell className="font-mono font-medium text-white">{app.applicationNumber}</TableCell>
-                      <TableCell className="text-slate-200">{app.name}</TableCell>
-                      <TableCell className="text-slate-200">{app.requiredClass}</TableCell>
-                      <TableCell>
-                        <Badge variant={getStatusVariant(app.status)}>{capitalizeStatus(app.status)}</Badge>
-                      </TableCell>
+                  {students.map((s) => (
+                    <TableRow key={s.id} className="border-white/10 hover:bg-white/5">
+                      <TableCell className="font-mono font-medium text-white">{s.rollNumber ?? '—'}</TableCell>
+                      <TableCell className="text-slate-200">{s.name}</TableCell>
+                      <TableCell className="text-slate-200">{s.guardianName ?? '—'}</TableCell>
+                      <TableCell className="text-slate-200">{s.contact ?? '—'}</TableCell>
                       <TableCell className="text-slate-400 text-sm">
-                        {new Date(app.createdAt).toLocaleDateString()}
+                        {s.createdAt ? new Date(s.createdAt).toLocaleDateString() : '—'}
                       </TableCell>
                       <TableCell className="text-right">
                         <Button variant="outline" size="sm" asChild>
-                          <Link href={privateRoutes.applicationDetail(app.id)}>View</Link>
+                          <Link href={privateRoutes.studentDetail(s.id)}>View</Link>
                         </Button>
                       </TableCell>
                     </TableRow>

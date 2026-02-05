@@ -36,10 +36,32 @@ export interface AdmissionApplication {
   previousResultFileKey: string | null;
   status: string;
   statusReason?: string | null;
+  quranTestPassed?: boolean | null;
+  quranTestMarks?: string | null;
+  quranTestReason?: string | null;
   oralTestMarks?: string | null;
   oralTestPassed?: boolean | null;
   writtenAdmitEligible?: boolean;
+  writtenTestPassed?: boolean | null;
+  writtenTestMarks?: string | null;
+  writtenTestReason?: string | null;
   createdAt: string;
+}
+
+export interface Student {
+  id: string;
+  name: string;
+  dateOfBirth: string | null;
+  gender: string | null;
+  guardianName: string | null;
+  contact: string | null;
+  address: string | null;
+  photo: string | null;
+  rollNumber: string | null;
+  admissionApplicationId: string | null;
+  admissionApplication?: AdmissionApplication | null;
+  createdAt: string;
+  updatedAt: string;
 }
 
 export interface SubmitAdmissionResponse {
@@ -100,6 +122,39 @@ export async function setWrittenAdmitEligible(id: string): Promise<AdmissionAppl
   const { data } = await apiClient.patch<AdmissionApplication>(
     admissionEndpoints.writtenAdmitEligible(id)
   );
+  return data;
+}
+
+export async function updateQuranTest(
+  id: string,
+  payload: { marks?: string; passed: boolean; reason?: string }
+): Promise<AdmissionApplication> {
+  const { data } = await apiClient.patch<AdmissionApplication>(admissionEndpoints.quranTest(id), payload);
+  return data;
+}
+
+export async function updateWrittenTest(
+  id: string,
+  payload: { marks?: string; passed: boolean; reason?: string }
+): Promise<AdmissionApplication> {
+  const { data } = await apiClient.patch<AdmissionApplication>(admissionEndpoints.writtenTest(id), payload);
+  return data;
+}
+
+export async function fullyApprove(id: string): Promise<{ application: AdmissionApplication; student: Student }> {
+  const { data } = await apiClient.post<{ application: AdmissionApplication; student: Student }>(
+    admissionEndpoints.fullyApprove(id)
+  );
+  return data;
+}
+
+export async function fetchStudents(): Promise<Student[]> {
+  const { data } = await apiClient.get<Student[]>(admissionEndpoints.studentsList);
+  return data;
+}
+
+export async function fetchStudent(id: string): Promise<Student | null> {
+  const { data } = await apiClient.get<Student | null>(admissionEndpoints.studentDetail(id));
   return data;
 }
 

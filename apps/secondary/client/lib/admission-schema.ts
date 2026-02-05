@@ -87,10 +87,10 @@ export const academicInfoSchema = z.object({
     ),
 });
 
-// Step 4: Documents (files optional for now - can be required later)
+// Step 4: Documents (photo and ID required)
 export const documentsSchema = z.object({
-  photoFile: z.string().optional(),
-  idFile: z.string().optional(),
+  photoFile: z.string().min(1, 'Photograph is required'),
+  idFile: z.string().min(1, 'ID / Passport document is required'),
   authorityLetterFile: z.string().optional(),
   previousResultFile: z.string().optional(),
 });

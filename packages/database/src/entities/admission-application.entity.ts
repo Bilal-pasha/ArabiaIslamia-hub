@@ -109,6 +109,15 @@ export class AdmissionApplication {
   @Column({ type: 'varchar', length: 500, name: 'status_reason', nullable: true })
   statusReason: string | null;
 
+  @Column({ type: 'boolean', name: 'quran_test_passed', nullable: true })
+  quranTestPassed: boolean | null;
+
+  @Column({ type: 'varchar', length: 20, name: 'quran_test_marks', nullable: true })
+  quranTestMarks: string | null;
+
+  @Column({ type: 'varchar', length: 500, name: 'quran_test_reason', nullable: true })
+  quranTestReason: string | null;
+
   @Column({ type: 'varchar', length: 20, name: 'oral_test_marks', nullable: true })
   oralTestMarks: string | null;
 
@@ -117,6 +126,15 @@ export class AdmissionApplication {
 
   @Column({ type: 'boolean', name: 'written_admit_eligible', default: false })
   writtenAdmitEligible: boolean;
+
+  @Column({ type: 'boolean', name: 'written_test_passed', nullable: true })
+  writtenTestPassed: boolean | null;
+
+  @Column({ type: 'varchar', length: 20, name: 'written_test_marks', nullable: true })
+  writtenTestMarks: string | null;
+
+  @Column({ type: 'varchar', length: 500, name: 'written_test_reason', nullable: true })
+  writtenTestReason: string | null;
 
   @CreateDateColumn({ type: 'timestamp', name: 'created_at' })
   createdAt: Date;

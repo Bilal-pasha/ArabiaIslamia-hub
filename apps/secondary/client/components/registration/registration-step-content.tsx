@@ -41,6 +41,7 @@ export function RegistrationStepContent({
         <FormStepDocuments
           data={data}
           files={files}
+          errors={errors}
           onUpdate={onUpdate}
           onFileSelect={onFileSelect}
         />

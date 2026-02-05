@@ -89,13 +89,11 @@ export class SubmitAdmissionDto {
   @IsString()
   accommodationType: string;
 
-  @IsOptional()
   @IsString()
-  photoFile?: string;
+  photoFile: string;
 
-  @IsOptional()
   @IsString()
-  idFile?: string;
+  idFile: string;
 
   @IsOptional()
   @IsString()

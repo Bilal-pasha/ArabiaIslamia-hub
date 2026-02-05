@@ -10,6 +10,7 @@ import {
   LayoutDashboard,
   Menu,
   X,
+  GraduationCap,
 } from 'lucide-react';
 import { Button, SecondaryLogo } from '@arabiaaislamia/ui';
 import { apiClient } from '@/utils/axios-instance';
@@ -31,6 +32,8 @@ function getPageTitle(pathname: string): string {
   if (pathname.startsWith(privateRoutes.users)) return 'Users';
   if (pathname === privateRoutes.applications) return 'Applications';
   if (pathname.match(/\/applications\/[^/]+$/)) return 'Application detail';
+  if (pathname === privateRoutes.students) return 'Students';
+  if (pathname.match(/\/students\/[^/]+$/)) return 'Student detail';
   return 'Admin';
 }
 
@@ -68,6 +71,7 @@ export function AdminDashboardLayout({
   const navItems = [
     { href: privateRoutes.dashboard, label: 'Dashboard', icon: LayoutDashboard },
     { href: privateRoutes.applications, label: 'Applications', icon: ClipboardList },
+    { href: privateRoutes.students, label: 'Students', icon: GraduationCap },
     ...(user?.role === 'superadmin'
       ? [{ href: privateRoutes.users, label: 'Users', icon: Users }]
       : []),
@@ -91,8 +95,8 @@ export function AdminDashboardLayout({
               key={href}
               href={href}
               className={`flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-colors ${isActive(href)
-                  ? 'bg-white/15 text-white'
-                  : 'text-slate-300 hover:bg-white/10 hover:text-white'
+                ? 'bg-white/15 text-white'
+                : 'text-slate-300 hover:bg-white/10 hover:text-white'
                 }`}
             >
               <Icon className="size-5 shrink-0" />
@@ -149,8 +153,8 @@ export function AdminDashboardLayout({
               href={href}
               onClick={() => setSidebarOpen(false)}
               className={`flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-colors ${isActive(href)
-                  ? 'bg-white/15 text-white'
-                  : 'text-slate-300 hover:bg-white/10 hover:text-white'
+                ? 'bg-white/15 text-white'
+                : 'text-slate-300 hover:bg-white/10 hover:text-white'
                 }`}
             >
               <Icon className="size-5 shrink-0" />

@@ -1,7 +1,7 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable, BadRequestException, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { AdmissionApplication } from '@arabiaaislamia/database';
+import { AdmissionApplication, Student } from '@arabiaaislamia/database';
 import { SubmitAdmissionDto } from './dto/submit-admission.dto';
 
 @Injectable()
@@ -9,6 +9,8 @@ export class AdmissionService {
   constructor(
     @InjectRepository(AdmissionApplication)
     private readonly repo: Repository<AdmissionApplication>,
+    @InjectRepository(Student)
+    private readonly studentRepo: Repository<Student>,
   ) { }
 
   async submit(dto: SubmitAdmissionDto) {
@@ -57,6 +59,20 @@ export class AdmissionService {
     });
   }
 
+  async findAllStudents(): Promise<Student[]> {
+    return this.studentRepo.find({
+      relations: ['admissionApplication'],
+      order: { createdAt: 'DESC' },
+    });
+  }
+
+  async findOneStudent(id: string): Promise<Student | null> {
+    return this.studentRepo.findOne({
+      where: { id },
+      relations: ['admissionApplication'],
+    });
+  }
+
   async findOne(id: string): Promise<AdmissionApplication | null> {
     return this.repo.findOne({ where: { id } });
   }
@@ -78,6 +94,25 @@ export class AdmissionService {
     return app;
   }
 
+  async updateQuranTest(
+    id: string,
+    marks: string | undefined,
+    passed: boolean,
+    reason?: string,
+  ): Promise<AdmissionApplication> {
+    const app = await this.repo.findOne({ where: { id } });
+    if (!app) throw new NotFoundException('Application not found');
+    app.quranTestMarks = marks ?? null;
+    app.quranTestPassed = passed;
+    app.quranTestReason = reason ?? null;
+    if (!passed) {
+      app.status = 'quran_test_failed';
+      app.statusReason = reason ?? 'Quran test failed';
+    }
+    await this.repo.save(app);
+    return app;
+  }
+
   async updateOralTest(
     id: string,
     marks: string | undefined,
@@ -88,7 +123,6 @@ export class AdmissionService {
     if (!app) throw new NotFoundException('Application not found');
     app.oralTestMarks = marks ?? null;
     app.oralTestPassed = passed;
-    if (passed) app.writtenAdmitEligible = true;
     await this.repo.save(app);
     return app;
   }
@@ -99,6 +133,49 @@ export class AdmissionService {
     app.writtenAdmitEligible = true;
     await this.repo.save(app);
     return app;
+  }
+
+  async updateWrittenTest(
+    id: string,
+    marks: string | undefined,
+    passed: boolean,
+    reason?: string,
+  ): Promise<AdmissionApplication> {
+    const app = await this.repo.findOne({ where: { id } });
+    if (!app) throw new NotFoundException('Application not found');
+    app.writtenTestMarks = marks ?? null;
+    app.writtenTestPassed = passed;
+    app.writtenTestReason = reason ?? null;
+    await this.repo.save(app);
+    return app;
+  }
+
+  async fullyApprove(id: string): Promise<{ application: AdmissionApplication; student: Student }> {
+    const app = await this.repo.findOne({ where: { id } });
+    if (!app) throw new NotFoundException('Application not found');
+    if (app.status === 'student') throw new BadRequestException('Application already converted to student');
+    if (app.quranTestPassed !== true || app.oralTestPassed !== true || app.writtenTestPassed !== true) {
+      throw new BadRequestException('Quran, oral and written tests must be passed before full approval');
+    }
+
+    const student = this.studentRepo.create({
+      name: app.name,
+      dateOfBirth: app.dateOfBirth ? new Date(app.dateOfBirth) : null,
+      gender: app.gender || null,
+      guardianName: app.guardianName || null,
+      contact: app.phone || null,
+      address: app.address || null,
+      photo: app.photoFileKey || null,
+      rollNumber: app.applicationNumber,
+      admissionApplicationId: app.id,
+    });
+    await this.studentRepo.save(student);
+
+    app.status = 'student';
+    app.statusReason = null;
+    await this.repo.save(app);
+
+    return { application: app, student };
   }
 
   private generateApplicationNumber(): string {

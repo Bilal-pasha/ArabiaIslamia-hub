@@ -12,6 +12,7 @@ import { User } from './user.entity';
 import { Parent } from './parent.entity';
 import { Registration } from './registration.entity';
 import { FeePayment } from './fee-payment.entity';
+import { AdmissionApplication } from './admission-application.entity';
 
 @Entity('students')
 export class Student {
@@ -31,6 +32,13 @@ export class Student {
   @ManyToOne(() => Parent, (p) => p.students, { onDelete: 'SET NULL' })
   @JoinColumn({ name: 'parent_id' })
   parent: Parent | null;
+
+  @Column({ type: 'uuid', name: 'admission_application_id', nullable: true })
+  admissionApplicationId: string | null;
+
+  @ManyToOne(() => AdmissionApplication, { onDelete: 'SET NULL' })
+  @JoinColumn({ name: 'admission_application_id' })
+  admissionApplication: AdmissionApplication | null;
 
   @Column({ type: 'varchar', length: 150 })
   name: string;
