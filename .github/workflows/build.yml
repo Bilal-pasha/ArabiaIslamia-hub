@@ -39,7 +39,7 @@ jobs:
           set -e
           echo "Checking infra and Dockerfiles..."
           test -f infra/prod/docker-compose.prod.yml || (echo "Missing infra/prod/docker-compose.prod.yml" && exit 1)
-          test -f apps/main-website/Dockerfile || (echo "Missing apps/main-website/Dockerfile" && exit 1)
+          test -f apps/main-website/client/Dockerfile || (echo "Missing apps/main-website/client/Dockerfile" && exit 1)
           test -f apps/main-website/api/Dockerfile || (echo "Missing apps/main-website/api/Dockerfile" && exit 1)
           test -f apps/secondary/api/Dockerfile || (echo "Missing apps/secondary/api/Dockerfile" && exit 1)
           test -f apps/secondary/client/Dockerfile || (echo "Missing apps/secondary/client/Dockerfile" && exit 1)
@@ -82,7 +82,7 @@ jobs:
         uses: docker/build-push-action@v5
         with:
           context: .
-          file: apps/main-website/Dockerfile
+          file: apps/main-website/client/Dockerfile
           push: true
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}

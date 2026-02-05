@@ -1,5 +1,5 @@
-# Builder: same layout as Dockerfile.dev for reliable install, then production build
-FROM node:20-alpine AS builder
+# Builder: Debian slim avoids @next/swc-linux-x64-musl (Alpine) and uses -gnu binary
+FROM node:20-slim AS builder
 WORKDIR /app
 RUN corepack enable && corepack prepare pnpm@9.14.2 --activate
 
@@ -12,11 +12,11 @@ COPY packages/ui ./packages/ui
 COPY packages/animations ./packages/animations
 
 # App package.json first for better layer caching
-COPY apps/main-website/package.json ./apps/main-website/
+COPY apps/main-website/client/package.json ./apps/main-website/client/
 
-RUN pnpm install --frozen-lockfile || pnpm install
+RUN pnpm config set network-timeout 120000 && pnpm install --frozen-lockfile || pnpm install
 
-COPY apps/main-website ./apps/main-website
+COPY apps/main-website/client ./apps/main-website/client
 
 # NEXT_PUBLIC_* must be present at build time (Next.js inlines them into the client bundle)
 ARG NEXT_PUBLIC_SECONDARY_APP_URL
@@ -37,10 +37,9 @@ WORKDIR /app
 ENV NODE_ENV=production
 ENV PORT=3000
 
-COPY --from=builder /app/apps/main-website/.next/standalone ./
-COPY --from=builder /app/apps/main-website/.next/static ./apps/main-website/.next/static
-COPY --from=builder /app/apps/main-website/public ./apps/main-website/public
+COPY --from=builder /app/apps/main-website/client/.next/standalone ./
+COPY --from=builder /app/apps/main-website/client/.next/static ./apps/main-website/client/.next/static
 
-WORKDIR /app/apps/main-website
+WORKDIR /app/apps/main-website/client
 EXPOSE 3000
 CMD ["node", "server.js"]
