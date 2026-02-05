@@ -1,5 +1,6 @@
 'use client';
 
+import { useMemo } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -37,8 +38,24 @@ function HeroCarouselDots({ count, index, onSelect }: { count: number; index: nu
   );
 }
 
-export function HeroCarousel() {
-  const { index, setIndex, slide, slides } = useHeroCarousel();
+interface HeroCarouselProps {
+  /** Optional slides from CMS API; when provided, overrides default slides */
+  apiSlides?: Array<{ desktopImageUrl: string; mobileImageUrl: string; title: string; subtitle: string }> | null;
+}
+
+export function HeroCarousel({ apiSlides }: HeroCarouselProps = {}) {
+  const mappedSlides = useMemo(
+    () => (apiSlides && apiSlides.length > 0
+      ? apiSlides.map((s) => ({
+        desktopBg: s.desktopImageUrl,
+        mobileBg: s.mobileImageUrl,
+        title: s.title ?? '',
+        subtitle: s.subtitle ?? '',
+      }))
+      : null),
+    [apiSlides],
+  );
+  const { index, setIndex, slide, slides } = useHeroCarousel(mappedSlides);
   return (
     <section className="relative w-full overflow-hidden" style={{ minHeight: 'clamp(320px, 72vh, 680px)', height: 'clamp(320px, 72vh, 680px)' }}>
       <AnimatePresence mode="wait">

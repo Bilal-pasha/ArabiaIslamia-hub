@@ -1,4 +1,4 @@
-import { HeroCarousel, WhiteSection, FacultiesSection, StatisticSection, NewsSection, DonateFormSection } from '@/components/organisms';
+import { HomePageClient } from './page-client';
 import { SEO_DEFAULTS } from '@/constants/seo';
 
 export const metadata = {
@@ -21,14 +21,5 @@ export const metadata = {
 };
 
 export default function HomePage() {
-  return (
-    <>
-      <HeroCarousel />
-      <WhiteSection />
-      <FacultiesSection />
-      <StatisticSection />
-      <NewsSection />
-      <DonateFormSection />
-    </>
-  );
+  return <HomePageClient />;
 }

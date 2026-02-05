@@ -1,12 +1,13 @@
 import { join } from 'path';
 import { DataSource, DataSourceOptions } from 'typeorm';
 
-export type ProjectId = 'huffaz' | 'secondary' | 'scouts-portal';
+export type ProjectId = 'huffaz' | 'secondary' | 'scouts-portal' | 'main-website';
 
 const PROJECT_DB_MAP: Record<ProjectId, string> = {
   huffaz: 'huffaz_db',
   secondary: 'secondary_db',
   'scouts-portal': 'scouts_portal_db',
+  'main-website': 'main_website_db',
 };
 
 export interface DatabaseConfigParams {

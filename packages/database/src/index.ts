@@ -16,6 +16,9 @@ export { FeePayment, type FeePaymentStatus } from './entities/fee-payment.entity
 export { ScoutsUser } from './entities/scouts-user.entity';
 export { Madrasa } from './entities/madrasa.entity';
 export { ScoutsStudent } from './entities/scouts-student.entity';
+export { CmsAdmin } from './entities/cms-admin.entity';
+export { HeroSlide } from './entities/hero-slide.entity';
+export { SiteSection, type SectionType } from './entities/site-section.entity';
 export {
   createDataSource,
   createDataSourceOptions,

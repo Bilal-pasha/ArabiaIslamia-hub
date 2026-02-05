@@ -1,5 +1,6 @@
 import './globals.css';
-import { MainLayout } from '@/components/templates';
+import { LayoutSwitcher } from '@/components/templates';
+import { Toaster } from '@arabiaaislamia/ui';
 import { SEO_DEFAULTS } from '@/constants/seo';
 
 export const metadata = {
@@ -74,7 +75,8 @@ export default function RootLayout({
         />
       </head>
       <body className="font-sans antialiased overflow-x-hidden" suppressHydrationWarning>
-        <MainLayout>{children}</MainLayout>
+        <LayoutSwitcher>{children}</LayoutSwitcher>
+        <Toaster richColors position="top-right" />
       </body>
     </html>
   );
