@@ -17,7 +17,8 @@ import { JwtStrategy } from './strategies/jwt.strategy';
       useFactory: (config: ConfigService) => ({
         secret: config.get<string>('JWT_SECRET', 'cms-secret-change-in-prod'),
         signOptions: {
-          expiresIn: config.get<string>('JWT_EXPIRES_IN', '8h'),
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          expiresIn: config.get<string>('JWT_EXPIRES_IN', '8h') as any,
         },
       }),
       inject: [ConfigService],
@@ -27,4 +28,4 @@ import { JwtStrategy } from './strategies/jwt.strategy';
   providers: [AuthService, JwtStrategy],
   exports: [AuthService],
 })
-export class AuthModule {}
+export class AuthModule { }

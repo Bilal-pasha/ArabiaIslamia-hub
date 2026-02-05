@@ -12,7 +12,7 @@ export class AuthService {
     @InjectRepository(CmsAdmin)
     private readonly adminRepository: Repository<CmsAdmin>,
     private readonly jwtService: JwtService,
-  ) {}
+  ) { }
 
   async login(dto: LoginDto): Promise<{ user: AdminResponseDto; accessToken: string }> {
     const admin = await this.adminRepository.findOne({
@@ -21,9 +21,11 @@ export class AuthService {
     if (!admin) throw new UnauthorizedException('Invalid credentials');
     const valid = await admin.comparePassword(dto.password);
     if (!valid) throw new UnauthorizedException('Invalid credentials');
+    const expiresIn = process.env.JWT_EXPIRES_IN || '8h';
     const accessToken = this.jwtService.sign(
       { sub: admin.id },
-      { expiresIn: process.env.JWT_EXPIRES_IN || '8h' },
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      { expiresIn } as any,
     );
     return { user: this.toResponse(admin), accessToken };
   }
