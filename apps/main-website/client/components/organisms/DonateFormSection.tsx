@@ -6,8 +6,8 @@ import { z } from 'zod';
 import { motion } from 'framer-motion';
 import { useRef } from 'react';
 import { useInView } from 'framer-motion';
-import { Button } from '@/components/atoms';
-import { FormField } from '@/components/molecules';
+import { Button } from '@/client/components/atoms';
+import { FormField } from '@/client/components/molecules';
 
 const donateSchema = z.object({
   firstname: z.string().min(1, 'Please enter your first name'),

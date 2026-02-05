@@ -1,5 +1,5 @@
 import './globals.css';
-import { LayoutSwitcher } from '@/components/templates';
+import { LayoutSwitcher } from '@/client/components/templates';
 import { Toaster } from '@arabiaaislamia/ui';
 import { SEO_DEFAULTS } from '@/constants/seo';
 

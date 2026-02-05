@@ -4,7 +4,7 @@ import Link from 'next/link';
 import { motion, useInView } from 'framer-motion';
 import { useRef } from 'react';
 import { Facebook, Twitter, Instagram, Youtube, GraduationCap, ExternalLink } from 'lucide-react';
-import { Logo } from '@/components/atoms';
+import { Logo } from '@/client/components/atoms';
 import { APP_LINKS } from '@/constants/navigation';
 
 const FOOTER_NAV_LINKS = [

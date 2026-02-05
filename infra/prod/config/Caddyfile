@@ -2,24 +2,20 @@
     email admin@jamiaarabiaislamia.com
 }
 
-# Main website API: https://api.jamiaarabiaislamia.com (backend for main site)
-# Uncomment when main-website-api is added to docker-compose.prod.yml
-# api.jamiaarabiaislamia.com {
-#     reverse_proxy main-website-api:8000 {
-#         health_uri /health
-#         health_interval 30s
-#     }
-#     encode gzip zstd
-#     header {
-#         X-Frame-Options "DENY"
-#         X-Content-Type-Options "nosniff"
-#         -Server
-#     }
-#     log {
-#         output file /var/log/caddy/api-main.log
-#         format json
-#     }
-# }
+# Main website API: https://api.jamiaarabiaislamia.com (backend for main site CMS)
+api.jamiaarabiaislamia.com {
+    reverse_proxy main-website-api:8000
+    encode gzip zstd
+    header {
+        X-Frame-Options "DENY"
+        X-Content-Type-Options "nosniff"
+        -Server
+    }
+    log {
+        output file /var/log/caddy/api-main.log
+        format json
+    }
+}
 
 # Main website: https://jamiaarabiaislamia.com
 jamiaarabiaislamia.com {

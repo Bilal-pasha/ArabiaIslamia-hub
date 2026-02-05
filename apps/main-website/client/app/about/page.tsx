@@ -3,8 +3,8 @@
 import Image from 'next/image';
 import Link from 'next/link';
 import { motion } from 'framer-motion';
-import { Button } from '@/components/atoms';
-import { NewsSection } from '@/components/organisms';
+import { Button } from '@/client/components/atoms';
+import { NewsSection } from '@/client/components/organisms';
 import { SEO_DEFAULTS } from '@/constants/seo';
 
 const ABOUT_DATA = {

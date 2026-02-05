@@ -3,8 +3,8 @@
 import Link from 'next/link';
 import { Menu, X, ChevronDown, ExternalLink, GraduationCap } from 'lucide-react';
 import { Drawer, DrawerContent } from '@arabiaaislamia/ui';
-import { Logo } from '@/components/atoms';
-import { NavLink, NavDropdown } from '@/components/molecules';
+import { Logo } from '@/client/components/atoms';
+import { NavLink, NavDropdown } from '@/client/components/molecules';
 import { NAV_DATA, APP_LINKS } from '@/constants/navigation';
 import type { NavChildLink } from '@/constants/navigation';
 import { cn } from '@/lib/utils';

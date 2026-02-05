@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import { motion } from 'framer-motion';
-import { Button } from '@/components/atoms';
+import { Button } from '@/client/components/atoms';
 
 export function WhiteSection() {
   return (

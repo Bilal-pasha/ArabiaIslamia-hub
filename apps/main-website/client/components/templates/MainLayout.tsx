@@ -1,7 +1,7 @@
 'use client';
 
-import { Navbar } from '@/components/organisms';
-import { Footer } from '@/components/organisms';
+import { Navbar } from '@/client/components/organisms';
+import { Footer } from '@/client/components/organisms';
 
 interface MainLayoutProps {
   children: React.ReactNode;

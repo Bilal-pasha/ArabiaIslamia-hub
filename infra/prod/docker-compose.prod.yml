@@ -53,6 +53,23 @@ services:
   #     postgres:
   #       condition: service_healthy
 
+  main-website-api:
+    image: ${REGISTRY}/${IMAGE_NAME_LOWER}-main-website-api:latest
+    container_name: arabiaislamia-hub-main-website-api
+    restart: unless-stopped
+    env_file:
+      - ./.env
+    environment:
+      NODE_ENV: production
+      SERVER_PORT: 8000
+      DB_HOST: postgres
+      COOKIE_DOMAIN: .jamiaarabiaislamia.com
+    networks:
+      - app-network
+    depends_on:
+      postgres:
+        condition: service_healthy
+
   secondary-api:
     image: ${REGISTRY}/${IMAGE_NAME_LOWER}-secondary-api:latest
     container_name: arabiaislamia-hub-secondary-api
@@ -76,6 +93,7 @@ services:
       - NEXT_PUBLIC_SECONDARY_APP_URL=${NEXT_PUBLIC_SECONDARY_APP_URL}
       - NEXT_PUBLIC_HUFFAZ_APP_URL=${NEXT_PUBLIC_HUFFAZ_APP_URL}
       - NEXT_PUBLIC_SCOUTS_APP_URL=${NEXT_PUBLIC_SCOUTS_APP_URL}
+      - NEXT_PUBLIC_MAIN_WEBSITE_API_URL=${NEXT_PUBLIC_MAIN_WEBSITE_API_URL}
       - NODE_ENV=production
     env_file:
       - ./.env
@@ -145,6 +163,7 @@ services:
       - app-network
     depends_on:
       # - huffaz-api
+      - main-website-api
       - secondary-api
       - main-website
       # - huffaz-app

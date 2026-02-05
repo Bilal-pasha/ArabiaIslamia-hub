@@ -4,8 +4,8 @@ import Link from 'next/link';
 import { motion } from 'framer-motion';
 import { useRef } from 'react';
 import { useInView } from 'framer-motion';
-import { Button } from '@/components/atoms';
-import { FacultyCard } from '@/components/molecules';
+import { Button } from '@/client/components/atoms';
+import { FacultyCard } from '@/client/components/molecules';
 
 const FACULTIES = [
   {
