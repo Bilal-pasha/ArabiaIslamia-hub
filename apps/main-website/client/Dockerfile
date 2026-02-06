@@ -39,6 +39,7 @@ ENV PORT=3000
 
 COPY --from=builder /app/apps/main-website/client/.next/standalone ./
 COPY --from=builder /app/apps/main-website/client/.next/static ./apps/main-website/client/.next/static
+COPY --from=builder /app/apps/main-website/client/public ./apps/main-website/client/public
 
 WORKDIR /app/apps/main-website/client
 EXPOSE 3000

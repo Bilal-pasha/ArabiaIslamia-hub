@@ -1,7 +1,8 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import Image from 'next/image';
+import { Upload } from 'lucide-react';
 import {
   Card,
   CardContent,
@@ -33,6 +34,7 @@ import {
   deleteHeroSlide,
   type HeroSlideDto,
 } from '@/services/cms.service';
+import { uploadFile } from '@/services/upload.service';
 
 const defaultSlide = {
   desktopImageUrl: '',
@@ -43,6 +45,8 @@ const defaultSlide = {
   isActive: true,
 };
 
+type ImageField = 'desktopImageUrl' | 'mobileImageUrl';
+
 export default function AdminHeroPage() {
   const [slides, setSlides] = useState<HeroSlideDto[]>([]);
   const [loading, setLoading] = useState(true);
@@ -52,6 +56,9 @@ export default function AdminHeroPage() {
   const [saving, setSaving] = useState(false);
   const [deleteId, setDeleteId] = useState<string | null>(null);
   const [deleting, setDeleting] = useState(false);
+  const [uploadingField, setUploadingField] = useState<ImageField | null>(null);
+  const desktopInputRef = useRef<HTMLInputElement>(null);
+  const mobileInputRef = useRef<HTMLInputElement>(null);
 
   const load = () => {
     setLoading(true);
@@ -116,6 +123,24 @@ export default function AdminHeroPage() {
       toast.error(err instanceof Error ? err.message : 'Failed to delete');
     } finally {
       setDeleting(false);
+    }
+  };
+
+  const handleFileSelect = async (field: ImageField, file: File | null) => {
+    if (!file || !file.type.startsWith('image/')) {
+      if (file) toast.error('Please select an image file (e.g. JPG, PNG)');
+      setUploadingField(null);
+      return;
+    }
+    setUploadingField(field);
+    try {
+      const url = await uploadFile(`hero-${field}`, file);
+      setForm((f) => ({ ...f, [field]: url }));
+      toast.success('Image uploaded');
+    } catch (err) {
+      toast.error(err instanceof Error ? err.message : 'Upload failed');
+    } finally {
+      setUploadingField(null);
     }
   };
 
@@ -189,25 +214,79 @@ export default function AdminHeroPage() {
             <DialogTitle>{editing ? 'Edit slide' : 'Add slide'}</DialogTitle>
           </DialogHeader>
           <form onSubmit={handleSubmit} className="space-y-4">
+            <input
+              ref={desktopInputRef}
+              type="file"
+              accept="image/*"
+              className="hidden"
+              onChange={(e) => {
+                const file = e.target.files?.[0];
+                handleFileSelect('desktopImageUrl', file ?? null);
+                e.target.value = '';
+              }}
+            />
+            <input
+              ref={mobileInputRef}
+              type="file"
+              accept="image/*"
+              className="hidden"
+              onChange={(e) => {
+                const file = e.target.files?.[0];
+                handleFileSelect('mobileImageUrl', file ?? null);
+                e.target.value = '';
+              }}
+            />
             <div>
-              <Label className="text-slate-200">Desktop image URL</Label>
-              <Input
-                value={form.desktopImageUrl}
-                onChange={(e) => setForm((f) => ({ ...f, desktopImageUrl: e.target.value }))}
-                placeholder="/images/background.jpg or full URL"
-                className="mt-1 border-white/20 bg-white/5 text-white"
-                required
-              />
+              <Label className="text-slate-200">Desktop image</Label>
+              <div className="mt-1 flex gap-2">
+                <Input
+                  value={form.desktopImageUrl}
+                  onChange={(e) => setForm((f) => ({ ...f, desktopImageUrl: e.target.value }))}
+                  placeholder="URL or upload below"
+                  className="flex-1 border-white/20 bg-white/5 text-white"
+                  required
+                />
+                <Button
+                  type="button"
+                  variant="outline"
+                  className="shrink-0 border-white/20 text-white hover:bg-white/10"
+                  disabled={uploadingField === 'desktopImageUrl'}
+                  onClick={() => desktopInputRef.current?.click()}
+                >
+                  {uploadingField === 'desktopImageUrl' ? (
+                    <Spinner className="size-4" />
+                  ) : (
+                    <Upload className="size-4" />
+                  )}
+                </Button>
+              </div>
+              <p className="mt-1 text-xs text-slate-500">Upload or paste URL</p>
             </div>
             <div>
-              <Label className="text-slate-200">Mobile image URL</Label>
-              <Input
-                value={form.mobileImageUrl}
-                onChange={(e) => setForm((f) => ({ ...f, mobileImageUrl: e.target.value }))}
-                placeholder="/images/slider-image-1.jpg"
-                className="mt-1 border-white/20 bg-white/5 text-white"
-                required
-              />
+              <Label className="text-slate-200">Mobile image</Label>
+              <div className="mt-1 flex gap-2">
+                <Input
+                  value={form.mobileImageUrl}
+                  onChange={(e) => setForm((f) => ({ ...f, mobileImageUrl: e.target.value }))}
+                  placeholder="URL or upload below"
+                  className="flex-1 border-white/20 bg-white/5 text-white"
+                  required
+                />
+                <Button
+                  type="button"
+                  variant="outline"
+                  className="shrink-0 border-white/20 text-white hover:bg-white/10"
+                  disabled={uploadingField === 'mobileImageUrl'}
+                  onClick={() => mobileInputRef.current?.click()}
+                >
+                  {uploadingField === 'mobileImageUrl' ? (
+                    <Spinner className="size-4" />
+                  ) : (
+                    <Upload className="size-4" />
+                  )}
+                </Button>
+              </div>
+              <p className="mt-1 text-xs text-slate-500">Upload or paste URL</p>
             </div>
             <div>
               <Label className="text-slate-200">Title</Label>

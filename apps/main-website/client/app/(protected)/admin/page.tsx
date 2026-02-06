@@ -1,7 +1,7 @@
 'use client';
 
 import Link from 'next/link';
-import { LayoutDashboard, ImageIcon, LayoutList } from 'lucide-react';
+import { ImageIcon, LayoutList } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@arabiaaislamia/ui';
 import { adminRoutes, publicRoutes } from '@/constants/route';
 
