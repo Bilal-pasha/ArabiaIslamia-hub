@@ -13,10 +13,11 @@ const CLASSES: Array<{ name: string; sortOrder: number }> = [
 
 export class SeedSecondaryClasses1738541300000 implements MigrationInterface {
   public async up(queryRunner: QueryRunner): Promise<void> {
-    const existing = await queryRunner.query<{ count: string }[]>(
+    const existing = await queryRunner.query(
       `SELECT COUNT(*) AS count FROM classes`
     );
-    const count = parseInt(existing?.[0]?.count ?? '0', 10);
+    const firstRow = Array.isArray(existing) && existing.length > 0 ? existing[0] : null;
+    const count = parseInt(firstRow && typeof firstRow === 'object' && 'count' in firstRow ? String(firstRow.count) : '0', 10);
     if (count > 0) return;
 
     for (const row of CLASSES) {
