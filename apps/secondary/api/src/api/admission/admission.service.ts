@@ -299,6 +299,11 @@ export class AdmissionService {
       (a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime(),
     );
     const latest = sorted[0];
+    let lastClassName: string | undefined = latest?.class?.name;
+    if (latest?.classId && !lastClassName) {
+      const cls = await this.classRepo.findOne({ where: { id: latest.classId }, select: ['name'] });
+      lastClassName = cls?.name;
+    }
     return {
       id: student.id,
       name: student.name,
@@ -307,7 +312,7 @@ export class AdmissionService {
       contact: student.contact,
       address: student.address,
       lastSessionName: latest?.academicSession?.name,
-      lastClassName: latest?.class?.name,
+      lastClassName,
     };
   }
 

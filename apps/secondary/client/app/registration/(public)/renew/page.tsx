@@ -180,14 +180,6 @@ export default function RenewAdmissionPage() {
       className="min-h-screen w-full min-w-0 flex items-center justify-center px-4 py-6 sm:p-6 overflow-x-hidden"
     >
       <div className="w-full max-w-lg min-w-0">
-        <Button variant="ghost" size="sm" asChild className="mb-6">
-          <Link href={publicRoutes.home} className="gap-2 inline-flex items-center text-sm font-medium text-slate-300 hover:text-amber-300">
-            <svg className="size-4 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
-            </svg>
-            Back to home
-          </Link>
-        </Button>
         <div className="flex justify-center mb-6">
           <div className="rounded-xl bg-white/10 border border-white/20 p-3">
             <SecondaryLogo width={72} height={72} className="rounded-lg" />
@@ -241,12 +233,12 @@ export default function RenewAdmissionPage() {
                   )}
                   {student && (
                     <div className="mt-6 p-4 rounded-lg bg-white/5 border border-white/10 space-y-3">
-                      <p className="font-semibold text-white">{student.name}</p>
+                      <p className="font-semibold text-white">Student Name: {student.name}</p>
                       {student.guardianName && (
-                        <p className="text-slate-400 text-sm">Guardian: {student.guardianName}</p>
+                        <p className="text-slate-400 text-sm">Guardian Name: {student.guardianName}</p>
                       )}
                       {student.lastClassName && (
-                        <p className="text-slate-400 text-sm">Previous class: {student.lastClassName}</p>
+                        <p className="text-slate-400 text-sm">Previous Class: {student.lastClassName}</p>
                       )}
                       <Button
                         type="button"
