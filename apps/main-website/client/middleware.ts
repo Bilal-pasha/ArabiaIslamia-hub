@@ -8,17 +8,17 @@ export function middleware(request: NextRequest) {
   const token = request.cookies.get(ACCESS_TOKEN_COOKIE);
   const pathname = request.nextUrl.pathname;
 
-  const isSignin =
-    pathname === adminRoutes.signin || pathname.startsWith(`${adminRoutes.signin}/`);
-  const isProtectedAdmin = pathname.startsWith('/admin') && !isSignin;
+  const isLogin =
+    pathname === adminRoutes.login || pathname.startsWith(`${adminRoutes.login}/`);
+  const isProtectedAdmin = pathname.startsWith('/admin') && !isLogin;
 
   if (!token?.value && isProtectedAdmin) {
-    const signin = new URL(adminRoutes.signin, request.url);
-    signin.searchParams.set('redirect', pathname);
-    return NextResponse.redirect(signin);
+    const loginUrl = new URL(adminRoutes.login, request.url);
+    loginUrl.searchParams.set('redirect', pathname);
+    return NextResponse.redirect(loginUrl);
   }
 
-  if (token?.value && isSignin) {
+  if (token?.value && isLogin) {
     return NextResponse.redirect(new URL(adminRoutes.dashboard, request.url));
   }
 

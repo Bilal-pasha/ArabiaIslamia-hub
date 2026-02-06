@@ -9,7 +9,7 @@ import { Button, Input, Label } from '@arabiaaislamia/ui';
 import { adminRoutes, publicRoutes } from '@/constants/route';
 import { apiClient } from '@/utils/axios-instance';
 
-function AdminSigninContent() {
+function AdminLoginContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const redirect = searchParams.get('redirect') || adminRoutes.dashboard;
@@ -51,7 +51,7 @@ function AdminSigninContent() {
               />
             </div>
             <CardTitle className="mb-2 text-center text-xl text-white sm:text-2xl">
-              CMS Admin Sign In
+              CMS Admin Login
             </CardTitle>
             <p className="mb-6 text-center text-sm text-slate-300">
               Main website content management
@@ -89,7 +89,7 @@ function AdminSigninContent() {
                 className="w-full bg-amber-500 hover:bg-amber-600"
                 disabled={loading}
               >
-                {loading ? 'Signing in...' : 'Sign In'}
+                {loading ? 'Signing in...' : 'Log in'}
               </Button>
             </form>
             <p className="mt-4 text-center">
@@ -107,7 +107,7 @@ function AdminSigninContent() {
   );
 }
 
-function SigninFallback() {
+function LoginFallback() {
   return (
     <div className="flex min-h-screen w-full min-w-0 items-center justify-center overflow-x-hidden bg-gradient-to-br from-slate-800 via-[#1a3254] to-[#256089] px-4 py-6 sm:p-6">
       <div className="w-full min-w-0 max-w-md">
@@ -136,10 +136,10 @@ function SigninFallback() {
   );
 }
 
-export default function AdminSigninPage() {
+export default function AdminLoginPage() {
   return (
-    <Suspense fallback={<SigninFallback />}>
-      <AdminSigninContent />
+    <Suspense fallback={<LoginFallback />}>
+      <AdminLoginContent />
     </Suspense>
   );
 }

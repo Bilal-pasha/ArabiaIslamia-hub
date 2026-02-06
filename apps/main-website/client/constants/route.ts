@@ -8,7 +8,7 @@ export const publicRoutes = {
 } as const;
 
 export const adminRoutes = {
-  signin: '/admin/signin',
+  login: '/admin/login',
   dashboard: '/admin',
   hero: '/admin/hero',
   sections: '/admin/sections',

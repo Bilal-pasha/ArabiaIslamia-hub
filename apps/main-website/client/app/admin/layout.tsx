@@ -4,11 +4,8 @@ import { usePathname } from 'next/navigation';
 import { AdminDashboardLayout } from '@/components/admin-dashboard-layout';
 import { adminRoutes } from '@/constants/route';
 
-function isSigninPath(pathname: string) {
-  return (
-    pathname === adminRoutes.signin ||
-    pathname.includes('/admin/signin')
-  );
+function isLoginPath(pathname: string) {
+  return pathname === adminRoutes.login || pathname.startsWith(`${adminRoutes.login}/`);
 }
 
 export default function AdminLayout({
@@ -18,7 +15,7 @@ export default function AdminLayout({
 }) {
   const pathname = usePathname();
 
-  if (pathname && isSigninPath(pathname)) {
+  if (pathname && isLoginPath(pathname)) {
     return <>{children}</>;
   }
 

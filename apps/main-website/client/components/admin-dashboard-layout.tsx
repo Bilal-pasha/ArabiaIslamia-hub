@@ -52,10 +52,10 @@ export function AdminDashboardLayout({
     try {
       await apiClient.post('/api/auth/logout');
       toast.success('Signed out');
-      window.location.href = adminRoutes.signin;
+      window.location.href = adminRoutes.login;
     } catch {
       toast.error('Sign out failed');
-      window.location.href = adminRoutes.signin;
+      window.location.href = adminRoutes.login;
     }
   };
 
