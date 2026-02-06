@@ -33,11 +33,25 @@ async function bootstrap(): Promise<void> {
   );
 
   app.use(cookieParser());
+
   const corsOrigin = configService.get<string>('CORS_ORIGIN');
-  const allowedOrigins = corsOrigin
+  const isProd = configService.get<string>('NODE_ENV') === 'production';
+  const devOrigins = ['http://localhost:3000', 'http://127.0.0.1:3000'];
+  const prodOrigins = corsOrigin
     ? corsOrigin.split(',').map((o) => o.trim()).filter(Boolean)
-    : true;
-  app.enableCors({ origin: allowedOrigins, credentials: true });
+    : [];
+  const allowedOrigins = isProd
+    ? prodOrigins.length > 0
+      ? prodOrigins
+      : true
+    : [...devOrigins, ...prodOrigins];
+
+  app.enableCors({
+    origin: allowedOrigins,
+    credentials: true,
+    methods: ['GET', 'HEAD', 'PUT', 'PATCH', 'POST', 'DELETE', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Authorization', 'Accept'],
+  });
 
   await app.listen(port, '0.0.0.0');
   console.log(`Main website API running on port ${port}`);
