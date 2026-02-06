@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import Link from 'next/link';
 import { motion } from 'framer-motion';
 import {
@@ -16,8 +16,15 @@ import {
   Badge,
   TableSkeleton,
   toast,
+  AlertDialog,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
 } from '@arabiaaislamia/ui';
-import { fetchApplications, type AdmissionApplication } from '@/services/admission/admission.service';
+import { fetchApplications, deleteApplication, type AdmissionApplication } from '@/services/admission/admission.service';
 import { fadeInUp, defaultTransition } from '@arabiaaislamia/animations';
 import { publicRoutes, privateRoutes } from '@/constants/route';
 
@@ -37,8 +44,13 @@ export default function AdminApplicationsPage() {
   const [applications, setApplications] = useState<AdmissionApplication[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
+  const [appToDelete, setAppToDelete] = useState<AdmissionApplication | null>(null);
+  const [deleting, setDeleting] = useState(false);
 
-  useEffect(() => {
+  const loadApplications = useCallback(() => {
+    setLoading(true);
+    setError(null);
     fetchApplications()
       .then(setApplications)
       .catch((err) => {
@@ -48,6 +60,32 @@ export default function AdminApplicationsPage() {
       })
       .finally(() => setLoading(false));
   }, []);
+
+  useEffect(() => {
+    loadApplications();
+  }, [loadApplications]);
+
+  const handleDeleteClick = (app: AdmissionApplication) => {
+    setAppToDelete(app);
+    setDeleteDialogOpen(true);
+  };
+
+  const handleDeleteConfirm = async () => {
+    if (!appToDelete) return;
+    setDeleting(true);
+    try {
+      await deleteApplication(appToDelete.id);
+      toast.success('Application deleted.');
+      setDeleteDialogOpen(false);
+      setAppToDelete(null);
+      loadApplications();
+    } catch (err) {
+      const msg = err instanceof Error ? err.message : 'Delete failed';
+      toast.error(msg);
+    } finally {
+      setDeleting(false);
+    }
+  };
 
   return (
     <motion.div
@@ -108,9 +146,19 @@ export default function AdminApplicationsPage() {
                         {new Date(app.createdAt).toLocaleDateString()}
                       </TableCell>
                       <TableCell className="text-right">
-                        <Button variant="outline" size="sm" asChild>
-                          <Link href={privateRoutes.applicationDetail(app.id)}>View</Link>
-                        </Button>
+                        <div className="flex items-center justify-end gap-2">
+                          <Button variant="outline" size="sm" asChild>
+                            <Link href={privateRoutes.applicationDetail(app.id)}>View</Link>
+                          </Button>
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            className="border-red-400/50 text-red-300 hover:bg-red-500/20 hover:text-red-200"
+                            onClick={() => handleDeleteClick(app)}
+                          >
+                            Delete
+                          </Button>
+                        </div>
                       </TableCell>
                     </TableRow>
                   ))}
@@ -120,6 +168,29 @@ export default function AdminApplicationsPage() {
           </Card>
         )}
       </div>
+
+      <AlertDialog open={deleteDialogOpen} onOpenChange={setDeleteDialogOpen}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Delete application?</AlertDialogTitle>
+            <AlertDialogDescription>
+              This will permanently delete the application for {appToDelete?.name} ({appToDelete?.applicationNumber})
+              and all attached files. This cannot be undone.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel disabled={deleting}>Cancel</AlertDialogCancel>
+            <Button
+              variant="destructive"
+              onClick={handleDeleteConfirm}
+              disabled={deleting}
+              className="bg-red-600 hover:bg-red-700"
+            >
+              {deleting ? 'Deleting…' : 'Delete'}
+            </Button>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </motion.div>
   );
 }

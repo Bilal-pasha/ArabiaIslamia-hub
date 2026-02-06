@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Param, Patch, Post, Query, UseGuards } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Patch, Post, Query, UseGuards } from '@nestjs/common';
 import { AdmissionService } from './admission.service';
 import { SubmitAdmissionDto } from './dto/submit-admission.dto';
 import { SubmitRenewalDto } from './dto/submit-renewal.dto';
@@ -110,6 +110,14 @@ export class AdmissionController {
     return student;
   }
 
+  @Delete('students/:id')
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles('admin', 'superadmin')
+  async deleteStudent(@Param('id') id: string) {
+    await this.admissionService.deleteStudent(id);
+    return { success: true };
+  }
+
   @Get(':id')
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles('admin', 'superadmin')
@@ -157,5 +165,13 @@ export class AdmissionController {
   @Roles('admin', 'superadmin')
   async fullyApprove(@Param('id') id: string) {
     return this.admissionService.fullyApprove(id);
+  }
+
+  @Delete(':id')
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles('admin', 'superadmin')
+  async deleteApplication(@Param('id') id: string) {
+    await this.admissionService.deleteApplication(id);
+    return { success: true };
   }
 }

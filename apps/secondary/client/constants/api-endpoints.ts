@@ -28,6 +28,8 @@ export const admissionEndpoints = {
   renewalDetail: (id: string) => `/admission/renewals/${id}`,
   renewalStatus: (id: string) => `/admission/renewals/${id}/status`,
   stats: '/admission/stats',
+  deleteApplication: (id: string) => `/admission/${id}`,
+  deleteStudent: (id: string) => `/admission/students/${id}`,
 } as const;
 
 export const uploadEndpoints = {

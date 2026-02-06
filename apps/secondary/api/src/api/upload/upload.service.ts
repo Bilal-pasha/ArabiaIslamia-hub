@@ -4,12 +4,13 @@ import {
   createPresignedPutUrl,
   createPresignedGetUrl,
   generateKey,
+  deleteObject as deleteStorageObject,
   type R2Config,
 } from '@arabiaaislamia/storage';
 
 @Injectable()
 export class UploadService {
-  constructor(private readonly config: ConfigService) {}
+  constructor(private readonly config: ConfigService) { }
 
   async getPresignedUrl(
     field: string,
@@ -37,6 +38,18 @@ export class UploadService {
       throw new Error('R2 storage not configured.');
     }
     return createPresignedGetUrl(r2Config, { key, expiresIn: 3600 });
+  }
+
+  /** Deletes an object from R2 by key. No-op if R2 not configured or key empty. */
+  async deleteObject(key: string | null | undefined): Promise<void> {
+    if (!key || !key.trim()) return;
+    const r2Config = this.getR2Config();
+    if (!r2Config) return;
+    try {
+      await deleteStorageObject(r2Config, key.trim());
+    } catch {
+      // Log but do not throw; caller may still proceed with DB delete
+    }
   }
 
   private getR2Config(): R2Config | null {

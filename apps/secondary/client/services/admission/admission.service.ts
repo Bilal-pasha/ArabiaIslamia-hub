@@ -159,6 +159,14 @@ export async function fetchStudent(id: string): Promise<Student | null> {
   return data;
 }
 
+export async function deleteApplication(id: string): Promise<void> {
+  await apiClient.delete(admissionEndpoints.deleteApplication(id));
+}
+
+export async function deleteStudent(id: string): Promise<void> {
+  await apiClient.delete(admissionEndpoints.deleteStudent(id));
+}
+
 export async function getFileViewUrl(key: string): Promise<string> {
   const { data } = await apiClient.get<{ url: string }>(uploadEndpoints.presignGet(key));
   return data.url;

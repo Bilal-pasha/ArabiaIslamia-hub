@@ -12,6 +12,7 @@ import {
 } from '@arabiaaislamia/database';
 import { SubmitAdmissionDto } from './dto/submit-admission.dto';
 import { SubmitRenewalDto } from './dto/submit-renewal.dto';
+import { UploadService } from '../upload/upload.service';
 
 export interface StudentByRollDto {
   id: string;
@@ -81,6 +82,7 @@ export class AdmissionService {
     private readonly renewalRepo: Repository<RenewalApplication>,
     @InjectRepository(Registration)
     private readonly registrationRepo: Repository<Registration>,
+    private readonly uploadService: UploadService,
   ) { }
 
   async submit(dto: SubmitAdmissionDto) {
@@ -449,6 +451,30 @@ export class AdmissionService {
     renewal.statusReason = reason ?? null;
     await this.renewalRepo.save(renewal);
     return this.toRenewalDto(renewal);
+  }
+
+  async deleteApplication(id: string): Promise<void> {
+    const app = await this.repo.findOne({ where: { id } });
+    if (!app) throw new NotFoundException('Application not found');
+    const fileKeys = [
+      app.photoFileKey,
+      app.idFileKey,
+      app.authorityLetterFileKey,
+      app.previousResultFileKey,
+    ].filter((k): k is string => !!k && k.trim() !== '');
+    for (const key of fileKeys) {
+      await this.uploadService.deleteObject(key);
+    }
+    await this.repo.remove(app);
+  }
+
+  async deleteStudent(id: string): Promise<void> {
+    const student = await this.studentRepo.findOne({ where: { id } });
+    if (!student) throw new NotFoundException('Student not found');
+    if (student.photo && student.photo.trim()) {
+      await this.uploadService.deleteObject(student.photo);
+    }
+    await this.studentRepo.remove(student);
   }
 
   async getStats(): Promise<{

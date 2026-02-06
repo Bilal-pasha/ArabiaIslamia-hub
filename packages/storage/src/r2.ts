@@ -1,4 +1,4 @@
-import { GetObjectCommand, PutObjectCommand, S3Client } from '@aws-sdk/client-s3';
+import { DeleteObjectCommand, GetObjectCommand, PutObjectCommand, S3Client } from '@aws-sdk/client-s3';
 import { getSignedUrl } from '@aws-sdk/s3-request-presigner';
 import { randomUUID } from 'crypto';
 
@@ -64,4 +64,14 @@ export function generateKey(prefix: string, field: string, filename: string): st
   const ext = filename.includes('.') ? filename.split('.').pop() ?? 'bin' : 'bin';
   const safeName = filename.replace(/[^a-zA-Z0-9.-]/g, '_').slice(0, 50);
   return `${prefix}/${field}-${Date.now()}-${randomUUID().slice(0, 8)}.${ext}`;
+}
+
+export async function deleteObject(config: R2Config, key: string): Promise<void> {
+  const client = createR2Client(config);
+  await client.send(
+    new DeleteObjectCommand({
+      Bucket: config.bucket,
+      Key: key,
+    }),
+  );
 }

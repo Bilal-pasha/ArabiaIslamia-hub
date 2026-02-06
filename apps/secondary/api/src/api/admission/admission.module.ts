@@ -10,6 +10,7 @@ import {
   Registration,
 } from '@arabiaaislamia/database';
 import { AuthModule } from '../auth/auth.module';
+import { UploadModule } from '../upload/upload.module';
 import { AdmissionController } from './admission.controller';
 import { AdmissionService } from './admission.service';
 
@@ -25,6 +26,7 @@ import { AdmissionService } from './admission.service';
       Registration,
     ]),
     AuthModule,
+    UploadModule,
   ],
   controllers: [AdmissionController],
   providers: [AdmissionService],

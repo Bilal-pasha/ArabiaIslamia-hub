@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import Link from 'next/link';
 import { motion } from 'framer-motion';
 import {
@@ -15,8 +15,15 @@ import {
   Button,
   TableSkeleton,
   toast,
+  AlertDialog,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
 } from '@arabiaaislamia/ui';
-import { fetchStudents, type Student } from '@/services/admission/admission.service';
+import { fetchStudents, deleteStudent, type Student } from '@/services/admission/admission.service';
 import { fadeInUp, defaultTransition } from '@arabiaaislamia/animations';
 import { privateRoutes } from '@/constants/route';
 
@@ -24,8 +31,13 @@ export default function AdminStudentsPage() {
   const [students, setStudents] = useState<Student[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
+  const [studentToDelete, setStudentToDelete] = useState<Student | null>(null);
+  const [deleting, setDeleting] = useState(false);
 
-  useEffect(() => {
+  const loadStudents = useCallback(() => {
+    setLoading(true);
+    setError(null);
     fetchStudents()
       .then(setStudents)
       .catch((err) => {
@@ -35,6 +47,32 @@ export default function AdminStudentsPage() {
       })
       .finally(() => setLoading(false));
   }, []);
+
+  useEffect(() => {
+    loadStudents();
+  }, [loadStudents]);
+
+  const handleDeleteClick = (s: Student) => {
+    setStudentToDelete(s);
+    setDeleteDialogOpen(true);
+  };
+
+  const handleDeleteConfirm = async () => {
+    if (!studentToDelete) return;
+    setDeleting(true);
+    try {
+      await deleteStudent(studentToDelete.id);
+      toast.success('Student deleted.');
+      setDeleteDialogOpen(false);
+      setStudentToDelete(null);
+      loadStudents();
+    } catch (err) {
+      const msg = err instanceof Error ? err.message : 'Delete failed';
+      toast.error(msg);
+    } finally {
+      setDeleting(false);
+    }
+  };
 
   return (
     <motion.div
@@ -88,9 +126,19 @@ export default function AdminStudentsPage() {
                         {s.createdAt ? new Date(s.createdAt).toLocaleDateString() : '—'}
                       </TableCell>
                       <TableCell className="text-right">
-                        <Button variant="outline" size="sm" asChild>
-                          <Link href={privateRoutes.studentDetail(s.id)}>View</Link>
-                        </Button>
+                        <div className="flex items-center justify-end gap-2">
+                          <Button variant="outline" size="sm" asChild>
+                            <Link href={privateRoutes.studentDetail(s.id)}>View</Link>
+                          </Button>
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            className="border-red-400/50 text-red-300 hover:bg-red-500/20 hover:text-red-200"
+                            onClick={() => handleDeleteClick(s)}
+                          >
+                            Delete
+                          </Button>
+                        </div>
                       </TableCell>
                     </TableRow>
                   ))}
@@ -100,6 +148,29 @@ export default function AdminStudentsPage() {
           </Card>
         )}
       </div>
+
+      <AlertDialog open={deleteDialogOpen} onOpenChange={setDeleteDialogOpen}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Delete student?</AlertDialogTitle>
+            <AlertDialogDescription>
+              This will permanently delete {studentToDelete?.name} (Roll: {studentToDelete?.rollNumber ?? '—'})
+              and all related data: registrations, renewals, fee records, and uploaded files. This cannot be undone.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel disabled={deleting}>Cancel</AlertDialogCancel>
+            <Button
+              variant="destructive"
+              onClick={handleDeleteConfirm}
+              disabled={deleting}
+              className="bg-red-600 hover:bg-red-700"
+            >
+              {deleting ? 'Deleting…' : 'Delete'}
+            </Button>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </motion.div>
   );
 }
