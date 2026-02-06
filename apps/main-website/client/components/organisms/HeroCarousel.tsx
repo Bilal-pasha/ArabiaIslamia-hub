@@ -66,9 +66,25 @@ export function HeroCarousel({ apiSlides }: HeroCarouselProps = {}) {
         <div className="urdutext mx-auto flex w-full max-w-4xl flex-col items-center gap-4 text-center sm:gap-5 md:gap-6">
           <motion.p initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2, duration: 0.5 }} className="text-sm font-medium uppercase tracking-[0.2em] text-amber-200/95 sm:text-base">Welcome to</motion.p>
         </div>
-        <div className="flex flex-col flex-wrap items-center justify-center gap-12">
-          <motion.p key={`title-${index}`} initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5, ease: [0.25, 0.46, 0.45, 0.94] }} className="text-3xl font-bold leading-tight text-white drop-shadow-[0_2px_12px_rgba(0,0,0,0.4)] min-[400px]:text-4xl sm:text-5xl md:text-6xl lg:text-7xl">{slide.title}</motion.p>
-          <motion.p key={`subtitle-${index}`} initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.15, duration: 0.5 }} className="text-lg text-amber-200/95 drop-shadow-md sm:text-xl md:text-2xl lg:text-3xl">{slide.subtitle}</motion.p>
+        <div className="flex flex-1 flex-col items-center justify-center">
+          <motion.div
+            key={`logo-${index}`}
+            initial={{ opacity: 0, y: 16 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, ease: [0.25, 0.46, 0.45, 0.94] }}
+            className="relative mx-auto w-full max-w-[min(90vw,28rem)] sm:max-w-[32rem] md:max-w-[36rem]"
+            style={{ aspectRatio: 'auto' }}
+          >
+            <Image
+              src="/images/JamiaArabiaLogo.png"
+              alt="Jamia Arabia Islamia – اسکاؤٹ کالونی"
+              width={576}
+              height={240}
+              className="h-auto w-full object-contain drop-shadow-[0_2px_20px_rgba(0,0,0,0.5)] [filter:brightness(0)_invert(1)]"
+              priority
+              sizes="(max-width: 640px) 90vw, (max-width: 768px) 32rem, 36rem"
+            />
+          </motion.div>
         </div>
         <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.35, duration: 0.5 }} className="mb-14 flex flex-wrap items-center justify-center gap-3 sm:mb-16 sm:gap-4 md:mb-20">
           <Link href="/faculties" className="flex min-w-[10rem] items-center justify-center rounded-lg bg-amber-500 px-6 py-3 text-center text-sm font-semibold text-amber-950 shadow-lg transition-all hover:bg-amber-400 focus:outline-none focus:ring-2 focus:ring-amber-300 focus:ring-offset-2 focus:ring-offset-black/30 sm:px-8 sm:py-3.5 sm:text-base">Explore Faculties</Link>
