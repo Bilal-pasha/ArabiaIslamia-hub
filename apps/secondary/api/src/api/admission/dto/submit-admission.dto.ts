@@ -1,4 +1,4 @@
-import { IsOptional, IsString } from 'class-validator';
+import { IsOptional, IsString, IsUUID } from 'class-validator';
 
 export class SubmitAdmissionDto {
   @IsString()
@@ -67,8 +67,8 @@ export class SubmitAdmissionDto {
   @IsString()
   guardianAddress?: string;
 
-  @IsString()
-  requiredClass: string;
+  @IsUUID()
+  requiredClassId: string;
 
   @IsOptional()
   @IsString()

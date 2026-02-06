@@ -24,7 +24,8 @@ export interface AdmissionApplication {
   guardianEmail: string | null;
   guardianOccupation: string | null;
   guardianAddress: string | null;
-  requiredClass: string;
+  requiredClassId: string | null;
+  class?: { id: string; name: string } | null;
   previousSchool: string | null;
   previousClass: string | null;
   previousGrade: string | null;

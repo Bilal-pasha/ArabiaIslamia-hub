@@ -52,7 +52,7 @@ export function MyApplicationView({ application }: MyApplicationViewProps) {
               <div>
                 <CardTitle className="text-xl text-white">{application.name}</CardTitle>
                 <p className="text-sm text-slate-300">
-                  {application.applicationNumber} · {application.requiredClass}
+                  {application.applicationNumber} · {application.class?.name ?? '—'}
                 </p>
                 <p className="text-xs text-slate-400 mt-1">
                   Last status: {getLastStatusLabel(application)}

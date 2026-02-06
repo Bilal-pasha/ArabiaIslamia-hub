@@ -3,7 +3,10 @@ import {
   PrimaryGeneratedColumn,
   Column,
   CreateDateColumn,
+  ManyToOne,
+  JoinColumn,
 } from 'typeorm';
+import { Class } from './class.entity';
 
 @Entity('admission_applications')
 export class AdmissionApplication {
@@ -73,8 +76,12 @@ export class AdmissionApplication {
   @Column({ type: 'varchar', length: 500, name: 'guardian_address', nullable: true })
   guardianAddress: string | null;
 
-  @Column({ type: 'varchar', length: 100, name: 'required_class', default: '' })
-  requiredClass: string;
+  @Column({ type: 'uuid', name: 'required_class_id', nullable: true })
+  requiredClassId: string | null;
+
+  @ManyToOne(() => Class, { onDelete: 'RESTRICT' })
+  @JoinColumn({ name: 'required_class_id' })
+  class: Class | null;
 
   @Column({ type: 'varchar', length: 200, name: 'previous_school', nullable: true })
   previousSchool: string | null;

@@ -129,7 +129,7 @@ export default function StudentDetailPage() {
                 <Row label="Country" value={app.country} />
                 <Row label="State" value={app.state} />
                 <Row label="City" value={app.city} />
-                <Row label="Required Class" value={app.requiredClass} />
+                <Row label="Required Class" value={app.class?.name ?? '—'} />
               </CardContent>
             </Card>
 

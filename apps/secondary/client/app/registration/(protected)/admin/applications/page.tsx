@@ -100,7 +100,7 @@ export default function AdminApplicationsPage() {
                     <TableRow key={app.id} className="border-white/10 hover:bg-white/5">
                       <TableCell className="font-mono font-medium text-white">{app.applicationNumber}</TableCell>
                       <TableCell className="text-slate-200">{app.name}</TableCell>
-                      <TableCell className="text-slate-200">{app.requiredClass}</TableCell>
+                      <TableCell className="text-slate-200">{app.class?.name ?? '—'}</TableCell>
                       <TableCell>
                         <Badge variant={getStatusVariant(app.status)}>{capitalizeStatus(app.status)}</Badge>
                       </TableCell>

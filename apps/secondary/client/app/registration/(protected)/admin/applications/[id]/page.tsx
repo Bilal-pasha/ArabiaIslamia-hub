@@ -731,7 +731,7 @@ export default function ApplicationDetailPage() {
               <CardTitle className="text-white">Academic Information</CardTitle>
             </CardHeader>
             <CardContent className="grid gap-2 text-sm">
-              <Row label="Required Class" value={app.requiredClass} />
+              <Row label="Required Class" value={app.class?.name ?? '—'} />
               <Row label="Previous School" value={app.previousSchool} />
               <Row label="Previous Class" value={app.previousClass} />
               <Row label="Previous Grade" value={app.previousGrade} />
@@ -806,7 +806,7 @@ export default function ApplicationDetailPage() {
           <h2 className="print:text-lg print:font-semibold print:mb-3">Academic Information</h2>
           <table className="print:w-full print:text-sm">
             <tbody>
-              <PrintRow label="Required Class" value={app.requiredClass} />
+              <PrintRow label="Required Class" value={app.class?.name ?? '—'} />
               <PrintRow label="Previous School" value={app.previousSchool} />
               <PrintRow label="Previous Class" value={app.previousClass} />
               <PrintRow label="Previous Grade" value={app.previousGrade} />

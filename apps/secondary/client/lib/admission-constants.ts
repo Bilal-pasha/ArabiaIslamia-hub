@@ -7,24 +7,6 @@ export const STEPS = [
   { id: 4, title: 'Documents', icon: '4', subtitle: 'Attach files' },
 ] as const;
 
-export const CLASSES = [
-  'Primary Level',
-  'Level One',
-  'Level Two',
-  'Level Three',
-  'Level Four',
-  'Level Five',
-  'Level Six',
-  'Quran Memorization',
-  'Quran Recitation (Nazira)',
-  'Quran Memorization Review',
-  'Tajweed Quran',
-  'Foundation Level',
-  'Grade 9',
-  'Grade 10',
-  'Matriculation',
-];
-
 export const OCCUPATIONS = [
   'Teacher',
   'Trader',
@@ -73,7 +55,7 @@ export const INITIAL_FORM_DATA: AdmissionFormDataWithEmptyEnums = {
   guardianEmail: '',
   guardianOccupation: '',
   guardianAddress: '',
-  requiredClass: '',
+  requiredClassId: '',
   previousSchool: '',
   previousClass: '',
   previousGrade: '',

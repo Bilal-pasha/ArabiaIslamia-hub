@@ -74,7 +74,7 @@ export const guardianInfoSchema = z.object({
 
 // Step 3: Academic Information (department = Secondary, implied by form context)
 export const academicInfoSchema = z.object({
-  requiredClass: z.string().min(1, 'Please select required class'),
+  requiredClassId: z.string().min(1, 'Please select required class'),
   previousSchool: z.string().optional().or(z.literal('')),
   previousClass: z.string().optional().or(z.literal('')),
   previousGrade: z.enum(['excellent', 'very-good', 'good', 'acceptable']).optional().or(z.literal('')),

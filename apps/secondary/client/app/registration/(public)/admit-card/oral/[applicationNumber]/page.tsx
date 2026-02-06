@@ -110,7 +110,7 @@ export default function OralAdmitCardPage() {
               <Row label="Gender" value={application.gender} />
               <Row label="Phone" value={application.phone} />
               <Row label="Email" value={application.email} />
-              <Row label="Class applying for" value={application.requiredClass} />
+              <Row label="Class applying for" value={application.class?.name ?? '—'} />
               <Row label="Address" value={fullAddress || application.address} />
             </Section>
 

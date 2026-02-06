@@ -1,8 +1,10 @@
 'use client';
 
+import { useEffect, useState } from 'react';
 import { Input, Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@arabiaaislamia/ui';
 import { FormField } from './form-field';
-import { CLASSES } from '@/lib/admission-constants';
+import { fetchClasses } from '@/services/admission/admission.service';
+import type { ClassDto } from '@/services/admission/admission.service';
 import type { AdmissionFormDataWithEmptyEnums } from '@/lib/admission-schema';
 
 interface FormStepAcademicProps {
@@ -12,17 +14,22 @@ interface FormStepAcademicProps {
 }
 
 export function FormStepAcademic({ data, errors, onUpdate }: FormStepAcademicProps) {
+  const [classes, setClasses] = useState<ClassDto[]>([]);
+  useEffect(() => {
+    fetchClasses().then(setClasses).catch(() => setClasses([]));
+  }, []);
+
   return (
     <div className="grid gap-4 sm:gap-5 sm:grid-cols-2 min-w-0 w-full">
-      <FormField label="Required Class" required error={errors.requiredClass}>
-        <Select value={data.requiredClass} onValueChange={(v) => onUpdate('requiredClass', v)}>
-          <SelectTrigger className={`h-10 ${errors.requiredClass ? 'border-destructive' : ''}`}>
+      <FormField label="Required Class" required error={errors.requiredClassId}>
+        <Select value={data.requiredClassId} onValueChange={(v) => onUpdate('requiredClassId', v)}>
+          <SelectTrigger className={`h-10 ${errors.requiredClassId ? 'border-destructive' : ''}`}>
             <SelectValue placeholder="Select" />
           </SelectTrigger>
           <SelectContent>
-            {CLASSES.map((c) => (
-              <SelectItem key={c} value={c}>
-                {c}
+            {classes.map((c) => (
+              <SelectItem key={c.id} value={c.id}>
+                {c.name}
               </SelectItem>
             ))}
           </SelectContent>

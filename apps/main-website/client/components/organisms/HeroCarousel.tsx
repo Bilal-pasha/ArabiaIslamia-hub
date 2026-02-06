@@ -64,7 +64,7 @@ export function HeroCarousel({ apiSlides }: HeroCarouselProps = {}) {
       <div className="absolute inset-0 z-[1]" style={{ background: 'linear-gradient(to bottom, rgba(0,0,0,0.2) 0%, rgba(0,0,0,0.35) 40%, rgba(0,0,0,0.6) 100%)' }} aria-hidden />
       <div className="absolute inset-0 z-10 flex flex-col justify-between px-4 py-8 sm:px-6 sm:py-10 md:px-8 md:py-12">
         <div className="urdutext mx-auto flex w-full max-w-4xl flex-col items-center gap-4 text-center sm:gap-5 md:gap-6">
-          <motion.p initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2, duration: 0.5 }} className="text-sm font-medium uppercase tracking-[0.2em] text-amber-200/95 sm:text-base">Welcome to</motion.p>
+          <motion.p initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2, duration: 0.5 }} className="text-2xl font-poppins font-medium uppercase tracking-[0.2em] text-amber-200/95 sm:text-base">Welcome to</motion.p>
         </div>
         <div className="flex flex-1 flex-col items-center justify-center">
           <motion.div

@@ -84,6 +84,9 @@ export class AdmissionService {
   ) { }
 
   async submit(dto: SubmitAdmissionDto) {
+    const cls = await this.classRepo.findOne({ where: { id: dto.requiredClassId } });
+    if (!cls) throw new BadRequestException('Invalid class');
+
     const applicationNumber = this.generateApplicationNumber();
     const application = this.repo.create({
       applicationNumber,
@@ -107,7 +110,7 @@ export class AdmissionService {
       guardianEmail: dto.guardianEmail || null,
       guardianOccupation: dto.guardianOccupation || null,
       guardianAddress: dto.guardianAddress || null,
-      requiredClass: dto.requiredClass,
+      requiredClassId: dto.requiredClassId,
       previousSchool: dto.previousSchool || null,
       previousClass: dto.previousClass || null,
       previousGrade: dto.previousGrade || null,
@@ -126,6 +129,7 @@ export class AdmissionService {
   async findAll(): Promise<AdmissionApplication[]> {
     return this.repo.find({
       order: { createdAt: 'DESC' },
+      relations: ['class'],
     });
   }
 
@@ -144,11 +148,11 @@ export class AdmissionService {
   }
 
   async findOne(id: string): Promise<AdmissionApplication | null> {
-    return this.repo.findOne({ where: { id } });
+    return this.repo.findOne({ where: { id }, relations: ['class'] });
   }
 
   async findByApplicationNumber(applicationNumber: string): Promise<AdmissionApplication | null> {
-    return this.repo.findOne({ where: { applicationNumber } });
+    return this.repo.findOne({ where: { applicationNumber }, relations: ['class'] });
   }
 
   async updateStatus(
@@ -353,18 +357,30 @@ export class AdmissionService {
   }
 
   async findAllRenewals(): Promise<RenewalDto[]> {
-    const list = await this.renewalRepo.find({
-      relations: ['student', 'academicSession', 'class', 'section'],
-      order: { createdAt: 'DESC' },
-    });
+    const list = await this.renewalRepo
+      .createQueryBuilder('r')
+      .leftJoinAndSelect('r.student', 'student')
+      .leftJoinAndSelect('r.academicSession', 'academicSession')
+      .leftJoin('r.class', 'class')
+      .addSelect(['class.id', 'class.name'])
+      .leftJoin('r.section', 'section')
+      .addSelect(['section.id', 'section.name'])
+      .orderBy('r.createdAt', 'DESC')
+      .getMany();
     return list.map((r) => this.toRenewalDto(r));
   }
 
   async findOneRenewal(id: string): Promise<RenewalDto | null> {
-    const renewal = await this.renewalRepo.findOne({
-      where: { id },
-      relations: ['student', 'academicSession', 'class', 'section'],
-    });
+    const renewal = await this.renewalRepo
+      .createQueryBuilder('r')
+      .leftJoinAndSelect('r.student', 'student')
+      .leftJoinAndSelect('r.academicSession', 'academicSession')
+      .leftJoin('r.class', 'class')
+      .addSelect(['class.id', 'class.name'])
+      .leftJoin('r.section', 'section')
+      .addSelect(['section.id', 'section.name'])
+      .where('r.id = :id', { id })
+      .getOne();
     return renewal ? this.toRenewalDto(renewal) : null;
   }
 
@@ -396,10 +412,16 @@ export class AdmissionService {
     status: 'approved' | 'rejected',
     reason?: string,
   ): Promise<RenewalDto> {
-    const renewal = await this.renewalRepo.findOne({
-      where: { id },
-      relations: ['student', 'academicSession', 'class', 'section'],
-    });
+    const renewal = await this.renewalRepo
+      .createQueryBuilder('r')
+      .leftJoinAndSelect('r.student', 'student')
+      .leftJoinAndSelect('r.academicSession', 'academicSession')
+      .leftJoin('r.class', 'class')
+      .addSelect(['class.id', 'class.name'])
+      .leftJoin('r.section', 'section')
+      .addSelect(['section.id', 'section.name'])
+      .where('r.id = :id', { id })
+      .getOne();
     if (!renewal) throw new NotFoundException('Renewal application not found');
 
     if (status === 'approved') {
