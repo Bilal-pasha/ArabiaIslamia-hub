@@ -15,6 +15,7 @@ import {
   DialogContent,
   DialogHeader,
   DialogTitle,
+  DialogDescription,
   DialogFooter,
   AlertDialog,
   AlertDialogAction,
@@ -220,6 +221,9 @@ export default function AdminHeroPage() {
         <DialogContent className="border-amber-200/80 bg-white shadow-lg">
           <DialogHeader>
             <DialogTitle className="text-amber-950">{editing ? 'Edit slide' : 'Add slide'}</DialogTitle>
+            <DialogDescription className="sr-only">
+              {editing ? 'Edit hero carousel slide image and text.' : 'Add a new hero carousel slide with desktop and mobile images.'}
+            </DialogDescription>
           </DialogHeader>
           <form onSubmit={handleSubmit} className="space-y-4">
             <input

@@ -13,6 +13,7 @@ import {
   DialogContent,
   DialogHeader,
   DialogTitle,
+  DialogDescription,
   DialogFooter,
   toast,
   Spinner,
@@ -202,6 +203,9 @@ export default function AdminSectionsPage() {
         <DialogContent className="max-h-[90vh] overflow-y-auto border-amber-200/80 bg-white shadow-lg">
           <DialogHeader>
             <DialogTitle className="text-amber-950">{editing ? 'Edit section' : 'Add section'}</DialogTitle>
+            <DialogDescription className="sr-only">
+              {editing ? 'Edit home page section content and visibility.' : 'Add a new section to the home page.'}
+            </DialogDescription>
           </DialogHeader>
           <form onSubmit={handleSubmit} className="space-y-4">
             <div>
