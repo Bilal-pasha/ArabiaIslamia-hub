@@ -73,35 +73,34 @@ export function AdminDashboardLayout({
   const title = getPageTitle(pathname ?? '');
 
   return (
-    <div className="flex min-h-screen w-full min-w-0 overflow-x-hidden bg-gradient-to-br from-slate-800 via-[#1a3254] to-[#256089]">
-      <aside className="hidden w-64 shrink-0 flex-col border-r border-white/10 bg-[#0f2744]/95 backdrop-blur-xl lg:flex">
-        <div className="flex h-16 items-center gap-3 border-b border-white/10 px-4">
-          <div className="flex size-10 items-center justify-center overflow-hidden rounded-lg border border-white/20 bg-white/10">
+    <div className="flex min-h-screen w-full min-w-0 overflow-x-hidden bg-gradient-to-br from-amber-50 via-yellow-50/95 to-amber-100/90" style={{ backgroundAttachment: 'fixed' }}>
+      <aside className="hidden w-64 shrink-0 flex-col border-r border-amber-200/80 bg-white/80 backdrop-blur-xl lg:flex">
+        <div className="flex h-16 items-center gap-3 border-b border-amber-200/80 px-4">
+          <div className="flex size-10 items-center justify-center overflow-hidden rounded-lg border border-amber-200 bg-amber-50">
             <Image src="/images/Logo.png" alt="Logo" width={28} height={28} className="object-contain" />
           </div>
-          <span className="font-semibold text-white">CMS Admin</span>
+          <span className="font-semibold text-amber-950">CMS Admin</span>
         </div>
         <nav className="flex-1 space-y-0.5 p-3">
           {navItems.map(({ href, label, icon: Icon }) => (
             <Link
               key={href}
               href={href}
-              className={`flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-colors ${isActive(href) ? 'bg-white/15 text-white' : 'text-slate-300 hover:bg-white/10 hover:text-white'
-                }`}
+              className={`flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-colors ${isActive(href) ? 'bg-amber-200/80 text-amber-950' : 'text-amber-800 hover:bg-amber-100 hover:text-amber-950'}`}
             >
               <Icon className="size-5 shrink-0" />
               {label}
             </Link>
           ))}
         </nav>
-        <div className="border-t border-white/10 p-3">
-          <div className="mb-2 truncate px-3 py-1.5 text-xs text-slate-400" title={user?.email}>
+        <div className="border-t border-amber-200/80 p-3">
+          <div className="mb-2 truncate px-3 py-1.5 text-xs text-amber-700" title={user?.email}>
             {user?.email}
           </div>
           <button
             type="button"
             onClick={handleSignOut}
-            className="flex w-full items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium text-slate-300 transition-colors hover:bg-white/10 hover:text-white"
+            className="flex w-full items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium text-amber-800 transition-colors hover:bg-amber-100 hover:text-amber-950"
           >
             <LogOut className="size-5 shrink-0" />
             Sign out
@@ -111,25 +110,24 @@ export function AdminDashboardLayout({
 
       {sidebarOpen && (
         <div
-          className="fixed inset-0 z-40 bg-black/50 lg:hidden"
+          className="fixed inset-0 z-40 bg-amber-950/30 lg:hidden"
           onClick={() => setSidebarOpen(false)}
           aria-hidden
         />
       )}
 
       <aside
-        className={`fixed left-0 top-0 z-50 flex h-full w-64 flex-col border-r border-white/10 bg-[#0f2744] shadow-xl transition-transform lg:hidden ${sidebarOpen ? 'translate-x-0' : '-translate-x-full'
-          }`}
+        className={`fixed left-0 top-0 z-50 flex h-full w-64 flex-col border-r border-amber-200/80 bg-white shadow-xl transition-transform lg:hidden ${sidebarOpen ? 'translate-x-0' : '-translate-x-full'}`}
       >
-        <div className="flex h-16 items-center justify-between border-b border-white/10 px-4">
+        <div className="flex h-16 items-center justify-between border-b border-amber-200/80 px-4">
           <div className="flex items-center gap-3">
             <Image src="/images/Logo.png" alt="Logo" width={28} height={28} className="object-contain" />
-            <span className="font-semibold text-white">CMS Admin</span>
+            <span className="font-semibold text-amber-950">CMS Admin</span>
           </div>
           <button
             type="button"
             onClick={() => setSidebarOpen(false)}
-            className="rounded p-2 text-slate-400 hover:bg-white/10 hover:text-white"
+            className="rounded p-2 text-amber-700 hover:bg-amber-100 hover:text-amber-950"
           >
             <X className="size-5" />
           </button>
@@ -140,19 +138,18 @@ export function AdminDashboardLayout({
               key={href}
               href={href}
               onClick={() => setSidebarOpen(false)}
-              className={`flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-colors ${isActive(href) ? 'bg-white/15 text-white' : 'text-slate-300 hover:bg-white/10 hover:text-white'
-                }`}
+              className={`flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-colors ${isActive(href) ? 'bg-amber-200/80 text-amber-950' : 'text-amber-800 hover:bg-amber-100 hover:text-amber-950'}`}
             >
               <Icon className="size-5 shrink-0" />
               {label}
             </Link>
           ))}
         </nav>
-        <div className="border-t border-white/10 p-3">
+        <div className="border-t border-amber-200/80 p-3">
           <button
             type="button"
             onClick={handleSignOut}
-            className="flex w-full items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium text-slate-300 hover:bg-white/10 hover:text-white"
+            className="flex w-full items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium text-amber-800 hover:bg-amber-100 hover:text-amber-950"
           >
             <LogOut className="size-5 shrink-0" />
             Sign out
@@ -161,15 +158,15 @@ export function AdminDashboardLayout({
       </aside>
 
       <div className="flex min-w-0 flex-1 flex-col">
-        <header className="sticky top-0 z-30 flex h-14 items-center gap-4 border-b border-white/10 bg-white/5 px-4 backdrop-blur-xl sm:px-6">
+        <header className="sticky top-0 z-30 flex h-14 items-center gap-4 border-b border-amber-200/80 bg-white/80 px-4 backdrop-blur-xl sm:px-6">
           <button
             type="button"
             onClick={() => setSidebarOpen(true)}
-            className="rounded p-2 text-slate-300 hover:bg-white/10 hover:text-white lg:hidden"
+            className="rounded p-2 text-amber-800 hover:bg-amber-100 hover:text-amber-950 lg:hidden"
           >
             <Menu className="size-5" />
           </button>
-          <h1 className="truncate text-lg font-semibold text-white">{title}</h1>
+          <h1 className="truncate text-lg font-semibold text-amber-950">{title}</h1>
         </header>
         <main className="min-w-0 flex-1 overflow-auto overflow-x-hidden p-4 sm:p-6">{children}</main>
       </div>

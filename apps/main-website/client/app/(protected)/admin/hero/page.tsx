@@ -12,6 +12,7 @@ import {
   Input,
   Label,
   Dialog,
+  DialogTrigger,
   DialogContent,
   DialogHeader,
   DialogTitle,
@@ -145,73 +146,84 @@ export default function AdminHeroPage() {
   };
 
   return (
-    <div className="space-y-6">
-      <div className="flex flex-wrap items-center justify-between gap-4">
-        <div>
-          <h1 className="text-2xl font-bold text-white">Hero carousel</h1>
-          <p className="mt-1 text-sm text-slate-400">Manage hero slides on the home page</p>
+    <Dialog
+      open={open}
+      onOpenChange={(o) => {
+        setOpen(o);
+        if (o) {
+          setEditing(null);
+          setForm(defaultSlide);
+        }
+      }}
+    >
+      <div className="space-y-6">
+        <div className="flex flex-wrap items-center justify-between gap-4">
+          <div>
+            <h1 className="text-2xl font-bold text-amber-950">Hero carousel</h1>
+            <p className="mt-1 text-sm text-amber-700">Manage hero slides on the home page</p>
+          </div>
+          <DialogTrigger asChild>
+            <Button type="button" className="bg-primary text-primary-foreground hover:bg-primary/90">
+              Add slide
+            </Button>
+          </DialogTrigger>
         </div>
-        <Button onClick={openAdd} className="bg-amber-500 hover:bg-amber-600">
-          Add slide
-        </Button>
-      </div>
 
-      {loading ? (
-        <div className="flex items-center justify-center py-12">
-          <Spinner className="size-8 text-amber-400" />
-        </div>
-      ) : slides.length === 0 ? (
-        <Card className="border border-white/10 bg-white/5">
-          <CardContent className="py-12 text-center text-slate-400">
-            No hero slides yet. Add one to show on the home page.
-          </CardContent>
-        </Card>
-      ) : (
-        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-          {slides.map((slide) => (
-            <Card key={slide.id} className="overflow-hidden border border-white/10 bg-white/5">
-              <div className="relative aspect-video w-full bg-slate-800">
-                <Image
-                  src={slide.desktopImageUrl || '/images/Logo.png'}
-                  alt={slide.title || 'Slide'}
-                  fill
-                  className="object-cover"
-                  sizes="(max-width: 640px) 100vw, 33vw"
-                />
-              </div>
-              <CardHeader className="pb-2">
-                <CardTitle className="truncate text-base text-white">
-                  {slide.title || 'Untitled'}
-                </CardTitle>
-                <p className="truncate text-sm text-slate-400">{slide.subtitle}</p>
-              </CardHeader>
-              <CardContent className="flex gap-2">
-                <Button
-                  variant="outline"
-                  size="sm"
-                  className="flex-1 border-white/20 text-white hover:bg-white/10"
-                  onClick={() => openEdit(slide)}
-                >
-                  Edit
-                </Button>
-                <Button
-                  variant="outline"
-                  size="sm"
-                  className="border-red-400/50 text-red-300 hover:bg-red-500/20"
-                  onClick={() => setDeleteId(slide.id)}
-                >
-                  Delete
-                </Button>
-              </CardContent>
-            </Card>
-          ))}
-        </div>
-      )}
+        {loading ? (
+          <div className="flex items-center justify-center py-12">
+            <Spinner className="size-8 text-primary" />
+          </div>
+        ) : slides.length === 0 ? (
+          <Card className="border border-amber-200/80 bg-white/80 shadow-sm">
+            <CardContent className="py-12 text-center text-amber-700">
+              No hero slides yet. Add one to show on the home page.
+            </CardContent>
+          </Card>
+        ) : (
+          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+            {slides.map((slide) => (
+              <Card key={slide.id} className="overflow-hidden border border-amber-200/80 bg-white/80 shadow-sm">
+                <div className="relative aspect-video w-full bg-amber-100">
+                  <Image
+                    src={slide.desktopImageUrl || '/images/Logo.png'}
+                    alt={slide.title || 'Slide'}
+                    fill
+                    className="object-cover"
+                    sizes="(max-width: 640px) 100vw, 33vw"
+                  />
+                </div>
+                <CardHeader className="pb-2">
+                  <CardTitle className="truncate text-base text-amber-950">
+                    {slide.title || 'Untitled'}
+                  </CardTitle>
+                  <p className="truncate text-sm text-amber-700">{slide.subtitle}</p>
+                </CardHeader>
+                <CardContent className="flex gap-2">
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    className="flex-1 border-amber-200 text-amber-900 hover:bg-amber-100"
+                    onClick={() => openEdit(slide)}
+                  >
+                    Edit
+                  </Button>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    className="border-red-200 text-red-700 hover:bg-red-50"
+                    onClick={() => setDeleteId(slide.id)}
+                  >
+                    Delete
+                  </Button>
+                </CardContent>
+              </Card>
+            ))}
+          </div>
+        )}
 
-      <Dialog open={open} onOpenChange={setOpen}>
-        <DialogContent className="border-white/10 bg-slate-900 text-white">
+        <DialogContent className="border-amber-200/80 bg-white shadow-lg">
           <DialogHeader>
-            <DialogTitle>{editing ? 'Edit slide' : 'Add slide'}</DialogTitle>
+            <DialogTitle className="text-amber-950">{editing ? 'Edit slide' : 'Add slide'}</DialogTitle>
           </DialogHeader>
           <form onSubmit={handleSubmit} className="space-y-4">
             <input
@@ -237,19 +249,19 @@ export default function AdminHeroPage() {
               }}
             />
             <div>
-              <Label className="text-slate-200">Desktop image</Label>
+              <Label className="text-amber-900">Desktop image</Label>
               <div className="mt-1 flex gap-2">
                 <Input
                   value={form.desktopImageUrl}
                   onChange={(e) => setForm((f) => ({ ...f, desktopImageUrl: e.target.value }))}
                   placeholder="URL or upload below"
-                  className="flex-1 border-white/20 bg-white/5 text-white"
+                  className="flex-1 border-amber-200 bg-white text-amber-950 placeholder:text-amber-500"
                   required
                 />
                 <Button
                   type="button"
                   variant="outline"
-                  className="shrink-0 border-white/20 text-white hover:bg-white/10"
+                  className="shrink-0 border-amber-200 text-amber-900 hover:bg-amber-50"
                   disabled={uploadingField === 'desktopImageUrl'}
                   onClick={() => desktopInputRef.current?.click()}
                 >
@@ -260,22 +272,22 @@ export default function AdminHeroPage() {
                   )}
                 </Button>
               </div>
-              <p className="mt-1 text-xs text-slate-500">Upload or paste URL</p>
+              <p className="mt-1 text-xs text-amber-600">Upload or paste URL</p>
             </div>
             <div>
-              <Label className="text-slate-200">Mobile image</Label>
+              <Label className="text-amber-900">Mobile image</Label>
               <div className="mt-1 flex gap-2">
                 <Input
                   value={form.mobileImageUrl}
                   onChange={(e) => setForm((f) => ({ ...f, mobileImageUrl: e.target.value }))}
                   placeholder="URL or upload below"
-                  className="flex-1 border-white/20 bg-white/5 text-white"
+                  className="flex-1 border-amber-200 bg-white text-amber-950 placeholder:text-amber-500"
                   required
                 />
                 <Button
                   type="button"
                   variant="outline"
-                  className="shrink-0 border-white/20 text-white hover:bg-white/10"
+                  className="shrink-0 border-amber-200 text-amber-900 hover:bg-amber-50"
                   disabled={uploadingField === 'mobileImageUrl'}
                   onClick={() => mobileInputRef.current?.click()}
                 >
@@ -286,69 +298,69 @@ export default function AdminHeroPage() {
                   )}
                 </Button>
               </div>
-              <p className="mt-1 text-xs text-slate-500">Upload or paste URL</p>
+              <p className="mt-1 text-xs text-amber-600">Upload or paste URL</p>
             </div>
             <div>
-              <Label className="text-slate-200">Title</Label>
+              <Label className="text-amber-900">Title</Label>
               <Input
                 value={form.title}
                 onChange={(e) => setForm((f) => ({ ...f, title: e.target.value }))}
                 placeholder="e.g. جامعہ عربیہ اسلامیہ"
-                className="mt-1 border-white/20 bg-white/5 text-white"
+                className="mt-1 border-amber-200 bg-white text-amber-950 placeholder:text-amber-500"
               />
             </div>
             <div>
-              <Label className="text-slate-200">Subtitle</Label>
+              <Label className="text-amber-900">Subtitle</Label>
               <Input
                 value={form.subtitle}
                 onChange={(e) => setForm((f) => ({ ...f, subtitle: e.target.value }))}
                 placeholder="e.g. اسکاؤٹ کالونی"
-                className="mt-1 border-white/20 bg-white/5 text-white"
+                className="mt-1 border-amber-200 bg-white text-amber-950 placeholder:text-amber-500"
               />
             </div>
             <div>
-              <Label className="text-slate-200">Sort order</Label>
+              <Label className="text-amber-900">Sort order</Label>
               <Input
                 type="number"
                 value={form.sortOrder}
                 onChange={(e) => setForm((f) => ({ ...f, sortOrder: Number(e.target.value) || 0 }))}
-                className="mt-1 border-white/20 bg-white/5 text-white"
+                className="mt-1 border-amber-200 bg-white text-amber-950"
               />
             </div>
             <DialogFooter>
-              <Button type="button" variant="outline" onClick={() => setOpen(false)}>
+              <Button type="button" variant="outline" className="border-amber-200 text-amber-900 hover:bg-amber-50" onClick={() => setOpen(false)}>
                 Cancel
               </Button>
-              <Button type="submit" disabled={saving} className="bg-amber-500 hover:bg-amber-600">
+              <Button type="submit" disabled={saving} className="bg-primary text-primary-foreground hover:bg-primary/90">
                 {saving ? 'Saving...' : editing ? 'Update' : 'Add'}
               </Button>
             </DialogFooter>
           </form>
         </DialogContent>
-      </Dialog>
 
-      <AlertDialog open={!!deleteId} onOpenChange={(o) => !o && setDeleteId(null)}>
-        <AlertDialogContent className="border-white/10 bg-slate-900 text-white">
-          <AlertDialogHeader>
-            <AlertDialogTitle>Delete slide?</AlertDialogTitle>
-            <AlertDialogDescription>
-              This slide will be removed from the hero carousel. This cannot be undone.
-            </AlertDialogDescription>
-          </AlertDialogHeader>
-          <AlertDialogFooter>
-            <AlertDialogCancel className="border-white/20 text-white hover:bg-white/10">
-              Cancel
-            </AlertDialogCancel>
-            <AlertDialogAction
-              onClick={handleDelete}
-              disabled={deleting}
-              className="bg-red-600 hover:bg-red-700"
-            >
-              {deleting ? 'Deleting...' : 'Delete'}
-            </AlertDialogAction>
-          </AlertDialogFooter>
-        </AlertDialogContent>
-      </AlertDialog>
-    </div>
+        <AlertDialog open={!!deleteId} onOpenChange={(o) => !o && setDeleteId(null)}>
+          <AlertDialogContent className="border-amber-200/80 bg-white shadow-lg">
+            <AlertDialogHeader>
+              <AlertDialogTitle className="text-amber-950">Delete slide?</AlertDialogTitle>
+              <AlertDialogDescription className="text-amber-700">
+                This slide will be removed from the hero carousel. This cannot be undone.
+              </AlertDialogDescription>
+            </AlertDialogHeader>
+            <AlertDialogFooter>
+              <AlertDialogCancel className="border-amber-200 text-amber-900 hover:bg-amber-50">
+                Cancel
+              </AlertDialogCancel>
+              <AlertDialogAction
+                onClick={handleDelete}
+                disabled={deleting}
+                className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+              >
+                {deleting ? 'Deleting...' : 'Delete'}
+              </AlertDialogAction>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialog>
+      </div>
+    </Dialog>
   );
 }

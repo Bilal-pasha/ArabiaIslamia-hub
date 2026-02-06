@@ -10,6 +10,7 @@ import {
   Input,
   Label,
   Dialog,
+  DialogTrigger,
   DialogContent,
   DialogHeader,
   DialogTitle,
@@ -125,87 +126,105 @@ export default function AdminSectionsPage() {
   };
 
   return (
-    <div className="space-y-6">
-      <div className="flex flex-wrap items-center justify-between gap-4">
-        <div>
-          <h1 className="text-2xl font-bold text-white">Sections</h1>
-          <p className="mt-1 text-sm text-slate-400">Edit home page sections (white, faculties, stats, news, donate)</p>
+    <Dialog
+      open={open}
+      onOpenChange={(o) => {
+        setOpen(o);
+        if (o) {
+          setEditing(null);
+          setAddMode(true);
+          setForm({
+            sectionKey: '',
+            sectionType: 'white',
+            contentJson: '{}',
+            sortOrder: sections.length,
+            isVisible: true,
+          });
+        }
+      }}
+    >
+      <div className="space-y-6">
+        <div className="flex flex-wrap items-center justify-between gap-4">
+          <div>
+            <h1 className="text-2xl font-bold text-amber-950">Sections</h1>
+            <p className="mt-1 text-sm text-amber-700">Edit home page sections (white, faculties, stats, news, donate)</p>
+          </div>
+          <DialogTrigger asChild>
+            <Button type="button" className="bg-primary text-primary-foreground hover:bg-primary/90">
+              Add section
+            </Button>
+          </DialogTrigger>
         </div>
-        <Button onClick={openAdd} className="bg-amber-500 hover:bg-amber-600">
-          Add section
-        </Button>
-      </div>
 
-      {loading ? (
-        <div className="flex items-center justify-center py-12">
-          <Spinner className="size-8 text-amber-400" />
-        </div>
-      ) : sections.length === 0 ? (
-        <Card className="border border-white/10 bg-white/5">
-          <CardContent className="py-12 text-center text-slate-400">
-            No sections for home page. Add sections to control content from CMS.
-          </CardContent>
-        </Card>
-      ) : (
-        <div className="space-y-4">
-          {sections.map((section) => (
-            <Card key={section.id} className="border border-white/10 bg-white/5">
-              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <CardTitle className="text-lg text-white">
-                  {section.sectionKey}
-                  <Badge variant="secondary" className="ml-2 border-white/20 text-slate-300">
-                    {section.sectionType}
-                  </Badge>
-                </CardTitle>
-                <div className="flex items-center gap-2">
-                  {!section.isVisible && (
-                    <Badge variant="outline" className="border-amber-500/50 text-amber-400">
-                      Hidden
+        {loading ? (
+          <div className="flex items-center justify-center py-12">
+            <Spinner className="size-8 text-primary" />
+          </div>
+        ) : sections.length === 0 ? (
+          <Card className="border border-amber-200/80 bg-white/80 shadow-sm">
+            <CardContent className="py-12 text-center text-amber-700">
+              No sections for home page. Add sections to control content from CMS.
+            </CardContent>
+          </Card>
+        ) : (
+          <div className="space-y-4">
+            {sections.map((section) => (
+              <Card key={section.id} className="border border-amber-200/80 bg-white/80 shadow-sm">
+                <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                  <CardTitle className="text-lg text-amber-950">
+                    {section.sectionKey}
+                    <Badge variant="secondary" className="ml-2 border-amber-200 text-amber-800">
+                      {section.sectionType}
                     </Badge>
-                  )}
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    className="border-white/20 text-white hover:bg-white/10"
-                    onClick={() => openEdit(section)}
-                  >
-                    Edit
-                  </Button>
-                </div>
-              </CardHeader>
-              <CardContent>
-                <pre className="max-h-24 overflow-auto rounded bg-black/20 p-2 text-xs text-slate-400">
-                  {JSON.stringify(section.content ?? {}, null, 2)}
-                </pre>
-              </CardContent>
-            </Card>
-          ))}
-        </div>
-      )}
+                  </CardTitle>
+                  <div className="flex items-center gap-2">
+                    {!section.isVisible && (
+                      <Badge variant="outline" className="border-amber-400 text-amber-700">
+                        Hidden
+                      </Badge>
+                    )}
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      className="border-amber-200 text-amber-900 hover:bg-amber-100"
+                      onClick={() => openEdit(section)}
+                    >
+                      Edit
+                    </Button>
+                  </div>
+                </CardHeader>
+                <CardContent>
+                  <pre className="max-h-24 overflow-auto rounded bg-amber-50 p-2 text-xs text-amber-800">
+                    {JSON.stringify(section.content ?? {}, null, 2)}
+                  </pre>
+                </CardContent>
+              </Card>
+            ))}
+          </div>
+        )}
 
-      <Dialog open={open} onOpenChange={setOpen}>
-        <DialogContent className="max-h-[90vh] overflow-y-auto border-white/10 bg-slate-900 text-white">
+        <DialogContent className="max-h-[90vh] overflow-y-auto border-amber-200/80 bg-white shadow-lg">
           <DialogHeader>
-            <DialogTitle>{editing ? 'Edit section' : 'Add section'}</DialogTitle>
+            <DialogTitle className="text-amber-950">{editing ? 'Edit section' : 'Add section'}</DialogTitle>
           </DialogHeader>
           <form onSubmit={handleSubmit} className="space-y-4">
             <div>
-              <Label className="text-slate-200">Section key (e.g. home_white, home_faculties)</Label>
+              <Label className="text-amber-900">Section key (e.g. home_white, home_faculties)</Label>
               <Input
                 value={form.sectionKey}
                 onChange={(e) => setForm((f) => ({ ...f, sectionKey: e.target.value }))}
                 placeholder="home_white"
-                className="mt-1 border-white/20 bg-white/5 text-white"
+                className="mt-1 border-amber-200 bg-white text-amber-950"
                 required
                 disabled={!!editing}
               />
             </div>
             <div>
-              <Label className="text-slate-200">Section type</Label>
+              <Label className="text-amber-900">Section type</Label>
               <select
                 value={form.sectionType}
                 onChange={(e) => setForm((f) => ({ ...f, sectionType: e.target.value }))}
-                className="mt-1 w-full rounded-md border border-white/20 bg-white/5 px-3 py-2 text-white"
+                className="mt-1 w-full rounded-md border border-amber-200 bg-white px-3 py-2 text-amber-950"
               >
                 {SECTION_TYPES.map((t) => (
                   <option key={t} value={t}>
@@ -215,48 +234,48 @@ export default function AdminSectionsPage() {
               </select>
             </div>
             <div>
-              <Label className="text-slate-200">Content (JSON)</Label>
+              <Label className="text-amber-900">Content (JSON)</Label>
               <Textarea
                 value={form.contentJson}
                 onChange={(e) => setForm((f) => ({ ...f, contentJson: e.target.value }))}
                 placeholder='{"heading": "...", "body": "..."}'
                 rows={12}
-                className="mt-1 font-mono text-sm border-white/20 bg-white/5 text-white"
+                className="mt-1 font-mono text-sm border-amber-200 bg-white text-amber-950"
               />
             </div>
             <div className="grid grid-cols-2 gap-4">
               <div>
-                <Label className="text-slate-200">Sort order</Label>
+                <Label className="text-amber-900">Sort order</Label>
                 <Input
                   type="number"
                   value={form.sortOrder}
                   onChange={(e) => setForm((f) => ({ ...f, sortOrder: Number(e.target.value) || 0 }))}
-                  className="mt-1 border-white/20 bg-white/5 text-white"
+                  className="mt-1 border-amber-200 bg-white text-amber-950"
                 />
               </div>
               <div className="flex items-end pb-2">
-                <label className="flex items-center gap-2 text-slate-200">
+                <label className="flex items-center gap-2 text-amber-900">
                   <input
                     type="checkbox"
                     checked={form.isVisible}
                     onChange={(e) => setForm((f) => ({ ...f, isVisible: e.target.checked }))}
-                    className="rounded border-white/20 bg-white/5"
+                    className="rounded border-amber-200"
                   />
                   Visible on home page
                 </label>
               </div>
             </div>
             <DialogFooter>
-              <Button type="button" variant="outline" onClick={() => setOpen(false)}>
+              <Button type="button" variant="outline" className="border-amber-200 text-amber-900 hover:bg-amber-50" onClick={() => setOpen(false)}>
                 Cancel
               </Button>
-              <Button type="submit" disabled={saving} className="bg-amber-500 hover:bg-amber-600">
+              <Button type="submit" disabled={saving} className="bg-primary text-primary-foreground hover:bg-primary/90">
                 {saving ? 'Saving...' : editing ? 'Update' : 'Add'}
               </Button>
             </DialogFooter>
           </form>
         </DialogContent>
-      </Dialog>
-    </div>
+      </div>
+    </Dialog>
   );
 }
