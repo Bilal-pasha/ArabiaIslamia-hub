@@ -26,7 +26,7 @@ export class Section {
   @Column({ type: 'varchar', length: 50 })
   name: string;
 
-  @Column({ type: 'int', default: 0 })
+  @Column({ type: 'int', default: 0, name: 'sort_order' })
   sortOrder: number;
 
   @CreateDateColumn({ type: 'timestamp', name: 'created_at' })

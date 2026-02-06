@@ -18,7 +18,7 @@ export class Class {
   @Column({ type: 'varchar', length: 100 })
   name: string;
 
-  @Column({ type: 'int', default: 0 })
+  @Column({ type: 'int', default: 0, name: 'sort_order' })
   sortOrder: number;
 
   @CreateDateColumn({ type: 'timestamp', name: 'created_at' })
