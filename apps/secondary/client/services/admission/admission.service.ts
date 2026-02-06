@@ -190,6 +190,8 @@ export interface StudentByRollDto {
   name: string;
   rollNumber: string | null;
   guardianName: string | null;
+  contact: string | null;
+  address: string | null;
   lastSessionName?: string;
   lastClassName?: string;
 }

@@ -18,6 +18,8 @@ export interface StudentByRollDto {
   name: string;
   rollNumber: string | null;
   guardianName: string | null;
+  contact: string | null;
+  address: string | null;
   lastSessionName?: string;
   lastClassName?: string;
 }
@@ -302,6 +304,8 @@ export class AdmissionService {
       name: student.name,
       rollNumber: student.rollNumber,
       guardianName: student.guardianName,
+      contact: student.contact,
+      address: student.address,
       lastSessionName: latest?.academicSession?.name,
       lastClassName: latest?.class?.name,
     };

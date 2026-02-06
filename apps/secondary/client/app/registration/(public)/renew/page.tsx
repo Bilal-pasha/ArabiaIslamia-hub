@@ -44,7 +44,6 @@ export default function RenewAdmissionPage() {
   const [sessions, setSessions] = useState<AcademicSessionDto[]>([]);
   const [classes, setClasses] = useState<ClassDto[]>([]);
   const [sections, setSections] = useState<SectionDto[]>([]);
-  const [sessionId, setSessionId] = useState('');
   const [classId, setClassId] = useState('');
   const [sectionId, setSectionId] = useState('');
   const [contactOverride, setContactOverride] = useState('');
@@ -61,6 +60,9 @@ export default function RenewAdmissionPage() {
       })
       .catch(() => { });
   }, []);
+
+  /** Use first active session, or first session, for submission (hidden from user). */
+  const defaultSessionId = sessions.find((s) => s.isActive)?.id ?? sessions[0]?.id ?? '';
 
   useEffect(() => {
     if (!classId) {
@@ -98,18 +100,22 @@ export default function RenewAdmissionPage() {
   };
 
   const handleConfirmAndContinue = () => {
+    setContactOverride(student?.contact ?? '');
+    setAddressOverride(student?.address ?? '');
+    setClassId('');
+    setSectionId('');
     setStep('choose');
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!student) return;
+    if (!student || !defaultSessionId) return;
     setSubmitError(null);
     setSubmitLoading(true);
     try {
       const res = await submitRenewal({
         studentId: student.id,
-        academicSessionId: sessionId,
+        academicSessionId: defaultSessionId,
         classId,
         sectionId,
         contactOverride: contactOverride.trim() || undefined,
@@ -155,7 +161,7 @@ export default function RenewAdmissionPage() {
                   Reference: {renewalId}
                 </p>
               )}
-              <Button asChild variant="outline" size="sm" className="w-full">
+              <Button asChild size="sm" className="w-full h-11 bg-amber-500 hover:bg-amber-400 text-white font-medium">
                 <Link href={publicRoutes.home}>Back to home</Link>
               </Button>
             </CardContent>
@@ -175,7 +181,7 @@ export default function RenewAdmissionPage() {
     >
       <div className="w-full max-w-lg min-w-0">
         <Button variant="ghost" size="sm" asChild className="mb-6">
-          <Link href={publicRoutes.home} className="gap-2 inline-flex items-center text-sm font-medium text-slate-300 hover:text-white">
+          <Link href={publicRoutes.home} className="gap-2 inline-flex items-center text-sm font-medium text-slate-300 hover:text-amber-300">
             <svg className="size-4 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
             </svg>
@@ -234,19 +240,17 @@ export default function RenewAdmissionPage() {
                     </p>
                   )}
                   {student && (
-                    <div className="mt-6 p-4 rounded-lg bg-white/5 border border-white/10 space-y-2">
-                      <p className="font-medium text-white">{student.name}</p>
-                      <p className="text-slate-400 text-sm">
-                        Guardian: {student.guardianName ?? '—'}
-                      </p>
-                      {(student.lastSessionName || student.lastClassName) && (
-                        <p className="text-slate-400 text-sm">
-                          Last: {[student.lastSessionName, student.lastClassName].filter(Boolean).join(' · ')}
-                        </p>
+                    <div className="mt-6 p-4 rounded-lg bg-white/5 border border-white/10 space-y-3">
+                      <p className="font-semibold text-white">{student.name}</p>
+                      {student.guardianName && (
+                        <p className="text-slate-400 text-sm">Guardian: {student.guardianName}</p>
+                      )}
+                      {student.lastClassName && (
+                        <p className="text-slate-400 text-sm">Previous class: {student.lastClassName}</p>
                       )}
                       <Button
                         type="button"
-                        className="w-full mt-4 bg-amber-500 hover:bg-amber-400 text-white"
+                        className="w-full mt-4 h-11 bg-amber-500 hover:bg-amber-400 text-white font-medium"
                         onClick={handleConfirmAndContinue}
                       >
                         Confirm and continue
@@ -268,30 +272,30 @@ export default function RenewAdmissionPage() {
             >
               <Card className="secondary-card backdrop-blur-xl border border-white/20 shadow-xl">
                 <CardContent className="pt-6 pb-6 px-6">
-                  <p className="text-slate-300 text-sm mb-4">
-                    Enrolling: <span className="font-medium text-white">{student.name}</span>
-                  </p>
-                  <form onSubmit={handleSubmit} className="space-y-4">
+                  {/* Student summary */}
+                  <div className="rounded-lg border border-white/10 bg-white/5 p-4 mb-6">
+                    <p className="text-slate-400 text-xs uppercase tracking-wider font-medium mb-1">Renewing enrollment for</p>
+                    <p className="font-semibold text-white text-lg">{student.name}</p>
+                    {student.guardianName && (
+                      <p className="text-slate-300 text-sm mt-0.5">Guardian: {student.guardianName}</p>
+                    )}
+                  </div>
+
+                  <form onSubmit={handleSubmit} className="space-y-5">
+                    {/* Previous class (read-only) */}
                     <div>
-                      <Label className="mb-2 block text-slate-300 font-medium">Academic session</Label>
-                      <Select value={sessionId} onValueChange={setSessionId} required>
-                        <SelectTrigger className="h-11 bg-white/5 border-white/20 text-white">
-                          <SelectValue placeholder="Select session" />
-                        </SelectTrigger>
-                        <SelectContent>
-                          {sessions.map((s) => (
-                            <SelectItem key={s.id} value={s.id} className="text-foreground">
-                              {s.name}
-                            </SelectItem>
-                          ))}
-                        </SelectContent>
-                      </Select>
+                      <Label className="mb-2 block text-slate-400 font-medium text-sm">Previous class</Label>
+                      <div className="h-11 rounded-md border border-white/20 bg-white/5 px-3 flex items-center text-white font-medium">
+                        {student.lastClassName ?? '—'}
+                      </div>
                     </div>
+
+                    {/* Requested admission class */}
                     <div>
-                      <Label className="mb-2 block text-slate-300 font-medium">Class</Label>
+                      <Label className="mb-2 block text-slate-300 font-medium">Requested admission class</Label>
                       <Select value={classId} onValueChange={setClassId} required>
                         <SelectTrigger className="h-11 bg-white/5 border-white/20 text-white">
-                          <SelectValue placeholder="Select class" />
+                          <SelectValue placeholder="Select class for next year" />
                         </SelectTrigger>
                         <SelectContent>
                           {classes.map((c) => (
@@ -302,11 +306,12 @@ export default function RenewAdmissionPage() {
                         </SelectContent>
                       </Select>
                     </div>
+
                     <div>
                       <Label className="mb-2 block text-slate-300 font-medium">Section</Label>
                       <Select value={sectionId} onValueChange={setSectionId} required disabled={!classId}>
                         <SelectTrigger className="h-11 bg-white/5 border-white/20 text-white">
-                          <SelectValue placeholder="Select section" />
+                          <SelectValue placeholder={classId ? 'Select section' : 'Select class first'} />
                         </SelectTrigger>
                         <SelectContent>
                           {sections.map((sec) => (
@@ -317,50 +322,57 @@ export default function RenewAdmissionPage() {
                         </SelectContent>
                       </Select>
                     </div>
-                    <div>
-                      <Label htmlFor="contact" className="mb-2 block text-slate-300 font-medium">
-                        Contact (optional)
-                      </Label>
-                      <Input
-                        id="contact"
-                        type="text"
-                        value={contactOverride}
-                        onChange={(e) => setContactOverride(e.target.value)}
-                        placeholder="Updated phone"
-                        className="h-11 bg-white/5 border-white/20 text-white placeholder:text-slate-500"
-                      />
+
+                    <div className="border-t border-white/10 pt-4 space-y-4">
+                      <p className="text-slate-400 text-sm font-medium">Contact details (update if changed)</p>
+                      <div>
+                        <Label htmlFor="contact" className="mb-2 block text-slate-300 font-medium text-sm">
+                          Contact number
+                        </Label>
+                        <Input
+                          id="contact"
+                          type="text"
+                          value={contactOverride}
+                          onChange={(e) => setContactOverride(e.target.value)}
+                          placeholder="Phone number"
+                          className="h-11 bg-white/5 border-white/20 text-white placeholder:text-slate-500"
+                        />
+                      </div>
+                      <div>
+                        <Label htmlFor="address" className="mb-2 block text-slate-300 font-medium text-sm">
+                          Address
+                        </Label>
+                        <Input
+                          id="address"
+                          type="text"
+                          value={addressOverride}
+                          onChange={(e) => setAddressOverride(e.target.value)}
+                          placeholder="Current address"
+                          className="h-11 bg-white/5 border-white/20 text-white placeholder:text-slate-500"
+                        />
+                      </div>
                     </div>
-                    <div>
-                      <Label htmlFor="address" className="mb-2 block text-slate-300 font-medium">
-                        Address (optional)
-                      </Label>
-                      <Input
-                        id="address"
-                        type="text"
-                        value={addressOverride}
-                        onChange={(e) => setAddressOverride(e.target.value)}
-                        placeholder="Updated address"
-                        className="h-11 bg-white/5 border-white/20 text-white placeholder:text-slate-500"
-                      />
-                    </div>
+
                     <Button
                       type="submit"
                       className="w-full h-11 bg-amber-500 hover:bg-amber-400 text-white font-medium"
-                      disabled={submitLoading || !sessionId || !classId || !sectionId}
+                      disabled={submitLoading || !defaultSessionId || !classId || !sectionId}
                     >
                       {submitLoading ? 'Submitting...' : 'Submit renewal'}
                     </Button>
                   </form>
+
                   {submitError && (
                     <p className="mt-4 text-sm text-red-200 rounded-lg bg-red-500/10 border border-red-400/30 px-3 py-2">
                       {submitError}
                     </p>
                   )}
+
                   <Button
                     type="button"
                     variant="ghost"
                     size="sm"
-                    className="w-full mt-4 text-slate-400"
+                    className="w-full mt-4 text-slate-400 hover:text-white"
                     onClick={() => setStep('identify')}
                   >
                     ← Change student
