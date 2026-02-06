@@ -10,7 +10,6 @@ import {
   Input,
   Label,
   Dialog,
-  DialogTrigger,
   DialogContent,
   DialogHeader,
   DialogTitle,
@@ -126,34 +125,31 @@ export default function AdminSectionsPage() {
   };
 
   return (
-    <Dialog
-      open={open}
-      onOpenChange={(o) => {
-        setOpen(o);
-        if (o) {
-          setEditing(null);
-          setAddMode(true);
-          setForm({
-            sectionKey: '',
-            sectionType: 'white',
-            contentJson: '{}',
-            sortOrder: sections.length,
-            isVisible: true,
-          });
-        }
-      }}
-    >
+    <Dialog open={open} onOpenChange={setOpen}>
       <div className="space-y-6">
         <div className="flex flex-wrap items-center justify-between gap-4">
           <div>
             <h1 className="text-2xl font-bold text-amber-950">Sections</h1>
             <p className="mt-1 text-sm text-amber-700">Edit home page sections (white, faculties, stats, news, donate)</p>
           </div>
-          <DialogTrigger asChild>
-            <Button type="button" className="bg-primary text-primary-foreground hover:bg-primary/90">
-              Add section
-            </Button>
-          </DialogTrigger>
+          <Button
+            type="button"
+            className="bg-primary text-primary-foreground hover:bg-primary/90"
+            onClick={() => {
+              setEditing(null);
+              setAddMode(true);
+              setForm({
+                sectionKey: '',
+                sectionType: 'white',
+                contentJson: '{}',
+                sortOrder: sections.length,
+                isVisible: true,
+              });
+              setOpen(true);
+            }}
+          >
+            Add section
+          </Button>
         </div>
 
         {loading ? (
