@@ -47,12 +47,12 @@ function StepperTriggerWrapper({
     );
 }
 
-function StepperSeparator({ status, isLast }: { status: StepStatus; isLast: boolean }) {
+function StepperSeparator({ status, isLast }: { status: StepStatus | undefined; isLast: boolean }) {
     if (isLast) return null;
     return (
         <Stepper.Separator
             orientation="horizontal"
-            data-status={status}
+            data-status={status as any}
             className="mx-1 h-0.5 flex-1 min-w-[12px] sm:min-w-[20px] bg-white/25 rounded-full overflow-hidden data-[status=success]:bg-primary transition-all duration-300"
         />
     );
@@ -96,7 +96,7 @@ export function RegistrationPageContent() {
                         return (
                             <Stepper.Item
                                 key={stepData.id}
-                                step={stepData.id}
+                                step={stepData.id as any}
                                 className="group peer relative flex flex-1 items-center"
                             >
                                 <div className="flex flex-col items-center flex-1">
@@ -105,7 +105,7 @@ export function RegistrationPageContent() {
                                         {d.title ?? stepData.id}
                                     </span>
                                 </div>
-                                <StepperSeparator status={status as StepStatus} isLast={isLast} />
+                                <StepperSeparator status={status as StepStatus | undefined} isLast={isLast} />
                             </Stepper.Item>
                         );
                     })}
