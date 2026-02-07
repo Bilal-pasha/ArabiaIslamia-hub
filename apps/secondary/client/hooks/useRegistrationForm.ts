@@ -7,6 +7,7 @@ import {
   type AdmissionFormDataWithEmptyEnums,
 } from '@/lib/admission-schema';
 import { INITIAL_FORM_DATA } from '@/lib/admission-constants';
+import { registrationStepper, indexToStepId } from '@/lib/registration-stepper';
 import { submitAdmission } from '@/services/admission/admission.service';
 import { getPresignedUrl, uploadToPresignedUrl } from '@/services/upload/upload.service';
 import { toast } from '@arabiaaislamia/ui';
@@ -28,7 +29,10 @@ function getErrorStep(fieldErrors: Record<string, string>): number {
 
 export function useRegistrationForm() {
   const formRef = useRef<HTMLFormElement>(null);
-  const [step, setStep] = useState(1);
+  const stepper = registrationStepper.useStepper();
+  const stepIndex = stepper.state.current.index + 1;
+  const stepId = stepper.state.current.data.id;
+
   const [data, setData] = useState<AdmissionFormDataWithEmptyEnums>(INITIAL_FORM_DATA);
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -50,19 +54,19 @@ export function useRegistrationForm() {
   }, []);
 
   const next = useCallback(() => {
-    const result = validateStep(step, data as Record<string, unknown>);
+    const result = validateStep(stepIndex, data as Record<string, unknown>);
     if (!result.success && result.errors) {
       setErrors(result.errors);
       return;
     }
     setErrors({});
-    setStep((s) => Math.min(s + 1, 4));
-  }, [step, data]);
+    stepper.navigation.next();
+  }, [stepIndex, data, stepper]);
 
   const prev = useCallback(() => {
     setErrors({});
-    setStep((s) => Math.max(s - 1, 1));
-  }, []);
+    stepper.navigation.prev();
+  }, [stepper]);
 
   const handleSubmit = useCallback(
     async (e: React.FormEvent) => {
@@ -75,7 +79,7 @@ export function useRegistrationForm() {
           if (path && !fieldErrors[path]) fieldErrors[path] = issue.message;
         }
         setErrors(fieldErrors);
-        setStep(getErrorStep(fieldErrors));
+        stepper.navigation.goTo(indexToStepId(getErrorStep(fieldErrors)));
         return;
       }
       setIsSubmitting(true);
@@ -100,13 +104,13 @@ export function useRegistrationForm() {
       } catch (err) {
         const msg = err instanceof Error ? err.message : 'Submission failed. Please try again.';
         setErrors({ _form: msg });
-        setStep(4);
+        stepper.navigation.goTo('documents');
         toast.error(msg);
       } finally {
         setIsSubmitting(false);
       }
     },
-    [data, files]
+    [data, files, stepper]
   );
 
   const requestSubmit = useCallback(() => {
@@ -115,7 +119,9 @@ export function useRegistrationForm() {
 
   return {
     formRef,
-    step,
+    step: stepIndex,
+    stepId,
+    stepper,
     data,
     errors,
     files,

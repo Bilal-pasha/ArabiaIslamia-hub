@@ -1,7 +1,6 @@
 'use client';
 
 import { Card, CardHeader, CardTitle, CardContent } from '@arabiaaislamia/ui';
-import { STEPS } from '@/lib/admission-constants';
 import { FormNavigation } from '@/components/form-navigation';
 import { FormErrorAlert } from './form-error-alert';
 import { RegistrationStepContent } from './registration-step-content';
@@ -9,7 +8,11 @@ import type { AdmissionFormDataWithEmptyEnums } from '@/lib/admission-schema';
 import type { DocumentFileKey } from '@/components/form-step-documents';
 
 interface RegistrationFormCardProps {
-  step: number;
+  stepId: string;
+  stepTitle: string;
+  stepSubtitle: string;
+  isFirstStep: boolean;
+  isLastStep: boolean;
   data: AdmissionFormDataWithEmptyEnums;
   errors: Record<string, string>;
   files: Partial<Record<DocumentFileKey, File | null>>;
@@ -22,7 +25,11 @@ interface RegistrationFormCardProps {
 }
 
 export function RegistrationFormCard({
-  step,
+  stepId,
+  stepTitle,
+  stepSubtitle,
+  isFirstStep,
+  isLastStep,
   data,
   errors,
   files,
@@ -37,14 +44,14 @@ export function RegistrationFormCard({
     <Card className="secondary-card overflow-hidden backdrop-blur-xl border border-white/20 w-full min-w-0">
       <CardHeader className="border-b border-white/15 bg-white/5 pb-6">
         <CardTitle className="text-xl sm:text-2xl font-semibold text-white">
-          {STEPS[step - 1]?.title} Information
+          {stepTitle} Information
         </CardTitle>
-        <p className="text-slate-300 text-sm mt-0.5">{STEPS[step - 1]?.subtitle}</p>
+        <p className="text-slate-300 text-sm mt-0.5">{stepSubtitle}</p>
       </CardHeader>
       <CardContent className="pt-6 sm:pt-8">
         {errors._form && <FormErrorAlert message={errors._form} />}
         <RegistrationStepContent
-          step={step}
+          stepId={stepId}
           data={data}
           errors={errors}
           files={files}
@@ -53,7 +60,8 @@ export function RegistrationFormCard({
         />
       </CardContent>
       <FormNavigation
-        step={step}
+        isFirstStep={isFirstStep}
+        isLastStep={isLastStep}
         isSubmitting={isSubmitting}
         onPrev={onPrev}
         onNext={onNext}

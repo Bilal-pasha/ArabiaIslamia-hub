@@ -13,7 +13,8 @@ import { useRegistrationForm } from '@/hooks';
 export default function AdmissionFormPage() {
   const {
     formRef,
-    step,
+    stepId,
+    stepper,
     data,
     errors,
     files,
@@ -48,11 +49,15 @@ export default function AdmissionFormPage() {
         <main className="container mx-auto px-3 sm:px-6 py-4 sm:py-8 max-w-4xl w-full min-w-0">
           <InstructionsAlert />
           <div className="mb-6 sm:mb-8">
-            <StepIndicator currentStep={step} />
+            <StepIndicator stepper={stepper} />
           </div>
           <form ref={formRef} onSubmit={handleSubmit} className="pb-24 sm:pb-8">
             <RegistrationFormCard
-              step={step}
+              stepId={stepId}
+              stepTitle={stepper.state.current.data.title ?? stepId}
+              stepSubtitle={stepper.state.current.data.subtitle ?? ''}
+              isFirstStep={stepper.state.isFirst}
+              isLastStep={stepper.state.isLast}
               data={data}
               errors={errors}
               files={files}

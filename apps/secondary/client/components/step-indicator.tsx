@@ -1,21 +1,36 @@
 'use client';
 
-import { STEPS } from '@/lib/admission-constants';
 import { motion } from 'framer-motion';
 
-interface StepIndicatorProps {
-  currentStep: number;
+interface StepData {
+  id: string;
+  title?: string;
+  subtitle?: string;
+  icon?: string;
 }
 
-export function StepIndicator({ currentStep }: StepIndicatorProps) {
+interface StepIndicatorProps {
+  stepper: {
+    state: {
+      all: StepData[];
+      current: { data: StepData; index: number };
+    };
+  };
+}
+
+export function StepIndicator({ stepper }: StepIndicatorProps) {
+  const steps = stepper.state.all;
+  const currentId = stepper.state.current.data.id;
+  const currentIndex = stepper.state.current.index;
+
   return (
     <div className="w-full py-6 sm:py-8 px-2 sm:px-4" aria-label="Progress">
       <div className="mx-auto max-w-2xl">
         <div className="flex items-center justify-between">
-          {STEPS.map((s, idx) => {
-            const isActive = currentStep === s.id;
-            const isCompleted = currentStep > s.id;
-            const isLast = idx === STEPS.length - 1;
+          {steps.map((s, idx) => {
+            const isActive = currentId === s.id;
+            const isCompleted = currentIndex > idx;
+            const isLast = idx === steps.length - 1;
             return (
               <div key={s.id} className="flex flex-1 items-center">
                 <div className="flex flex-col items-center flex-1 select-none">
@@ -34,11 +49,11 @@ export function StepIndicator({ currentStep }: StepIndicatorProps) {
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                       </svg>
                     ) : (
-                      s.icon
+                      s.icon ?? idx + 1
                     )}
                   </motion.div>
                   <span className={`mt-2 hidden text-xs font-medium sm:block ${isActive ? 'text-orange-200' : 'text-slate-400'}`}>
-                    {s.title}
+                    {s.title ?? s.id}
                   </span>
                 </div>
                 {!isLast && (
@@ -56,8 +71,8 @@ export function StepIndicator({ currentStep }: StepIndicatorProps) {
           })}
         </div>
         <div className="mt-2 text-center sm:hidden">
-          <span className="text-sm font-medium text-white">{STEPS[currentStep - 1]?.title}</span>
-          <span className="text-slate-300 text-xs ml-1">— {STEPS[currentStep - 1]?.subtitle}</span>
+          <span className="text-sm font-medium text-white">{stepper.state.current.data.title}</span>
+          <span className="text-slate-300 text-xs ml-1">— {stepper.state.current.data.subtitle}</span>
         </div>
       </div>
     </div>

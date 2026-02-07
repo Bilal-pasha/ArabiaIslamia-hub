@@ -66,11 +66,11 @@ export default function AdmissionStatusPage() {
     >
       <div className="w-full max-w-md min-w-0">
         <Button variant="ghost" size="sm" asChild className="mb-6">
-          <Link href={publicRoutes.form} className="gap-2 inline-flex items-center text-sm font-medium">
+          <Link href={publicRoutes.home} className="gap-2 inline-flex items-center text-sm font-medium">
             <svg className="size-4 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
             </svg>
-            Back to Admission Form
+            Back to Main Menu
           </Link>
         </Button>
         <Card className="secondary-card backdrop-blur-xl border border-white/20 shadow-xl">

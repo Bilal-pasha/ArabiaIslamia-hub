@@ -10,7 +10,7 @@ import type { AdmissionFormDataWithEmptyEnums } from '@/lib/admission-schema';
 import type { DocumentFileKey } from '@/components/form-step-documents';
 
 interface RegistrationStepContentProps {
-  step: number;
+  stepId: string;
   data: AdmissionFormDataWithEmptyEnums;
   errors: Record<string, string>;
   files: Partial<Record<DocumentFileKey, File | null>>;
@@ -19,7 +19,7 @@ interface RegistrationStepContentProps {
 }
 
 export function RegistrationStepContent({
-  step,
+  stepId,
   data,
   errors,
   files,
@@ -28,16 +28,16 @@ export function RegistrationStepContent({
 }: RegistrationStepContentProps) {
   return (
     <motion.div
-      key={step}
+      key={stepId}
       variants={staggerContainer}
       initial="hidden"
       animate="visible"
       className="space-y-1"
     >
-      {step === 1 && <FormStepPersonal data={data} errors={errors} onUpdate={onUpdate} />}
-      {step === 2 && <FormStepGuardian data={data} errors={errors} onUpdate={onUpdate} />}
-      {step === 3 && <FormStepAcademic data={data} errors={errors} onUpdate={onUpdate} />}
-      {step === 4 && (
+      {stepId === 'personal' && <FormStepPersonal data={data} errors={errors} onUpdate={onUpdate} />}
+      {stepId === 'guardian' && <FormStepGuardian data={data} errors={errors} onUpdate={onUpdate} />}
+      {stepId === 'academic' && <FormStepAcademic data={data} errors={errors} onUpdate={onUpdate} />}
+      {stepId === 'documents' && (
         <FormStepDocuments
           data={data}
           files={files}
