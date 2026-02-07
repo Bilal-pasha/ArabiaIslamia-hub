@@ -112,7 +112,6 @@ export default function StudentDetailPage() {
             <Row label="Guardian" value={student.guardianName} />
             <Row label="Contact" value={student.contact} />
             <Row label="Address" value={student.address} />
-            <Row label="Photo (file)" value={student.photo ?? null} />
             <Row label="Roll Number" value={student.rollNumber} />
             <Row label="Created" value={student.createdAt} />
             <Row label="Updated" value={student.updatedAt} />

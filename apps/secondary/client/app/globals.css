@@ -65,6 +65,9 @@
   --foreground: hsl(0 0% 98%);
   --color-background: transparent;
   --color-foreground: hsl(0 0% 98%);
+  /* Page background: ensure theme wrapper has gradient when Tailwind utilities don’t apply */
+  --secondary-bg-gradient: linear-gradient(to bottom right, rgb(30 41 59), rgb(26 50 84), rgb(37 96 137));
+  background: var(--secondary-bg-gradient);
   /* Card: same navy as hub gradient (#0f2744), with shadow and light text */
   --card: rgba(15, 39, 68, 0.92);
   --card-foreground: hsl(0 0% 98%);
@@ -97,7 +100,10 @@
 
 /* Secondary cards only: navy bg (override Tailwind’s fixed utility), shadow and text for depth */
 /* Use class "secondary-card" on Card for navy bg + shadow + light text */
-.secondary-card {
+/* Higher specificity so we win over Tailwind utility layer when .secondary-card and .bg-card are both on Card */
+.secondary-card,
+[data-theme="secondary"] .secondary-card,
+div.secondary-card {
   background-color: rgba(15, 39, 68, 0.92) !important;
   color: hsl(0 0% 98%) !important;
   box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.35), 0 0 0 1px rgba(255, 255, 255, 0.12);
