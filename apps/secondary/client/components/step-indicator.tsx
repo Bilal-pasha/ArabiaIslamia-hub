@@ -56,16 +56,14 @@ export function StepIndicator({ stepper }: StepIndicatorProps) {
                     {s.title ?? s.id}
                   </span>
                 </div>
-                {!isLast && (
-                  <div className="mx-1 h-0.5 flex-1 min-w-[12px] sm:min-w-[20px] bg-white/25 rounded-full overflow-hidden">
-                    <motion.div
-                      className="h-full rounded-full bg-primary"
-                      initial={false}
-                      animate={{ width: isCompleted ? '100%' : '0%' }}
-                      transition={{ duration: 0.3 }}
-                    />
-                  </div>
-                )}
+                <div className={`mx-1 h-0.5 flex-1 min-w-[12px] sm:min-w-[20px] rounded-full overflow-hidden ${isLast ? 'bg-transparent' : ' bg-white/25'}`}>
+                  <motion.div
+                    className="h-full rounded-full bg-primary"
+                    initial={false}
+                    animate={{ width: isCompleted ? '100%' : '0%' }}
+                    transition={{ duration: 0.3 }}
+                  />
+                </div>
               </div>
             );
           })}
