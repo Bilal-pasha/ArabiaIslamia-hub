@@ -20,19 +20,19 @@ export function AdmissionHeader() {
             </div>
           </div>
           <div className="flex gap-2 shrink-0 flex-wrap">
-            <Button variant="outline" size="sm" asChild>
+            <Button variant="outline" size="sm" asChild className="hover:border-amber-400/50 hover:text-amber-300">
               <Link href={publicRoutes.home} className="inline-flex items-center gap-2 text-current">
                 <Home className="size-4" />
                 Back to main menu
               </Link>
             </Button>
-            <Button variant="outline" size="sm" asChild>
+            <Button variant="outline" size="sm" asChild className="hover:border-amber-400/50 hover:text-amber-300">
               <Link href={publicRoutes.status} className="inline-flex items-center gap-2 text-current">
                 <ClipboardList className="size-4" />
                 Check Status
               </Link>
             </Button>
-            <Button variant="outline" size="sm" asChild>
+            <Button variant="outline" size="sm" asChild className="hover:border-amber-400/50 hover:text-amber-300">
               <Link href={privateRoutes.applications} className="inline-flex items-center gap-2 text-current">
                 <Building2 className="size-4" />
                 Admin

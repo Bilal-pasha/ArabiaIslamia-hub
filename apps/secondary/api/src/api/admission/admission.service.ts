@@ -1,6 +1,6 @@
 import { Injectable, BadRequestException, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { Repository, DeepPartial } from 'typeorm';
 import {
   AdmissionApplication,
   Student,
@@ -90,7 +90,7 @@ export class AdmissionService {
     if (!cls) throw new BadRequestException('Invalid class');
 
     const applicationNumber = this.generateApplicationNumber();
-    const application = this.repo.create({
+    const payload: DeepPartial<AdmissionApplication> = {
       applicationNumber,
       name: dto.name,
       fatherName: dto.fatherName,
@@ -112,7 +112,6 @@ export class AdmissionService {
       guardianEmail: dto.guardianEmail || null,
       guardianOccupation: dto.guardianOccupation || null,
       guardianAddress: dto.guardianAddress || null,
-      requiredClassId: dto.requiredClassId,
       previousSchool: dto.previousSchool || null,
       previousClass: dto.previousClass || null,
       previousGrade: dto.previousGrade || null,
@@ -123,7 +122,10 @@ export class AdmissionService {
       authorityLetterFileKey: dto.authorityLetterFile || null,
       previousResultFileKey: dto.previousResultFile || null,
       status: 'pending',
-    });
+    };
+    const application = this.repo.create(payload);
+    // FK column; TypeORM entity type may expose relation name only
+    (application as { requiredClassId?: string }).requiredClassId = dto.requiredClassId;
     await this.repo.save(application);
     return { applicationNumber, id: application.id };
   }
@@ -137,7 +139,7 @@ export class AdmissionService {
 
   async findAllStudents(): Promise<Student[]> {
     return this.studentRepo.find({
-      relations: ['admissionApplication'],
+      relations: ['admissionApplication', 'admissionApplication.class'],
       order: { createdAt: 'DESC' },
     });
   }
@@ -145,7 +147,7 @@ export class AdmissionService {
   async findOneStudent(id: string): Promise<Student | null> {
     return this.studentRepo.findOne({
       where: { id },
-      relations: ['admissionApplication'],
+      relations: ['admissionApplication', 'admissionApplication.class'],
     });
   }
 

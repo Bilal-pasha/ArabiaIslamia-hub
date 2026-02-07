@@ -3,9 +3,10 @@
 import Link from 'next/link';
 import { motion, useInView } from 'framer-motion';
 import { useRef } from 'react';
-import { Facebook, Twitter, Instagram, Youtube, GraduationCap, ExternalLink } from 'lucide-react';
+import { Facebook, Youtube, GraduationCap, ExternalLink } from 'lucide-react';
 import { Logo } from '@/components/atoms';
 import { APP_LINKS } from '@/constants/navigation';
+import { SOCIAL_LINKS as SOCIAL_URLS } from '@/constants/social';
 
 const FOOTER_NAV_LINKS = [
   { label: 'Faculties', href: '/faculties' },
@@ -14,11 +15,9 @@ const FOOTER_NAV_LINKS = [
   { label: 'More', href: '/more' },
 ];
 
-const SOCIAL_LINKS = [
-  { Icon: Facebook, href: '#', label: 'Facebook' },
-  { Icon: Twitter, href: '#', label: 'Twitter' },
-  { Icon: Instagram, href: '#', label: 'Instagram' },
-  { Icon: Youtube, href: '#', label: 'YouTube' },
+const FOOTER_SOCIAL_LINKS = [
+  { Icon: Facebook, href: SOCIAL_URLS.facebook, label: 'Facebook' },
+  { Icon: Youtube, href: SOCIAL_URLS.youtube, label: 'YouTube' },
 ];
 
 
@@ -27,7 +26,7 @@ export function Footer() {
   const isInView = useInView(ref, { once: true });
 
   return (
-    <footer className="bg-page border-t border-amber-200/80">
+    <footer className="bg-gradient-to-t from-amber-100/50 via-amber-50/90 to-emerald-50/60 border-t border-amber-200/80">
       <section className="mx-auto px-4 py-10 sm:px-6 md:px-8 lg:px-12">
         <motion.div
           ref={ref}
@@ -76,7 +75,7 @@ export function Footer() {
                   <li key={app.href + app.text}>
                     <a
                       href={app.href}
-                      target={'_blank'}
+                      target="_blank"
                       rel={'noopener noreferrer'}
                       className="inline-flex items-center gap-1.5 text-sm text-amber-900/90 transition-colors hover:text-amber-700 focus:outline-none focus:ring-2 focus:ring-amber-400 focus:ring-offset-2 rounded"
                     >
@@ -94,10 +93,12 @@ export function Footer() {
                 Follow us
               </h3>
               <div className="flex items-center gap-2">
-                {SOCIAL_LINKS.map(({ Icon, href, label }) => (
+                {FOOTER_SOCIAL_LINKS.map(({ Icon, href, label }) => (
                   <a
                     key={label}
                     href={href}
+                    target="_blank"
+                    rel="noopener noreferrer"
                     aria-label={label}
                     className="rounded-lg p-2.5 text-amber-800/90 transition-colors hover:bg-amber-200/70 hover:text-amber-900 focus:outline-none focus:ring-2 focus:ring-amber-400 focus:ring-offset-2"
                   >

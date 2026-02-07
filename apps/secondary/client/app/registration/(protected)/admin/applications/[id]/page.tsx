@@ -274,7 +274,7 @@ export default function ApplicationDetailPage() {
     return (
       <div className="min-h-screen flex flex-col items-center justify-center gap-4 p-4">
         <p className="text-destructive">{error || 'Application not found'}</p>
-        <Button onClick={() => router.back()}>Go Back</Button>
+        <Button variant="outline" onClick={() => router.back()} className="hover:border-amber-400/50 hover:text-amber-300">Go Back</Button>
       </div>
     );
   }
@@ -303,11 +303,11 @@ export default function ApplicationDetailPage() {
             )}
           </div>
           <div className="flex gap-2">
-            <Button variant="outline" size="sm" onClick={handlePrint} className="w-fit inline-flex items-center gap-2">
+            <Button variant="outline" size="sm" onClick={handlePrint} className="w-fit inline-flex items-center gap-2 hover:border-amber-400/50 hover:text-amber-300">
               <Printer className="size-4" />
               Print
             </Button>
-            <Button variant="outline" size="sm" asChild className="w-fit">
+            <Button variant="outline" size="sm" asChild className="w-fit hover:border-amber-400/50 hover:text-amber-300">
               <Link href={privateRoutes.applications}>← All applications</Link>
             </Button>
           </div>
@@ -394,7 +394,7 @@ export default function ApplicationDetailPage() {
                       <Input id="edit-quran-reason" value={quranReason} onChange={(e) => setQuranReason(e.target.value)} placeholder="Optional" className="bg-white/5 border-white/20 text-white" />
                     </div>
                     <div className="flex gap-2">
-                      <Button onClick={handleQuranSubmit} disabled={!quranPassed || quranSubmitLoading} className="bg-orange-500 hover:bg-orange-600">Save</Button>
+                      <Button onClick={handleQuranSubmit} disabled={!quranPassed || quranSubmitLoading} className="bg-amber-500 hover:bg-amber-400 text-amber-950">Save</Button>
                       <Button variant="outline" onClick={() => setEditQuran(false)}>Cancel</Button>
                     </div>
                   </div>
@@ -430,7 +430,7 @@ export default function ApplicationDetailPage() {
                       </Select>
                     </div>
                     <div className="flex gap-2">
-                      <Button onClick={handleOralSubmit} disabled={!oralPassed || oralSubmitLoading} className="bg-orange-500 hover:bg-orange-600">Save</Button>
+                      <Button onClick={handleOralSubmit} disabled={!oralPassed || oralSubmitLoading} className="bg-amber-500 hover:bg-amber-400 text-amber-950">Save</Button>
                       <Button variant="outline" onClick={() => setEditOral(false)}>Cancel</Button>
                     </div>
                   </div>
@@ -473,7 +473,7 @@ export default function ApplicationDetailPage() {
                       <Input id="edit-written-reason" value={writtenReason} onChange={(e) => setWrittenReason(e.target.value)} placeholder="Optional" className="bg-white/5 border-white/20 text-white" />
                     </div>
                     <div className="flex gap-2">
-                      <Button onClick={handleWrittenSubmit} disabled={!writtenPassed || writtenSubmitLoading} className="bg-orange-500 hover:bg-orange-600">Save</Button>
+                      <Button onClick={handleWrittenSubmit} disabled={!writtenPassed || writtenSubmitLoading} className="bg-amber-500 hover:bg-amber-400 text-amber-950">Save</Button>
                       <Button variant="outline" onClick={() => setEditWritten(false)}>Cancel</Button>
                     </div>
                   </div>
@@ -544,7 +544,7 @@ export default function ApplicationDetailPage() {
                     className="bg-white/5 border-white/20 text-white placeholder:text-slate-500"
                   />
                 </div>
-                <Button onClick={handleQuranSubmit} disabled={!quranPassed || quranSubmitLoading} className="bg-orange-500 hover:bg-orange-600">
+                <Button onClick={handleQuranSubmit} disabled={!quranPassed || quranSubmitLoading} className="bg-amber-500 hover:bg-amber-400 text-amber-950">
                   {quranSubmitLoading ? 'Saving...' : 'Save Quran test result'}
                 </Button>
               </CardContent>
@@ -590,7 +590,7 @@ export default function ApplicationDetailPage() {
                     className="bg-white/5 border-white/20 text-white placeholder:text-slate-500"
                   />
                 </div>
-                <Button onClick={handleOralSubmit} disabled={!oralPassed || oralSubmitLoading} className="bg-orange-500 hover:bg-orange-600">
+                <Button onClick={handleOralSubmit} disabled={!oralPassed || oralSubmitLoading} className="bg-amber-500 hover:bg-amber-400 text-amber-950">
                   {oralSubmitLoading ? 'Saving...' : 'Save oral test result'}
                 </Button>
                 {(app.oralTestPassed !== null || app.oralTestMarks) && (
@@ -609,7 +609,7 @@ export default function ApplicationDetailPage() {
                 <p className="text-sm text-slate-300">Mark applicant eligible to take the written test, then record written test result below.</p>
               </CardHeader>
               <CardContent>
-                <Button onClick={handleWrittenEligible} disabled={writtenEligibleLoading} className="bg-orange-500 hover:bg-orange-600">
+                <Button onClick={handleWrittenEligible} disabled={writtenEligibleLoading} className="bg-amber-500 hover:bg-amber-400 text-amber-950">
                   {writtenEligibleLoading ? 'Saving...' : 'Mark written test eligible'}
                 </Button>
               </CardContent>
@@ -655,7 +655,7 @@ export default function ApplicationDetailPage() {
                     className="bg-white/5 border-white/20 text-white placeholder:text-slate-500"
                   />
                 </div>
-                <Button onClick={handleWrittenSubmit} disabled={!writtenPassed || writtenSubmitLoading} className="bg-orange-500 hover:bg-orange-600">
+                <Button onClick={handleWrittenSubmit} disabled={!writtenPassed || writtenSubmitLoading} className="bg-amber-500 hover:bg-amber-400 text-amber-950">
                   {writtenSubmitLoading ? 'Saving...' : 'Save written test result'}
                 </Button>
                 {(app.writtenTestPassed !== null || app.writtenTestMarks) && (

@@ -13,7 +13,7 @@ import { useNavbar } from '@/hooks/useNavbar';
 export function Navbar() {
   const { mobileOpen, setMobileOpen, appsOpen, appsHandleEnter, appsHandleLeave } = useNavbar();
   return (
-    <nav className={cn('sticky top-0 z-50 w-full', 'bg-page', 'backdrop-blur-sm', 'border-b border-amber-200', 'shadow-[0_4px_24px_-4px_rgba(0,0,0,0.08)]', 'px-3 py-1.5 sm:px-4 md:px-6 lg:px-12')}>
+    <nav className={cn('sticky top-0 z-50 w-full', 'bg-gradient-to-r from-amber-50/95 via-white to-emerald-50/80', 'backdrop-blur-sm', 'border-b border-amber-200/80', 'shadow-[0_4px_24px_-4px_rgba(0,0,0,0.08)]', 'px-3 py-1.5 sm:px-4 md:px-6 lg:px-12')}>
       <div className="mx-auto flex w-full max-w-7xl items-center justify-between gap-2 sm:gap-3 min-w-0 px-4 sm:px-6 md:px-8 lg:px-12">
         <Drawer open={mobileOpen} onOpenChange={setMobileOpen}>
           <button type="button" className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg text-amber-900 transition-all hover:bg-amber-200/80 hover:text-amber-950 focus:outline-none focus:ring-2 focus:ring-amber-500 focus:ring-offset-2 md:hidden" onClick={() => setMobileOpen(!mobileOpen)} aria-label={mobileOpen ? 'Close menu' : 'Open menu'} aria-expanded={mobileOpen}>

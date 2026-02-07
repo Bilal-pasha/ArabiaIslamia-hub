@@ -33,7 +33,7 @@ export function MyApplicationView({ application }: MyApplicationViewProps) {
 
   return (
     <div className="space-y-6 w-full min-w-0 overflow-x-hidden">
-      <Button variant="ghost" size="sm" asChild className="mb-4">
+      <Button variant="ghost" size="sm" asChild className="mb-4 hover:text-amber-300">
         <Link href={publicRoutes.status} className="gap-2 inline-flex items-center">
           <svg className="size-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
@@ -90,14 +90,14 @@ export function MyApplicationView({ application }: MyApplicationViewProps) {
 
           <div className="flex flex-wrap gap-2 sm:gap-3">
             {canPrintOralAdmit && (
-              <Button asChild className="bg-orange-500 hover:bg-orange-600">
+              <Button asChild className="bg-amber-500 hover:bg-amber-400 text-amber-950 font-medium">
                 <Link href={`/registration/admit-card/oral/${encodeURIComponent(application.applicationNumber)}`}>
                   Print oral test admit card
                 </Link>
               </Button>
             )}
             {canDownloadWrittenAdmit && (
-              <Button variant="secondary" asChild className="bg-sky-500/20 text-sky-200 hover:bg-sky-500/30 border border-sky-400/30">
+              <Button variant="outline" asChild className="border-amber-400/50 text-amber-200 hover:bg-amber-500/20 hover:text-amber-100">
                 <Link href={`/registration/admit-card/written/${encodeURIComponent(application.applicationNumber)}`}>
                   Download written test admit card
                 </Link>

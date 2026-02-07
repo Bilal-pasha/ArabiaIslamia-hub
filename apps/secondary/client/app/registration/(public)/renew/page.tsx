@@ -364,7 +364,7 @@ export default function RenewAdmissionPage() {
                     type="button"
                     variant="ghost"
                     size="sm"
-                    className="w-full mt-4 text-slate-400 hover:text-white"
+                    className="w-full mt-4 text-slate-400 hover:text-amber-300"
                     onClick={() => setStep('identify')}
                   >
                     ← Change student

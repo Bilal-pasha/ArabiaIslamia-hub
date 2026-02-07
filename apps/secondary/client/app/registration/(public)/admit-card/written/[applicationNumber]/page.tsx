@@ -64,7 +64,7 @@ export default function WrittenAdmitCardPage() {
     return (
       <div className="min-h-screen flex flex-col items-center justify-center gap-4 p-6">
         <p className="text-destructive">{error ?? 'Not found'}</p>
-        <Button asChild>
+        <Button asChild className="bg-amber-500 hover:bg-amber-400 text-amber-950">
           <Link href={publicRoutes.status}>Back to status</Link>
         </Button>
       </div>
@@ -78,7 +78,7 @@ export default function WrittenAdmitCardPage() {
   return (
     <div className="min-h-screen w-full min-w-0 bg-slate-50 p-4 sm:p-6 print:bg-white print:p-8 overflow-x-hidden">
       <div className="print:hidden fixed top-4 right-4 z-10 flex gap-2">
-        <Button type="button" size="sm" onClick={handlePrint}>
+        <Button type="button" size="sm" onClick={handlePrint} className="bg-amber-500 hover:bg-amber-400 text-amber-950">
           Print
         </Button>
       </div>
@@ -150,8 +150,8 @@ export default function WrittenAdmitCardPage() {
       </div>
 
       <div className="mt-8 text-center print:hidden flex flex-wrap justify-center gap-2">
-        <Button onClick={handlePrint}>Print admit card</Button>
-        <Button variant="outline" asChild>
+        <Button onClick={handlePrint} className="bg-amber-500 hover:bg-amber-400 text-amber-950">Print admit card</Button>
+        <Button variant="outline" asChild className="hover:border-amber-400/50 hover:text-amber-300">
           <Link href={publicRoutes.status}>Back to status</Link>
         </Button>
       </div>

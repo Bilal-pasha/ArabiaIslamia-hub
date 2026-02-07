@@ -102,7 +102,7 @@ export default function AdminApplicationsPage() {
     >
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <p className="text-slate-400 text-sm">View and manage admission applications.</p>
-        <Button variant="outline" size="sm" asChild className="w-fit">
+        <Button variant="outline" size="sm" asChild className="w-fit hover:border-amber-400/50 hover:text-amber-300">
           <Link href={publicRoutes.form}>← Public form</Link>
         </Button>
       </div>

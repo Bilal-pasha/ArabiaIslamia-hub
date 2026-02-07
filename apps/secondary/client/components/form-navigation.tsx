@@ -24,7 +24,7 @@ export function FormNavigation({ step, isSubmitting, onPrev, onNext, onSubmit }:
           Previous
         </Button>
         {step < 4 ? (
-          <Button type="button" onClick={onNext} className="min-w-[90px] sm:min-w-[120px] bg-orange-500 hover:bg-orange-400 text-white border-0 font-medium text-sm sm:text-base">
+          <Button type="button" onClick={onNext} className="min-w-[90px] sm:min-w-[120px] bg-amber-500 hover:bg-amber-400 text-amber-950 border-0 font-medium text-sm sm:text-base">
             Next
           </Button>
         ) : (
@@ -32,7 +32,7 @@ export function FormNavigation({ step, isSubmitting, onPrev, onNext, onSubmit }:
             type="button"
             disabled={isSubmitting}
             onClick={onSubmit}
-            className="min-w-[120px] sm:min-w-[160px] bg-orange-500 hover:bg-orange-400 text-white border-0 font-medium text-sm sm:text-base"
+            className="min-w-[120px] sm:min-w-[160px] bg-amber-500 hover:bg-amber-400 text-amber-950 border-0 font-medium text-sm sm:text-base"
           >
             {isSubmitting ? 'Submitting...' : 'Submit Application'}
           </Button>
