@@ -7,7 +7,7 @@ interface ApplicationStepTimelineProps {
   application: AdmissionApplication;
 }
 
-type StepStatus = 'completed' | 'pending' | 'rejected' | 'upcoming';
+export type StepStatus = 'completed' | 'pending' | 'rejected' | 'upcoming';
 
 interface StepResult {
   status: StepStatus;
@@ -115,12 +115,12 @@ export function ApplicationStepTimeline({ application }: ApplicationStepTimeline
                 <div className="flex flex-col items-center shrink-0">
                   <div
                     className={`shrink-0 size-9 rounded-full flex items-center justify-center text-sm font-medium border-2 ${status === 'completed'
-                        ? 'bg-emerald-500/20 border-emerald-400/50 text-emerald-200'
-                        : status === 'rejected'
-                          ? 'bg-red-500/20 border-red-400/50 text-red-200'
-                          : status === 'pending'
-                            ? 'bg-orange-500/20 border-orange-400/50 text-orange-200'
-                            : 'bg-white/5 border-white/10 text-slate-500'
+                      ? 'bg-emerald-500/20 border-emerald-400/50 text-emerald-200'
+                      : status === 'rejected'
+                        ? 'bg-red-500/20 border-red-400/50 text-red-200'
+                        : status === 'pending'
+                          ? 'bg-orange-500/20 border-orange-400/50 text-orange-200'
+                          : 'bg-white/5 border-white/10 text-slate-500'
                       }`}
                   >
                     {status === 'completed' ? (
@@ -142,24 +142,24 @@ export function ApplicationStepTimeline({ application }: ApplicationStepTimeline
                   <div className="flex items-center gap-2 flex-wrap">
                     <span
                       className={`font-medium ${status === 'completed'
-                          ? 'text-emerald-200'
-                          : status === 'rejected'
-                            ? 'text-red-200'
-                            : status === 'pending'
-                              ? 'text-orange-200'
-                              : 'text-slate-400'
+                        ? 'text-emerald-200'
+                        : status === 'rejected'
+                          ? 'text-red-200'
+                          : status === 'pending'
+                            ? 'text-orange-200'
+                            : 'text-slate-400'
                         }`}
                     >
                       {step.title}
                     </span>
                     <span
                       className={`text-xs font-medium px-2 py-0.5 rounded ${status === 'completed'
-                          ? 'bg-emerald-500/20 text-emerald-200'
-                          : status === 'rejected'
-                            ? 'bg-red-500/20 text-red-200'
-                            : status === 'pending'
-                              ? 'bg-orange-500/20 text-orange-200'
-                              : 'bg-white/10 text-slate-500'
+                        ? 'bg-emerald-500/20 text-emerald-200'
+                        : status === 'rejected'
+                          ? 'bg-red-500/20 text-red-200'
+                          : status === 'pending'
+                            ? 'bg-orange-500/20 text-orange-200'
+                            : 'bg-white/10 text-slate-500'
                         }`}
                     >
                       {status === 'completed'

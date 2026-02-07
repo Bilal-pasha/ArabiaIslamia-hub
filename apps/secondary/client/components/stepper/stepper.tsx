@@ -7,6 +7,7 @@ import { RegistrationStepContent } from '@/components/registration/registration-
 import { AdmissionSuccess } from '@/components/admission-success';
 import { SubmissionOverlay } from '@/components/registration/submission-overlay';
 import { useRegistrationForm } from '@/hooks';
+import { StepStatus } from '../application-step-timeline';
 
 const { Stepper } = registrationStepper;
 
@@ -46,7 +47,7 @@ function StepperTriggerWrapper({
     );
 }
 
-function StepperSeparator({ status, isLast }: { status: string; isLast: boolean }) {
+function StepperSeparator({ status, isLast }: { status: StepStatus; isLast: boolean }) {
     if (isLast) return null;
     return (
         <Stepper.Separator
@@ -104,7 +105,7 @@ export function RegistrationPageContent() {
                                         {d.title ?? stepData.id}
                                     </span>
                                 </div>
-                                <StepperSeparator status={status} isLast={isLast} />
+                                <StepperSeparator status={status as StepStatus} isLast={isLast} />
                             </Stepper.Item>
                         );
                     })}
