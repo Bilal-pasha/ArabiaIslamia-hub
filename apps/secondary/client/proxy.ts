@@ -5,7 +5,7 @@ import { privateRoutes } from '@/constants/route';
 const ACCESS_TOKEN_COOKIE = 'access_token';
 const SIGNIN_PATH = '/registration/admin/signin';
 
-export function middleware(request: NextRequest) {
+export function proxy(request: NextRequest) {
   const token = request.cookies.get(ACCESS_TOKEN_COOKIE);
   const pathname = request.nextUrl.pathname;
 

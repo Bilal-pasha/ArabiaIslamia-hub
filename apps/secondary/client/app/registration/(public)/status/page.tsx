@@ -103,7 +103,7 @@ export default function AdmissionStatusPage() {
               </div>
               <Button
                 type="submit"
-                className="w-full h-11 bg-orange-500 hover:bg-orange-400 text-white font-medium"
+                className="w-full"
                 disabled={status === 'loading'}
               >
                 {status === 'loading' ? 'Checking...' : 'Check Status'}

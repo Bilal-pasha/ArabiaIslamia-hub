@@ -8,6 +8,7 @@ import { AdmissionSuccess } from '@/components/admission-success';
 import { SubmissionOverlay } from '@/components/registration/submission-overlay';
 import { useRegistrationForm } from '@/hooks';
 import { StepStatus } from '../application-step-timeline';
+import React from 'react';
 
 const { Stepper } = registrationStepper;
 
@@ -28,8 +29,9 @@ function StepperTriggerWrapper({
             render={(domProps: React.ButtonHTMLAttributes<HTMLButtonElement>) => (
                 <Button
                     type="button"
-                    className="flex size-10 sm:size-11 shrink-0 items-center justify-center rounded-full text-sm font-semibold border-0"
+                    className="flex size-10 sm:size-11 shrink-0 items-center justify-center rounded-full text-sm font-semibold"
                     variant={isInactive ? 'outline' : 'default'}
+                    disabled={isInactive}
                     {...domProps}
                 >
                     <Stepper.Indicator>
@@ -53,7 +55,7 @@ function StepperSeparator({ status, isLast }: { status: StepStatus | undefined; 
         <Stepper.Separator
             orientation="horizontal"
             data-status={status as any}
-            className="mx-1 h-0.5 flex-1 min-w-[12px] sm:min-w-[20px] bg-white/25 rounded-full overflow-hidden data-[status=success]:bg-primary transition-all duration-300"
+            className="mx-1 h-0.5 flex-1 min-w-[12px] sm:min-w-[25px] bg-white/25 rounded-full overflow-hidden data-[status=success]:bg-primary transition-all duration-300"
         />
     );
 }
@@ -94,19 +96,20 @@ export function RegistrationPageContent() {
                         const isLast = index === stepper.state.all.length - 1;
                         const d = stepData as StepData;
                         return (
-                            <Stepper.Item
-                                key={stepData.id}
-                                step={stepData.id as any}
-                                className="group peer relative flex flex-1 items-center"
-                            >
-                                <div className="flex flex-col items-center flex-1">
-                                    <StepperTriggerWrapper status={status} index={index} />
-                                    <span className="mt-2 hidden text-xs font-medium sm:block text-slate-400 group-data-[active]:text-orange-200">
-                                        {d.title ?? stepData.id}
-                                    </span>
-                                </div>
+                            <React.Fragment key={`${stepData.id}-${index}`}>
+                                <Stepper.Item
+                                    step={stepData.id as any}
+                                    className="group peer relative flex flex-1 items-center"
+                                >
+                                    <div className="flex flex-col items-center flex-1">
+                                        <StepperTriggerWrapper status={status} index={index} />
+                                        <span className="mt-2 hidden text-xs font-medium sm:block text-slate-400 group-data-[active]:text-orange-200">
+                                            {d.title ?? stepData.id}
+                                        </span>
+                                    </div>
+                                </Stepper.Item>
                                 <StepperSeparator status={status as StepStatus | undefined} isLast={isLast} />
-                            </Stepper.Item>
+                            </React.Fragment>
                         );
                     })}
                 </Stepper.List>
@@ -174,7 +177,7 @@ export function RegistrationPageContent() {
                                 variant="outline"
                                 onClick={prev}
                                 disabled={stepper.state.isFirst}
-                                className="min-w-[90px] sm:min-w-[120px] disabled:opacity-50 text-sm sm:text-base"
+                                className="w-full sm:w-auto disabled:opacity-50 text-sm sm:text-base"
                             >
                                 Previous
                             </Button>
@@ -182,7 +185,8 @@ export function RegistrationPageContent() {
                                 <Button
                                     type="button"
                                     onClick={next}
-                                    className="min-w-[90px] sm:min-w-[120px] bg-amber-500 hover:bg-amber-400 text-amber-950 border-0 font-medium text-sm sm:text-base"
+                                    variant="default"
+                                    className="w-full sm:w-auto"
                                 >
                                     Next
                                 </Button>
@@ -191,7 +195,8 @@ export function RegistrationPageContent() {
                                     type="button"
                                     disabled={isSubmitting}
                                     onClick={requestSubmit}
-                                    className="min-w-[120px] sm:min-w-[160px] bg-amber-500 hover:bg-amber-400 text-amber-950 border-0 font-medium text-sm sm:text-base"
+                                    variant="default"
+                                    className="w-full sm:w-auto"
                                 >
                                     {isSubmitting ? 'Submitting...' : 'Submit Application'}
                                 </Button>
