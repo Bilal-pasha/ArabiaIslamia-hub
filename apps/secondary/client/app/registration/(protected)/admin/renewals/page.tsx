@@ -20,6 +20,7 @@ import {
 import { fetchRenewals, type RenewalApplicationDto } from '@/services/admission/admission.service';
 import { fadeInUp, defaultTransition } from '@arabiaaislamia/animations';
 import { publicRoutes, privateRoutes } from '@/constants/route';
+import { Eye } from 'lucide-react';
 
 function getStatusVariant(status: string): 'pending' | 'approved' | 'rejected' {
   if (status === 'approved') return 'approved';
@@ -111,9 +112,10 @@ export default function AdminRenewalsPage() {
                         {new Date(r.createdAt).toLocaleDateString()}
                       </TableCell>
                       <TableCell className="text-right">
-                        <Button variant="outline" size="sm" asChild>
-                          <Link href={privateRoutes.renewalDetail(r.id)}>View</Link>
-                        </Button>
+                        <Link href={privateRoutes.renewalDetail(r.id)} className="flex text-white focus:bg-white/10 focus:text-white items-center gap-2 cursor-pointer">
+                          <Eye className="h-4 w-4" />
+                          View
+                        </Link>
                       </TableCell>
                     </TableRow>
                   ))}

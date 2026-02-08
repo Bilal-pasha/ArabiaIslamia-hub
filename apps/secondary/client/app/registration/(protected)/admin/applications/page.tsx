@@ -159,7 +159,7 @@ export default function AdminApplicationsPage() {
                           </DropdownMenuTrigger>
                           <DropdownMenuContent align="end" className="w-44 bg-slate-900 border-white/10">
                             <DropdownMenuItem asChild>
-                              <Link href={privateRoutes.applicationDetail(app.id)} className="flex text-white focus:bg-white/10 items-center gap-2 cursor-pointer">
+                              <Link href={privateRoutes.applicationDetail(app.id)} className="flex text-white focus:bg-white/10 focus:text-white items-center gap-2 cursor-pointer">
                                 <Eye className="h-4 w-4" />
                                 View
                               </Link>
