@@ -1,17 +1,27 @@
 FROM node:20-alpine
 WORKDIR /app
+
+# Enable pnpm
 RUN corepack enable && corepack prepare pnpm@9.14.2 --activate
 
+# --- Workspace root files (REQUIRED) ---
 COPY pnpm-workspace.yaml package.json pnpm-lock.yaml* ./
 COPY .npmrc* ./
+
+# --- ONLY the packages used by main-website ---
+COPY packages/database ./packages/database
+COPY packages/storage ./packages/storage
 COPY packages/ui ./packages/ui
 COPY packages/animations ./packages/animations
-COPY apps/main-website/package.json ./apps/main-website/
 
+# --- ONLY main-website app (api + client) ---
+COPY apps/main-website/client ./apps/main-website/client
+
+# Install from root workspace
 RUN pnpm install --frozen-lockfile || pnpm install
 
-COPY apps/main-website ./apps/main-website
+# ---- START CLIENT CORRECTLY ----
+WORKDIR /app/apps/main-website/client
 
-WORKDIR /app/apps/main-website
 EXPOSE 3000
-CMD ["pnpm", "run", "dev"]
+CMD ["pnpm", "dev"]
