@@ -13,24 +13,28 @@ const FACULTIES = [
     description:
       'Dive into the sacred world of Quranic memorization and recitation with our Tahfeez ul Quran faculty, where students embark on a profound journey of preserving the divine word in their hearts.',
     btnValue: 'Learn more',
+    href: '/faculties#tahfeez-ul-quran-faculty',
   },
   {
     title: 'Dars -e- Nizami',
     description:
       'Explore the depths of Islamic knowledge through our Darse Nizami faculty, where tradition meets modernity, and students engage in a comprehensive study of Islamic theology, jurisprudence, and spirituality.',
     btnValue: 'Learn more',
+    href: '/faculties#darse-nizami-faculty',
   },
   {
     title: 'Mahad ul Arabia',
     description:
       'Join the legacy of Islamic scholarship at our Mahad ul Arabia faculty, where aspiring scholars delve into advanced Arabic language and literature, equipping themselves to become torchbearers of Islamic wisdom.',
     btnValue: 'Learn more',
+    href: '/faculties#mahad-ul-lugha-tul-arabia-faculty',
   },
   {
     title: 'Schooling System',
     description:
       'Discover an innovative and holistic approach to education within our Schooling System faculty, designed to nurture young minds with a strong foundation in both secular and Islamic studies, fostering well-rounded individuals ready to embrace the future.',
     btnValue: 'Learn more',
+    href: '/faculties#schooling-system-faculty',
   },
 ];
 
@@ -40,7 +44,7 @@ export function FacultiesSection() {
 
   return (
     <section className="bg-gradient-to-r from-amber-400 to-amber-100 px-4 py-12 lg:px-32 lg:py-24">
-      <div className="mx-auto grid max-w-6xl gap-12 lg:grid-cols-2 lg:gap-20">
+      <div className="mx-auto grid gap-12 lg:grid-cols-2 lg:gap-20">
         <motion.div
           ref={ref}
           className="space-y-6 text-center lg:text-left"
@@ -72,6 +76,7 @@ export function FacultiesSection() {
               title={f.title}
               description={f.description}
               btnLabel={f.btnValue}
+              href={f.href}
             />
           ))}
         </motion.div>
