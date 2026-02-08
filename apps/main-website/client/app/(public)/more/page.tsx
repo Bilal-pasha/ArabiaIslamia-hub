@@ -14,22 +14,23 @@ const MORE_SECTIONS = [
 export default function MorePage() {
   return (
     <>
-      <section className="flex min-h-[40vh] flex-col items-center justify-center px-4 py-16 text-center">
+      <section className="section-about-hero flex min-h-[60vh] flex-col items-center justify-center px-4 text-center text-white">
         <motion.div
-          initial={{ opacity: 0, y: 24 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5 }}
+          className="max-w-4xl space-y-4 lg:block"
+          initial={{ opacity: 0, x: -24 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ duration: 0.6 }}
         >
-          <h1 className="text-3xl font-bold text-foreground md:text-5xl">
+          <h1 className="font-[Roboto] text-2xl font-bold md:text-4xl lg:text-6xl">
             More
           </h1>
-          <p className="mt-4 text-lg text-muted-foreground">
-            Admissions, scholarships, downloads, and results.
+          <p className="text-base md:text-lg">
+            More information about our university.
           </p>
         </motion.div>
       </section>
 
-      <section className="mx-auto max-w-4xl px-4 py-12 lg:py-20">
+      <section className="mx-auto md:container px-4 py-12 lg:py-20">
         <div className="grid gap-6 sm:grid-cols-2">
           {MORE_SECTIONS.map((section, i) => (
             <motion.div
@@ -50,11 +51,6 @@ export default function MorePage() {
               </Button>
             </motion.div>
           ))}
-        </div>
-        <div className="mt-12 text-center">
-          <Button asChild>
-            <Link href="/forms">Scouts Camping Registration Form</Link>
-          </Button>
         </div>
       </section>
     </>

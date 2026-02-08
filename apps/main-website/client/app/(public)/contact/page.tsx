@@ -6,18 +6,18 @@ import { DonateFormSection } from '@/components/organisms';
 export default function ContactPage() {
   return (
     <>
-      <section className="bg-pattern-lite flex min-h-[40vh] flex-col items-center justify-center px-4 py-16 text-center">
+      <section className="section-about-hero flex min-h-[60vh] flex-col items-center justify-center px-4 text-center text-white">
         <motion.div
-          initial={{ opacity: 0, y: 24 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5 }}
+          className="max-w-4xl space-y-4 lg:block"
+          initial={{ opacity: 0, x: -24 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ duration: 0.6 }}
         >
-          <h1 className="text-3xl font-bold text-foreground md:text-5xl">
+          <h1 className="font-[Roboto] text-2xl font-bold md:text-4xl lg:text-6xl">
             Contact us
           </h1>
-          <p className="mt-4 text-lg text-muted-foreground">
-            Get in touch with Jamia Arabia Islamia. We would love to hear from
-            you.
+          <p className="text-base md:text-lg">
+            Get in touch with Jamia Arabia Islamia. We would love to hear from you.
           </p>
         </motion.div>
       </section>
