@@ -31,6 +31,8 @@ import {
   type ClassDto,
   type SectionDto,
 } from '@/services/admission/admission.service';
+import { useRouter } from 'next/navigation';
+import { ArrowLeftIcon } from 'lucide-react';
 
 type Step = 'identify' | 'confirm' | 'choose' | 'success';
 
@@ -51,7 +53,7 @@ export default function RenewAdmissionPage() {
   const [submitLoading, setSubmitLoading] = useState(false);
   const [submitError, setSubmitError] = useState<string | null>(null);
   const [renewalId, setRenewalId] = useState<string | null>(null);
-
+  const router = useRouter();
   useEffect(() => {
     Promise.all([fetchAcademicSessions(), fetchClasses()])
       .then(([s, c]) => {
@@ -220,10 +222,19 @@ export default function RenewAdmissionPage() {
                     </div>
                     <Button
                       type="submit"
-                      className="w-full h-11 bg-amber-500 hover:bg-amber-400 text-white font-medium"
+                      className="w-full h-11"
+                      variant="default"
                       disabled={lookupLoading}
                     >
                       {lookupLoading ? 'Finding...' : 'Find student'}
+                    </Button>
+                    <Button
+                      type="button"
+                      className="w-full h-11"
+                      variant="outline"
+                      onClick={() => router.back()}
+                    >
+                      Return to home
                     </Button>
                   </form>
                   {lookupError && (
@@ -233,16 +244,17 @@ export default function RenewAdmissionPage() {
                   )}
                   {student && (
                     <div className="mt-6 p-4 rounded-lg bg-white/5 border border-white/10 space-y-3">
-                      <p className="font-semibold text-white">Student Name: {student.name}</p>
+                      <p className="text-slate-400 text-sm">Student Name: <span className="font-semibold text-white ml-1">{student.name}</span></p>
                       {student.guardianName && (
-                        <p className="text-slate-400 text-sm">Guardian Name: {student.guardianName}</p>
+                        <p className="text-slate-400 text-sm">Guardian Name: <span className="font-semibold text-white ml-1">{student.guardianName}</span></p>
                       )}
                       {student.lastClassName && (
-                        <p className="text-slate-400 text-sm">Previous Class: {student.lastClassName}</p>
+                        <p className="text-slate-400 text-sm">Previous Class: <span className="font-semibold text-white ml-1">{student.lastClassName}</span></p>
                       )}
                       <Button
                         type="button"
-                        className="w-full mt-4 h-11 bg-amber-500 hover:bg-amber-400 text-white font-medium"
+                        variant="default"
+                        className="w-full mt-4 h-11"
                         onClick={handleConfirmAndContinue}
                       >
                         Confirm and continue
@@ -267,9 +279,9 @@ export default function RenewAdmissionPage() {
                   {/* Student summary */}
                   <div className="rounded-lg border border-white/10 bg-white/5 p-4 mb-6">
                     <p className="text-slate-400 text-xs uppercase tracking-wider font-medium mb-1">Renewing enrollment for</p>
-                    <p className="font-semibold text-white text-lg">{student.name}</p>
+                    <p className="text-slate-300 text-sm">Student Name: <span className="font-semibold text-white ml-1 text-lg">{student.name}</span></p>
                     {student.guardianName && (
-                      <p className="text-slate-300 text-sm mt-0.5">Guardian: {student.guardianName}</p>
+                      <p className="text-slate-300 text-sm">Guardian Name: <span className="font-semibold text-white ml-1 text-lg">{student.guardianName}</span></p>
                     )}
                   </div>
 
@@ -347,10 +359,11 @@ export default function RenewAdmissionPage() {
 
                     <Button
                       type="submit"
-                      className="w-full h-11 bg-amber-500 hover:bg-amber-400 text-white font-medium"
+                      className="w-full h-11"
+                      variant="default"
                       disabled={submitLoading || !defaultSessionId || !classId || !sectionId}
                     >
-                      {submitLoading ? 'Submitting...' : 'Submit renewal'}
+                      {submitLoading ? 'Submitting...' : 'Submit Renewal Application'}
                     </Button>
                   </form>
 
@@ -362,12 +375,11 @@ export default function RenewAdmissionPage() {
 
                   <Button
                     type="button"
-                    variant="ghost"
-                    size="sm"
-                    className="w-full mt-4 text-slate-400 hover:text-amber-300"
+                    variant="outline"
+                    className="w-full mt-4 h-11"
                     onClick={() => setStep('identify')}
                   >
-                    ← Change student
+                    <ArrowLeftIcon className="size-4 mr-2" /> Change student
                   </Button>
                 </CardContent>
               </Card>
