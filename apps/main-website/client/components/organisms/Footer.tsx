@@ -7,6 +7,7 @@ import { Facebook, Youtube, GraduationCap, ExternalLink } from 'lucide-react';
 import { Logo } from '@/components/atoms';
 import { APP_LINKS } from '@/constants/navigation';
 import { SOCIAL_LINKS as SOCIAL_URLS } from '@/constants/social';
+import Image from 'next/image';
 
 const FOOTER_NAV_LINKS = [
   { label: 'Faculties', href: '/faculties' },
@@ -37,7 +38,8 @@ export function Footer() {
         >
           {/* Left: Logo + tagline */}
           <div className="flex flex-col items-center text-center lg:max-w-xs lg:items-start lg:text-left">
-            <Logo showUrdu className="text-amber-900" />
+            <Logo className="text-amber-900 w-full max-w-[120px]" />
+            <Image src="/images/JamiaArabiaLogo.png" alt="Jamia Arabia Islamia" width={200} height={200} />
             <p className="mt-3 text-sm leading-relaxed text-amber-800/85">
               Where tradition meets innovation, and faith meets knowledge.
             </p>
