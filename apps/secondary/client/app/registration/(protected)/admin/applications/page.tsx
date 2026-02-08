@@ -193,14 +193,13 @@ export default function AdminApplicationsPage() {
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogCancel disabled={deleting}>Cancel</AlertDialogCancel>
+            <AlertDialogCancel className="flex text-black items-center gap-2" disabled={deleting}>Cancel</AlertDialogCancel>
             <Button
               variant="destructive"
               onClick={handleDeleteConfirm}
               disabled={deleting}
-              className="bg-red-600 hover:bg-red-700"
             >
-              {deleting ? 'Deleting…' : 'Delete'}
+              {deleting ? 'Deleting…' : <><Trash2 className="h-4 w-4 mr-2" /> Delete</>}
             </Button>
           </AlertDialogFooter>
         </AlertDialogContent>
