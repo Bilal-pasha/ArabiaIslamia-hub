@@ -1,20 +1,11 @@
-name: Deploy to Google Cloud VM
+name: Deploy to AWS EC2
 
 on:
   workflow_run:
-    workflows: ["Build Docker Images"]
-    types:
-      - completed
+    workflows: [Build]
+    types: [completed]
   workflow_dispatch:
     inputs:
-      environment:
-        description: 'Deployment environment'
-        required: true
-        default: 'production'
-        type: choice
-        options:
-          - production
-          - staging
       image-tag:
         description: 'Docker image tag to deploy (defaults to latest)'
         required: false
@@ -30,77 +21,79 @@ jobs:
     if: ${{ github.event.workflow_run.conclusion == 'success' || github.event_name == 'workflow_dispatch' }}
 
     steps:
+      # ─────────────────────────────────────────────
+      # Checkout repo and set lowercase image name
+      # ─────────────────────────────────────────────
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Lowercase image name
-        run: |
-          echo "IMAGE_NAME_LOWER=${GITHUB_REPOSITORY,,}" >> $GITHUB_ENV
+      - name: Set lowercase image name
+        run: echo "IMAGE_NAME_LOWER=${GITHUB_REPOSITORY,,}" >> $GITHUB_ENV
 
       # ─────────────────────────────────────────────
-      # Prepare directory on GOOGLE CLOUD instance
+      # Prepare deployment directory on EC2
       # ─────────────────────────────────────────────
-      - name: Prepare deployment directory on GCP
+      - name: Prepare deployment directory
         uses: appleboy/ssh-action@v1.0.3
         with:
-          host: ${{ secrets.GCP_HOST }}
-          username: ${{ secrets.GCP_USERNAME }}
-          key: ${{ secrets.GCP_SSH_KEY }}
+          host: ${{ secrets.EC2_HOST }}
+          username: ${{ secrets.EC2_USERNAME }}
+          key: ${{ secrets.EC2_SSH_KEY }}
           port: 22
           script: |
-            sudo mkdir -p /home/${{ secrets.GCP_USERNAME }}/${{ env.DEPLOY_DIR }}
-            sudo chown -R ${{ secrets.GCP_USERNAME }}:${{ secrets.GCP_USERNAME }} /home/${{ secrets.GCP_USERNAME }}/${{ env.DEPLOY_DIR }}
-            chmod -R 755 /home/${{ secrets.GCP_USERNAME }}/${{ env.DEPLOY_DIR }}
+            sudo mkdir -p /home/${{ secrets.EC2_USERNAME }}/${{ env.DEPLOY_DIR }}
+            sudo chown -R ${{ secrets.EC2_USERNAME }}:${{ secrets.EC2_USERNAME }} /home/${{ secrets.EC2_USERNAME }}/${{ env.DEPLOY_DIR }}
+            sudo chmod -R 755 /home/${{ secrets.EC2_USERNAME }}/${{ env.DEPLOY_DIR }}
 
       # ─────────────────────────────────────────────
-      # Copy compose + env files
+      # Copy Docker Compose and config files
       # ─────────────────────────────────────────────
       - name: Copy Docker Compose and config
         uses: appleboy/scp-action@v0.1.7
         with:
-          host: ${{ secrets.GCP_HOST }}
-          username: ${{ secrets.GCP_USERNAME }}
-          key: ${{ secrets.GCP_SSH_KEY }}
+          host: ${{ secrets.EC2_HOST }}
+          username: ${{ secrets.EC2_USERNAME }}
+          key: ${{ secrets.EC2_SSH_KEY }}
           source: "infra/prod/docker-compose.prod.yml,infra/prod/init-databases.sql,infra/prod/.env,infra/prod/config/Caddyfile"
-          target: "/home/${{ secrets.GCP_USERNAME }}/${{ env.DEPLOY_DIR }}"
+          target: "/home/${{ secrets.EC2_USERNAME }}/${{ env.DEPLOY_DIR }}"
           strip_components: 2
 
       # ─────────────────────────────────────────────
-      # Deploy on Google Cloud VM
+      # Deploy application on EC2
       # ─────────────────────────────────────────────
-      - name: Deploy application on GCP
+      - name: Deploy application
         uses: appleboy/ssh-action@v1.0.3
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          host: ${{ secrets.GCP_HOST }}
-          username: ${{ secrets.GCP_USERNAME }}
-          key: ${{ secrets.GCP_SSH_KEY }}
+          host: ${{ secrets.EC2_HOST }}
+          username: ${{ secrets.EC2_USERNAME }}
+          key: ${{ secrets.EC2_SSH_KEY }}
           port: 22
           envs: REGISTRY,IMAGE_NAME_LOWER,GITHUB_TOKEN
           script: |
             set -e
-            cd /home/${{ secrets.GCP_USERNAME }}/${{ env.DEPLOY_DIR }}
+            cd /home/${{ secrets.EC2_USERNAME }}/${{ env.DEPLOY_DIR }}
 
-            echo "$GITHUB_TOKEN" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
+            # Login to GitHub Container Registry
+            echo "$GITHUB_TOKEN" | sudo docker login ghcr.io -u ${{ github.actor }} --password-stdin
 
+            # Determine tag (default: latest)
             IMAGE_TAG="${{ github.event.inputs.image-tag || 'latest' }}"
 
             echo "📥 Pulling Docker images (tag: $IMAGE_TAG)"
-            docker pull "$REGISTRY/$IMAGE_NAME_LOWER-main-website:$IMAGE_TAG"
-            docker pull "$REGISTRY/$IMAGE_NAME_LOWER-secondary-api:$IMAGE_TAG"
-            docker pull "$REGISTRY/$IMAGE_NAME_LOWER-secondary-app:$IMAGE_TAG"
-            docker pull "$REGISTRY/$IMAGE_NAME_LOWER-scouts-portal-api:$IMAGE_TAG"
-            docker pull "$REGISTRY/$IMAGE_NAME_LOWER-scouts-portal-app:$IMAGE_TAG"
+            sudo docker pull "$REGISTRY/$IMAGE_NAME_LOWER-secondary-app:$IMAGE_TAG"
+            sudo docker pull "$REGISTRY/$IMAGE_NAME_LOWER-scouts-portal-api:$IMAGE_TAG"
+            sudo docker pull "$REGISTRY/$IMAGE_NAME_LOWER-scouts-portal-app:$IMAGE_TAG"
+            
+            echo "🛑 Stopping all containers"
+            sudo docker compose -f docker-compose.prod.yml down
 
-            echo "🛑 Stopping containers"
-            docker compose -f docker-compose.prod.yml down
+            echo "♻️ Starting updated containers"
+            sudo docker compose -f docker-compose.prod.yml up -d --remove-orphans
 
-            echo "♻️ Starting new version"
-            docker compose -f docker-compose.prod.yml up -d --remove-orphans
+            echo "🧹 Cleaning up unused images"
+            sudo docker image prune -f
+            sudo docker logout ghcr.io
 
-            echo "🧹 Cleanup"
-            docker image prune -f
-            docker logout ghcr.io
-
-            echo "✅ Deployment to GCP completed"
+            echo "✅ Deployment completed successfully"
