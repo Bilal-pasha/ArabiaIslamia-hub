@@ -8,7 +8,9 @@ import { AdmissionSuccess } from '@/components/admission-success';
 import { SubmissionOverlay } from '@/components/registration/submission-overlay';
 import { useRegistrationForm } from '@/hooks';
 import { StepStatus } from '../application-step-timeline';
-import React from 'react';
+import React, { useEffect } from 'react';
+import { useRouter } from 'next/navigation';
+import { publicRoutes } from '@/constants/route';
 
 const { Stepper } = registrationStepper;
 
@@ -62,6 +64,7 @@ function StepperSeparator({ status, isLast }: { status: StepStatus | undefined; 
 
 /** Use inside Stepper.Root so useRegistrationForm gets stepper from context. Renders success or full form layout. */
 export function RegistrationPageContent() {
+    const router = useRouter();
     const {
         formRef,
         stepper,
@@ -79,11 +82,12 @@ export function RegistrationPageContent() {
         requestSubmit,
     } = useRegistrationForm();
 
-    if (submitted) {
-        return <AdmissionSuccess applicationNumber={applicationNumber} />;
-    }
-
     const currentData = stepper.state.current.data as StepData;
+    useEffect(() => {
+        if (submitted) {
+            router.push(`${publicRoutes.submitted}/${applicationNumber}`);
+        }
+    }, [submitted, applicationNumber]);
 
     return (
         <>

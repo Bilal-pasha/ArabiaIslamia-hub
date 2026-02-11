@@ -3,6 +3,7 @@ export const publicRoutes = {
   form: '/registration',
   status: '/registration/status',
   renew: '/registration/renew',
+  submitted: '/registration/submitted',
 } as const;
 
 export const privateRoutes = {
