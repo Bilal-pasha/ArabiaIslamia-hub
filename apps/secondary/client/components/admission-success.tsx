@@ -33,12 +33,15 @@ export function AdmissionSuccess({ applicationNumber }: AdmissionSuccessProps) {
           <p className="text-slate-300 mb-6 text-sm sm:text-base">
             Thank you for applying. You will receive a confirmation shortly. Keep your application number safe.
           </p>
-          <p className="text-sm font-mono font-medium text-amber-200 bg-amber-500/20 py-2 px-4 rounded-lg inline-block border border-amber-400/30 mb-6">
-            #{applicationNumber}
-          </p>
-          <Button asChild className="w-full sm:w-auto bg-amber-500 hover:bg-amber-400 text-amber-950 font-medium">
-            <Link href={publicRoutes.home}>Back to home</Link>
-          </Button>
+          <div className="flex flex-col gap-2">
+            <p className="text-sm font-mono font-medium text-amber-200 bg-amber-500/20 py-2 px-4 rounded-lg inline-block border border-amber-400/30 mb-6">
+              #{applicationNumber}
+            </p>
+            <Button asChild className="w-full sm:w-auto bg-amber-500 hover:bg-amber-400 text-amber-950 font-medium">
+              <Link href={publicRoutes.home}>Back to home</Link>
+            </Button>
+
+          </div>
         </CardContent>
       </Card>
     </motion.div>

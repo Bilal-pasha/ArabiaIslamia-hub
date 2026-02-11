@@ -1,3 +1,5 @@
+'use client'
+
 import { AdmissionSuccess } from '@/components'
 import { useParams } from 'next/navigation';
 
