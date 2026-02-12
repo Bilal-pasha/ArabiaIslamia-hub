@@ -82,7 +82,10 @@ jobs:
             IMAGE_TAG="${{ github.event.inputs.image-tag || 'latest' }}"
 
             echo "📥 Pulling Docker images (tag: $IMAGE_TAG)"
+            sudo docker pull "$REGISTRY/$IMAGE_NAME_LOWER-main-website-api:$IMAGE_TAG"
+            sudo docker pull "$REGISTRY/$IMAGE_NAME_LOWER-main-website:$IMAGE_TAG"
             sudo docker pull "$REGISTRY/$IMAGE_NAME_LOWER-secondary-app:$IMAGE_TAG"
+            sudo docker pull "$REGISTRY/$IMAGE_NAME_LOWER-secondary-api:$IMAGE_TAG"
             sudo docker pull "$REGISTRY/$IMAGE_NAME_LOWER-scouts-portal-api:$IMAGE_TAG"
             sudo docker pull "$REGISTRY/$IMAGE_NAME_LOWER-scouts-portal-app:$IMAGE_TAG"
             
