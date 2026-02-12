@@ -1,6 +1,13 @@
 import { join } from 'path';
 import { DataSource, DataSourceOptions } from 'typeorm';
 
+// Load .env when available (e.g. local dev); in Docker/production env vars are set by the runtime
+try {
+  require('dotenv/config');
+} catch {
+  // dotenv not installed or not needed
+}
+
 export type ProjectId = 'huffaz' | 'secondary' | 'scouts-portal' | 'main-website';
 
 const PROJECT_DB_MAP: Record<ProjectId, string> = {
