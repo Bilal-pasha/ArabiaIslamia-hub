@@ -15,6 +15,7 @@ import { UserResponseDto } from './dto/auth-response.dto';
 import { UpdateProfileDto } from './dto/update-profile.dto';
 import { UpdatePasswordDto } from './dto/update-password.dto';
 import { GoogleUserDto } from './dto/google-auth.dto';
+import { EmailService } from '@arabiaaislamia/email';
 
 @Injectable()
 export class AuthService {
@@ -23,7 +24,8 @@ export class AuthService {
     private readonly userRepository: Repository<User>,
     private readonly jwtService: JwtService,
     private readonly configService: ConfigService,
-  ) {}
+    private readonly emailService: EmailService,
+  ) { }
 
   async register(registerDto: RegisterDto) {
     const existing = await this.userRepository.findOne({
@@ -54,6 +56,17 @@ export class AuthService {
       role: 'admin',
     });
     const saved = await this.userRepository.save(user);
+    try {
+      await this.emailService.sendMail({
+        to: saved.email,
+        subject: 'Welcome Admin!',
+        text: `Hello ${saved.name},\n\nYour admin account has been created.\n\nRegards,\nJamia Arabia Team`,
+        html: `<p>Hello ${saved.name},</p><p>Your admin account has been created.</p><p>Regards,<br>Jamia Arabia Team</p>`,
+      });
+    } catch (err) {
+      console.error('Error sending admin email', err);
+      // optionally: continue without failing creation
+    }
     return this.toResponse(saved);
   }
 

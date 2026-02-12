@@ -12,11 +12,11 @@ export interface EmailConfig {
 
 // Example default config for AWS SES SMTP
 export const defaultEmailConfig: EmailConfig = {
-    host: process.env.SMTP_HOST || "email-smtp.us-east-1.amazonaws.com",
-    port: Number(process.env.SMTP_PORT) || 587,
+    host: process.env.SMTP_HOST ?? '',
+    port: Number(process.env.SMTP_PORT) ?? 587,
     secure: false,
-    user: process.env.SMTP_USER || "",
-    pass: process.env.SMTP_PASS || "",
-    fromName: "Jamia Arabia",
-    fromEmail: process.env.SMTP_FROM || "no-reply@jamiaarabiaislamia.com",
+    user: process.env.SMTP_USER ?? "",
+    pass: process.env.SMTP_PASS ?? "",
+    fromName: process.env.SMTP_FROM_NAME ?? "",
+    fromEmail: process.env.SMTP_FROM ?? "",
 };

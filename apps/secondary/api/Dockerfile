@@ -6,6 +6,7 @@ COPY pnpm-workspace.yaml package.json pnpm-lock.yaml* ./
 COPY .npmrc* ./
 COPY packages/database ./packages/database
 COPY packages/storage ./packages/storage
+COPY packages/email ./packages/email
 COPY apps/secondary/api/package.json ./apps/secondary/api/
 
 RUN pnpm install --frozen-lockfile || pnpm install
@@ -14,6 +15,7 @@ COPY apps/secondary/api ./apps/secondary/api
 
 RUN pnpm --filter @arabiaaislamia/database run build
 RUN pnpm --filter @arabiaaislamia/storage run build
+RUN pnpm --filter @arabiaaislamia/email run build
 RUN pnpm --filter secondary-api build
 
 # Deploy creates an isolated dir with node_modules (workspace deps included); dist is in .gitignore so copy it in
