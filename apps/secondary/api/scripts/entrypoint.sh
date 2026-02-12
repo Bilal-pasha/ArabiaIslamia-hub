@@ -2,7 +2,8 @@
 set -e
 
 echo "Running secondary database migrations..."
-pnpm typeorm migration:run -d ./node_modules/@arabiaaislamia/database/dist/data-source.secondary.js
+# Run migrations using the built JS DataSource
+node dist/data-source.secondary.js migration:run
 
 echo "Starting secondary-api..."
 exec node dist/main.js
