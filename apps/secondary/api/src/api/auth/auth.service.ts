@@ -15,7 +15,7 @@ import { UserResponseDto } from './dto/auth-response.dto';
 import { UpdateProfileDto } from './dto/update-profile.dto';
 import { UpdatePasswordDto } from './dto/update-password.dto';
 import { GoogleUserDto } from './dto/google-auth.dto';
-import { EmailService } from '@arabiaaislamia/email';
+import { EmailService, renderWelcomeAdminEmail } from '@arabiaaislamia/email';
 
 @Injectable()
 export class AuthService {
@@ -57,11 +57,17 @@ export class AuthService {
     });
     const saved = await this.userRepository.save(user);
     try {
+      const logoUrl = this.configService.get<string>('EMAIL_LOGO_URL');
+      const html = renderWelcomeAdminEmail({
+        name: saved.name,
+        logoUrl: logoUrl || undefined,
+        brandName: 'Jamia Arabia',
+      });
       await this.emailService.sendMail({
         to: saved.email,
-        subject: 'Welcome Admin!',
-        text: `Hello ${saved.name},\n\nYour admin account has been created.\n\nRegards,\nJamia Arabia Team`,
-        html: `<p>Hello ${saved.name},</p><p>Your admin account has been created.</p><p>Regards,<br>Jamia Arabia Team</p>`,
+        subject: 'Welcome Admin – Jamia Arabia',
+        text: `Hello ${saved.name},\n\nYour admin account has been created. You can now sign in to the admin dashboard.\n\nRegards,\nJamia Arabia Team`,
+        html,
       });
     } catch (err) {
       console.error('Error sending admin email', err);

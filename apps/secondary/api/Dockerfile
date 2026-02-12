@@ -34,6 +34,8 @@ RUN pnpm --filter secondary-api run build
 # Deploy folder with built JS + dependencies
 RUN mkdir -p deploy
 RUN cp -r apps/secondary/api/dist deploy/dist
+# Copy database package dist so migration entrypoint can run data-source.secondary.js (entities + migrations paths use __dirname)
+RUN cp -r packages/database/dist/* deploy/dist/
 RUN cp -r node_modules deploy/node_modules
 RUN cp apps/secondary/api/package.json deploy/package.json
 COPY apps/secondary/api/scripts/entrypoint.sh deploy/entrypoint.sh
