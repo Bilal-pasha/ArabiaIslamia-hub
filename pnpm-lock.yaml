@@ -7,7 +7,17 @@ settings:
 importers:
 
   .:
+    dependencies:
+      nodemailer:
+        specifier: ^8.0.1
+        version: 8.0.1
     devDependencies:
+      '@types/node':
+        specifier: ^25.2.3
+        version: 25.2.3
+      '@types/nodemailer':
+        specifier: ^7.0.9
+        version: 7.0.9
       turbo:
         specifier: ^2.3.0
         version: 2.8.1
@@ -137,14 +147,93 @@ importers:
         specifier: ^5
         version: 5.9.3
 
-  apps/main-website:
+  apps/main-website/api:
+    dependencies:
+      '@arabiaaislamia/database':
+        specifier: workspace:*
+        version: link:../../../packages/database
+      '@arabiaaislamia/storage':
+        specifier: workspace:*
+        version: link:../../../packages/storage
+      '@nestjs/common':
+        specifier: ^11.0.1
+        version: 11.1.12(class-transformer@0.5.1)(class-validator@0.14.3)(reflect-metadata@0.2.2)(rxjs@7.8.2)
+      '@nestjs/config':
+        specifier: ^4.0.2
+        version: 4.0.2(@nestjs/common@11.1.12(class-transformer@0.5.1)(class-validator@0.14.3)(reflect-metadata@0.2.2)(rxjs@7.8.2))(rxjs@7.8.2)
+      '@nestjs/core':
+        specifier: ^11.0.1
+        version: 11.1.12(@nestjs/common@11.1.12(class-transformer@0.5.1)(class-validator@0.14.3)(reflect-metadata@0.2.2)(rxjs@7.8.2))(@nestjs/platform-express@11.1.12)(reflect-metadata@0.2.2)(rxjs@7.8.2)
+      '@nestjs/jwt':
+        specifier: ^11.0.2
+        version: 11.0.2(@nestjs/common@11.1.12(class-transformer@0.5.1)(class-validator@0.14.3)(reflect-metadata@0.2.2)(rxjs@7.8.2))
+      '@nestjs/passport':
+        specifier: ^11.0.5
+        version: 11.0.5(@nestjs/common@11.1.12(class-transformer@0.5.1)(class-validator@0.14.3)(reflect-metadata@0.2.2)(rxjs@7.8.2))(passport@0.7.0)
+      '@nestjs/platform-express':
+        specifier: ^11.0.1
+        version: 11.1.12(@nestjs/common@11.1.12(class-transformer@0.5.1)(class-validator@0.14.3)(reflect-metadata@0.2.2)(rxjs@7.8.2))(@nestjs/core@11.1.12)
+      '@nestjs/typeorm':
+        specifier: ^11.0.0
+        version: 11.0.0(@nestjs/common@11.1.12(class-transformer@0.5.1)(class-validator@0.14.3)(reflect-metadata@0.2.2)(rxjs@7.8.2))(@nestjs/core@11.1.12)(reflect-metadata@0.2.2)(rxjs@7.8.2)(typeorm@0.3.28(pg@8.18.0)(ts-node@10.9.2(@types/node@22.19.7)(typescript@5.9.3)))
+      bcrypt:
+        specifier: ^6.0.0
+        version: 6.0.0
+      class-transformer:
+        specifier: ^0.5.1
+        version: 0.5.1
+      class-validator:
+        specifier: ^0.14.3
+        version: 0.14.3
+      cookie-parser:
+        specifier: ^1.4.7
+        version: 1.4.7
+      passport:
+        specifier: ^0.7.0
+        version: 0.7.0
+      passport-jwt:
+        specifier: ^4.0.1
+        version: 4.0.1
+      pg:
+        specifier: ^8.16.3
+        version: 8.18.0
+      reflect-metadata:
+        specifier: ^0.2.2
+        version: 0.2.2
+      rxjs:
+        specifier: ^7.8.1
+        version: 7.8.2
+      typeorm:
+        specifier: ^0.3.28
+        version: 0.3.28(pg@8.18.0)(ts-node@10.9.2(@types/node@22.19.7)(typescript@5.9.3))
+    devDependencies:
+      '@nestjs/cli':
+        specifier: ^11.0.0
+        version: 11.0.16(@types/node@22.19.7)
+      '@nestjs/schematics':
+        specifier: ^11.0.0
+        version: 11.0.9(chokidar@4.0.3)(typescript@5.9.3)
+      '@types/cookie-parser':
+        specifier: ^1.4.10
+        version: 1.4.10(@types/express@5.0.6)
+      '@types/express':
+        specifier: ^5.0.0
+        version: 5.0.6
+      '@types/node':
+        specifier: ^22.10.7
+        version: 22.19.7
+      typescript:
+        specifier: ^5.7.3
+        version: 5.9.3
+
+  apps/main-website/client:
     dependencies:
       '@arabiaaislamia/animations':
         specifier: workspace:*
-        version: link:../../packages/animations
+        version: link:../../../packages/animations
       '@arabiaaislamia/ui':
         specifier: workspace:*
-        version: link:../../packages/ui
+        version: link:../../../packages/ui
       '@hookform/resolvers':
         specifier: ^3.9.0
         version: 3.10.0(react-hook-form@7.71.1(react@19.2.3))
@@ -303,6 +392,9 @@ importers:
       '@heroicons/react':
         specifier: ^2.1.5
         version: 2.2.0(react@19.2.3)
+      '@tanstack/react-query':
+        specifier: ^5.62.0
+        version: 5.90.21(react@19.2.3)
       axios:
         specifier: ^1.7.0
         version: 1.13.4
@@ -364,6 +456,9 @@ importers:
       '@arabiaaislamia/database':
         specifier: workspace:*
         version: link:../../../packages/database
+      '@arabiaaislamia/email':
+        specifier: workspace:*
+        version: link:../../../packages/email
       '@arabiaaislamia/storage':
         specifier: workspace:*
         version: link:../../../packages/storage
@@ -464,6 +559,12 @@ importers:
       '@arabiaaislamia/ui':
         specifier: workspace:*
         version: link:../../../packages/ui
+      '@stepperize/react':
+        specifier: ^6.0.0
+        version: 6.0.0(react@19.2.3)(typescript@5.9.3)
+      '@tanstack/react-query':
+        specifier: ^5.62.0
+        version: 5.90.21(react@19.2.3)
       axios:
         specifier: ^1.7.0
         version: 1.13.4
@@ -538,19 +639,35 @@ importers:
         version: 0.2.2
       typeorm:
         specifier: ^0.3.28
-        version: 0.3.28(pg@8.18.0)(ts-node@10.9.2(@types/node@22.19.7)(typescript@5.9.3))
+        version: 0.3.28(pg@8.18.0)(ts-node@10.9.2(@types/node@25.2.3)(typescript@5.9.3))
     devDependencies:
       '@types/bcrypt':
         specifier: ^5.0.2
         version: 5.0.2
       ts-node:
         specifier: ^10.9.2
-        version: 10.9.2(@types/node@22.19.7)(typescript@5.9.3)
+        version: 10.9.2(@types/node@25.2.3)(typescript@5.9.3)
       tsconfig-paths:
         specifier: ^4.2.0
         version: 4.2.0
       typescript:
         specifier: ^5.7.3
+        version: 5.9.3
+
+  packages/email:
+    dependencies:
+      nodemailer:
+        specifier: ^6.9.4
+        version: 6.10.1
+    devDependencies:
+      '@types/node':
+        specifier: ^20.4.1
+        version: 20.19.30
+      '@types/nodemailer':
+        specifier: ^6.4.8
+        version: 6.4.22
+      typescript:
+        specifier: ^5.2.2
         version: 5.9.3
 
   packages/storage:
@@ -2033,6 +2150,16 @@ packages:
   '@sqltools/formatter@1.2.5':
     resolution: {integrity: sha512-Uy0+khmZqUrUGm5dmMqVlnvufZRSK0FbYzVgp0UMstm+F5+W2/jnEEQyc9vo1ZR/E5ZI/B1WjjoTqBqwJL6Krw==}
 
+  '@stepperize/core@2.0.0':
+    resolution: {integrity: sha512-6m7XEhwZlRL8kATOYFbdXkQpPCO22g3ssZ7NohX48myRkWuxiH5380ylavRklRGCjJv4tXCsAQmUqUkWgk0d5w==}
+    peerDependencies:
+      typescript: '>=5.0.2'
+
+  '@stepperize/react@6.0.0':
+    resolution: {integrity: sha512-Z8CjOxO00YCXbz7bTnSVj1aM2iFJ1BJCzLdgZGAOTvSY5ky8rs46CI2EGC00gca8s11lO5NpSvnJV0Ic6+BFvQ==}
+    peerDependencies:
+      react: ^17.0.0 || ^18.0.0 || ^19.0.0
+
   '@swc/helpers@0.5.15':
     resolution: {integrity: sha512-JQ5TuMi45Owi4/BIMAJBoSQoOJu12oOk/gADqlcUL9JEdHB8vyjUSsxqeNXnmXHjYKMi2WcYtezGEEhqUI/E2g==}
 
@@ -2124,6 +2251,14 @@ packages:
   '@tailwindcss/postcss@4.1.18':
     resolution: {integrity: sha512-Ce0GFnzAOuPyfV5SxjXGn0CubwGcuDB0zcdaPuCSzAa/2vII24JTkH+I6jcbXLb1ctjZMZZI6OjDaLPJQL1S0g==}
 
+  '@tanstack/query-core@5.90.20':
+    resolution: {integrity: sha512-OMD2HLpNouXEfZJWcKeVKUgQ5n+n3A2JFmBaScpNDUqSrQSjiveC7dKMe53uJUg1nDG16ttFPz2xfilz6i2uVg==}
+
+  '@tanstack/react-query@5.90.21':
+    resolution: {integrity: sha512-0Lu6y5t+tvlTJMTO7oh5NSpJfpg/5D41LlThfepTixPYkJ0sE2Jj0m0f6yYqujBwIXlId87e234+MxG3D3g7kg==}
+    peerDependencies:
+      react: ^18 || ^19
+
   '@tokenizer/inflate@0.4.1':
     resolution: {integrity: sha512-2mAv+8pkG6GIZiF1kNg1jAjh27IDxEPKwdGul3snfztFerfPGI1LjDezZp3i7BElXompqEtPmoPx6c2wgtWsOA==}
     engines: {node: '>=18'}
@@ -2189,6 +2324,15 @@ packages:
 
   '@types/node@22.19.7':
     resolution: {integrity: sha512-MciR4AKGHWl7xwxkBa6xUGxQJ4VBOmPTF7sL+iGzuahOFaO0jHCsuEfS80pan1ef4gWId1oWOweIhrDEYLuaOw==}
+
+  '@types/node@25.2.3':
+    resolution: {integrity: sha512-m0jEgYlYz+mDJZ2+F4v8D1AyQb+QzsNqRuI7xg1VQX/KlKS0qT9r1Mo16yo5F/MtifXFgaofIFsdFMox2SxIbQ==}
+
+  '@types/nodemailer@6.4.22':
+    resolution: {integrity: sha512-HV16KRsW7UyZBITE07B62k8PRAKFqRSFXn1T7vslurVjN761tMDBhk5Lbt17ehyTzK6XcyJnAgUpevrvkcVOzw==}
+
+  '@types/nodemailer@7.0.9':
+    resolution: {integrity: sha512-vI8oF1M+8JvQhsId0Pc38BdUP2evenIIys7c7p+9OZXSPOH5c1dyINP1jT8xQ2xPuBUXmIC87s+91IZMDjH8Ow==}
 
   '@types/pako@2.0.4':
     resolution: {integrity: sha512-VWDCbrLeVXJM9fihYodcLiIv0ku+AlOa/TQ1SvYOaBuyrSKgEcro95LJyIsJ4vSo6BXIxOKxiJAat04CmST9Fw==}
@@ -3503,6 +3647,14 @@ packages:
   node-releases@2.0.27:
     resolution: {integrity: sha512-nmh3lCkYZ3grZvqcCH+fjmQ7X+H0OeZgP40OierEaAptX4XofMh5kwNbWh7lBduUzCcV/8kZ+NDLCwm2iorIlA==}
 
+  nodemailer@6.10.1:
+    resolution: {integrity: sha512-Z+iLaBGVaSjbIzQ4pX6XV41HrooLsQ10ZWPUehGmuantvzWoDVBnmsdUcOIDM1t+yPor5pDhVlDESgOMEGxhHA==}
+    engines: {node: '>=6.0.0'}
+
+  nodemailer@8.0.1:
+    resolution: {integrity: sha512-5kcldIXmaEjZcHR6F28IKGSgpmZHaF1IXLWFTG+Xh3S+Cce4MiakLtWY+PlBU69fLbRa8HlaGIrC/QolUpHkhg==}
+    engines: {node: '>=6.0.0'}
+
   normalize-path@3.0.0:
     resolution: {integrity: sha512-6eZs5Ls3WtCisHWp9S2GUy8dqkpGi4BVSz3GaqiE6ezub0512ESztXUwUB6C6IKbQkY2Pnb/mD4WYojCRwcwLA==}
     engines: {node: '>=0.10.0'}
@@ -4367,6 +4519,9 @@ packages:
 
   undici-types@6.21.0:
     resolution: {integrity: sha512-iwDZqg0QAGrg9Rav5H4n0M64c3mkR59cJ6wQp+7C4nI0gsmExaedaYLNO44eT4AtBBwjbTiGPMlt2Md0T9H9JQ==}
+
+  undici-types@7.16.0:
+    resolution: {integrity: sha512-Zz+aZWSj8LE6zoxD+xrjh4VfkIG8Ya6LvYkZqtUQGJPZjYl53ypCaUwWqo7eI0x66KBGeRo+mlBEkMSeSZ38Nw==}
 
   universalify@2.0.1:
     resolution: {integrity: sha512-gptHNQghINnc/vTGIk0SOFGFNXw7JVrlRUtConJRlvaw6DuX0wO5Jeko9sWrMBhh+PsYAZ7oXAiOnf/UKogyiw==}
@@ -6341,6 +6496,17 @@ snapshots:
 
   '@sqltools/formatter@1.2.5': {}
 
+  '@stepperize/core@2.0.0(typescript@5.9.3)':
+    dependencies:
+      typescript: 5.9.3
+
+  '@stepperize/react@6.0.0(react@19.2.3)(typescript@5.9.3)':
+    dependencies:
+      '@stepperize/core': 2.0.0(typescript@5.9.3)
+      react: 19.2.3
+    transitivePeerDependencies:
+      - typescript
+
   '@swc/helpers@0.5.15':
     dependencies:
       tslib: 2.8.1
@@ -6414,6 +6580,13 @@ snapshots:
       postcss: 8.5.6
       tailwindcss: 4.1.18
 
+  '@tanstack/query-core@5.90.20': {}
+
+  '@tanstack/react-query@5.90.21(react@19.2.3)':
+    dependencies:
+      '@tanstack/query-core': 5.90.20
+      react: 19.2.3
+
   '@tokenizer/inflate@0.4.1':
     dependencies:
       debug: 4.4.3
@@ -6433,16 +6606,16 @@ snapshots:
 
   '@types/bcrypt@5.0.2':
     dependencies:
-      '@types/node': 22.19.7
+      '@types/node': 20.19.30
 
   '@types/body-parser@1.19.6':
     dependencies:
       '@types/connect': 3.4.38
-      '@types/node': 22.19.7
+      '@types/node': 20.19.30
 
   '@types/connect@3.4.38':
     dependencies:
-      '@types/node': 22.19.7
+      '@types/node': 20.19.30
 
   '@types/cookie-parser@1.4.10(@types/express@5.0.6)':
     dependencies:
@@ -6462,7 +6635,7 @@ snapshots:
 
   '@types/express-serve-static-core@5.1.1':
     dependencies:
-      '@types/node': 22.19.7
+      '@types/node': 20.19.30
       '@types/qs': 6.14.0
       '@types/range-parser': 1.2.7
       '@types/send': 1.2.1
@@ -6480,7 +6653,7 @@ snapshots:
   '@types/jsonwebtoken@9.0.10':
     dependencies:
       '@types/ms': 2.1.0
-      '@types/node': 22.19.7
+      '@types/node': 20.19.30
 
   '@types/ms@2.1.0': {}
 
@@ -6491,6 +6664,18 @@ snapshots:
   '@types/node@22.19.7':
     dependencies:
       undici-types: 6.21.0
+
+  '@types/node@25.2.3':
+    dependencies:
+      undici-types: 7.16.0
+
+  '@types/nodemailer@6.4.22':
+    dependencies:
+      '@types/node': 20.19.30
+
+  '@types/nodemailer@7.0.9':
+    dependencies:
+      '@types/node': 20.19.30
 
   '@types/pako@2.0.4': {}
 
@@ -6511,12 +6696,12 @@ snapshots:
 
   '@types/send@1.2.1':
     dependencies:
-      '@types/node': 22.19.7
+      '@types/node': 20.19.30
 
   '@types/serve-static@2.2.0':
     dependencies:
       '@types/http-errors': 2.0.5
-      '@types/node': 22.19.7
+      '@types/node': 20.19.30
 
   '@types/trusted-types@2.0.7':
     optional: true
@@ -7462,7 +7647,7 @@ snapshots:
 
   jest-worker@27.5.1:
     dependencies:
-      '@types/node': 22.19.7
+      '@types/node': 20.19.30
       merge-stream: 2.0.0
       supports-color: 8.1.1
 
@@ -7774,6 +7959,10 @@ snapshots:
   node-gyp-build@4.8.4: {}
 
   node-releases@2.0.27: {}
+
+  nodemailer@6.10.1: {}
+
+  nodemailer@8.0.1: {}
 
   normalize-path@3.0.0: {}
 
@@ -8546,6 +8735,25 @@ snapshots:
       typescript: 5.9.3
       v8-compile-cache-lib: 3.0.1
       yn: 3.1.1
+    optional: true
+
+  ts-node@10.9.2(@types/node@25.2.3)(typescript@5.9.3):
+    dependencies:
+      '@cspotcode/source-map-support': 0.8.1
+      '@tsconfig/node10': 1.0.12
+      '@tsconfig/node12': 1.0.11
+      '@tsconfig/node14': 1.0.3
+      '@tsconfig/node16': 1.0.4
+      '@types/node': 25.2.3
+      acorn: 8.15.0
+      acorn-walk: 8.3.4
+      arg: 4.1.3
+      create-require: 1.1.1
+      diff: 4.0.4
+      make-error: 1.3.6
+      typescript: 5.9.3
+      v8-compile-cache-lib: 3.0.1
+      yn: 3.1.1
 
   tsconfig-paths-webpack-plugin@4.2.0:
     dependencies:
@@ -8634,6 +8842,30 @@ snapshots:
       - babel-plugin-macros
       - supports-color
 
+  typeorm@0.3.28(pg@8.18.0)(ts-node@10.9.2(@types/node@25.2.3)(typescript@5.9.3)):
+    dependencies:
+      '@sqltools/formatter': 1.2.5
+      ansis: 4.2.0
+      app-root-path: 3.1.0
+      buffer: 6.0.3
+      dayjs: 1.11.19
+      debug: 4.4.3
+      dedent: 1.7.1
+      dotenv: 16.6.1
+      glob: 10.5.0
+      reflect-metadata: 0.2.2
+      sha.js: 2.4.12
+      sql-highlight: 6.1.0
+      tslib: 2.8.1
+      uuid: 11.1.0
+      yargs: 17.7.2
+    optionalDependencies:
+      pg: 8.18.0
+      ts-node: 10.9.2(@types/node@25.2.3)(typescript@5.9.3)
+    transitivePeerDependencies:
+      - babel-plugin-macros
+      - supports-color
+
   typescript@5.9.3: {}
 
   uid@2.0.2:
@@ -8643,6 +8875,8 @@ snapshots:
   uint8array-extras@1.5.0: {}
 
   undici-types@6.21.0: {}
+
+  undici-types@7.16.0: {}
 
   universalify@2.0.1: {}
 
