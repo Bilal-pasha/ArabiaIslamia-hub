@@ -11,10 +11,15 @@
     "db:migrate:main-website": "pnpm --filter @arabiaaislamia/database run migrate:main-website"
   },
   "devDependencies": {
+    "@types/node": "^25.2.3",
+    "@types/nodemailer": "^7.0.9",
     "turbo": "^2.3.0"
   },
   "packageManager": "pnpm@9.14.2",
   "engines": {
     "node": ">=20"
+  },
+  "dependencies": {
+    "nodemailer": "^8.0.1"
   }
 }
