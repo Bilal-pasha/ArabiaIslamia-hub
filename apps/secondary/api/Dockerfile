@@ -16,7 +16,7 @@ COPY packages/email ./packages/email
 # Copy app package.json first
 COPY apps/secondary/api/package.json ./apps/secondary/api/
 
-# Install dependencies
+# Install dependencies (links workspace packages)
 RUN pnpm install --frozen-lockfile || pnpm install
 
 # Copy full app source
@@ -30,8 +30,11 @@ RUN pnpm --filter @arabiaaislamia/email run build
 # Build NestJS app
 RUN pnpm --filter secondary-api run build
 
-# Deploy step (copy dist & entrypoint)
-RUN pnpm --filter secondary-api run deploy --prod deploy && cp -r apps/secondary/api/dist deploy/dist
+# Deploy step: create folder and copy dist
+RUN mkdir -p deploy/dist
+RUN cp -r apps/secondary/api/dist/* deploy/dist/
+
+# Copy entrypoint
 COPY apps/secondary/api/scripts/entrypoint.sh deploy/entrypoint.sh
 RUN chmod +x deploy/entrypoint.sh
 
