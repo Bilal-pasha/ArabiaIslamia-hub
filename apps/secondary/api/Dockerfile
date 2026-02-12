@@ -38,9 +38,21 @@ RUN cp -r apps/secondary/api/dist/* deploy/dist/
 COPY apps/secondary/api/scripts/entrypoint.sh deploy/entrypoint.sh
 RUN chmod +x deploy/entrypoint.sh
 
-# Final image
+# Runtime: standalone output only (no pnpm, minimal image)
 FROM node:20-alpine
 WORKDIR /app
+
+# Enable pnpm
+RUN corepack enable && corepack prepare pnpm@9.14.2 --activate
+
+# Copy package.json + lock
+COPY pnpm-workspace.yaml package.json pnpm-lock.yaml* ./
+COPY apps/secondary/api/package.json ./apps/secondary/api/
+
+# Install only production deps
+RUN pnpm install --prod --frozen-lockfile
+
+# Copy built app
 COPY --from=builder /app/deploy .
 
 ENV NODE_ENV=production
