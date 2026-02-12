@@ -50,7 +50,9 @@ COPY pnpm-workspace.yaml package.json pnpm-lock.yaml* ./
 COPY apps/secondary/api/package.json ./apps/secondary/api/
 
 # Install only production deps
-RUN pnpm install --prod --frozen-lockfile
+RUN pnpm install --prod --frozen-lockfile \
+    && pnpm add typeorm --filter secondary-api --save-prod
+
 
 # Copy built app
 COPY --from=builder /app/deploy .
