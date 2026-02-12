@@ -31,13 +31,11 @@ RUN pnpm --filter @arabiaaislamia/email run build
 # Build app
 RUN pnpm --filter secondary-api run build
 
-# Deploy folder with built JS + dependencies
-RUN mkdir -p deploy
+# Deploy folder: use pnpm deploy so node_modules has typeorm and all deps (no symlinks)
+RUN pnpm --filter secondary-api deploy --prod deploy
 RUN cp -r apps/secondary/api/dist deploy/dist
 # Copy database package dist so migration entrypoint can run data-source.secondary.js (entities + migrations paths use __dirname)
 RUN cp -r packages/database/dist/* deploy/dist/
-RUN cp -r node_modules deploy/node_modules
-RUN cp apps/secondary/api/package.json deploy/package.json
 COPY apps/secondary/api/scripts/entrypoint.sh deploy/entrypoint.sh
 RUN chmod +x deploy/entrypoint.sh
 
