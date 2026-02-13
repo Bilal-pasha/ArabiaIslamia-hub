@@ -1,9 +1,10 @@
 // libs/email/index.ts
 export * from "./email.service";
 export * from "./email.config";
-export * from "./templates/welcome-admin";
-export * from "./templates/invite-admin-set-password";
-export * from "./templates/admission-submitted";
-export * from "./templates/admission-status";
-export * from "./templates/admission-approved";
-export * from "./templates/admission-step-admit";
+// Secondary school email templates (shared package; use logoUrl + brandName per app)
+export * from "./email-templates/secondary/welcome-admin";
+export * from "./email-templates/secondary/invite-admin-set-password";
+export * from "./email-templates/secondary/admission-submitted";
+export * from "./email-templates/secondary/admission-status";
+export * from "./email-templates/secondary/admission-approved";
+export * from "./email-templates/secondary/admission-step-admit";

@@ -61,7 +61,7 @@ export class AuthService {
     });
     const saved = await this.userRepository.save(user);
     try {
-      const logoUrl = this.configService.get<string>('EMAIL_LOGO_URL');
+      const logoUrl = this.configService.get<string>('EMAIL_LOGO_URL_SECONDARY');
       const html = renderWelcomeAdminEmail({
         name: saved.name,
         logoUrl: logoUrl || undefined,
@@ -104,7 +104,7 @@ export class AuthService {
 
     const baseUrl = this.configService.get<string>('FRONTEND_URL') || this.configService.get<string>('SECONDARY_APP_URL') || 'http://localhost:3000';
     const setPasswordUrl = `${baseUrl.replace(/\/$/, '')}/registration/set-password?token=${encodeURIComponent(token)}`;
-    const logoUrl = this.configService.get<string>('EMAIL_LOGO_URL');
+    const logoUrl = this.configService.get<string>('EMAIL_LOGO_URL_SECONDARY');
 
     try {
       const html = renderInviteAdminSetPasswordEmail({

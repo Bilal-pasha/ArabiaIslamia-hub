@@ -151,7 +151,7 @@ export class AdmissionService {
     const recipients = dedupeEmails([dto.email, dto.guardianEmail]);
     if (recipients.length > 0) {
       try {
-        const logoUrl = this.configService.get<string>('EMAIL_LOGO_URL');
+        const logoUrl = this.configService.get<string>('EMAIL_LOGO_URL_SECONDARY');
         const html = renderAdmissionSubmittedEmail({
           applicantName: dto.name,
           applicationNumber,
@@ -222,7 +222,7 @@ export class AdmissionService {
       const recipients = dedupeEmails([app.email, app.guardianEmail]);
       if (recipients.length > 0) {
         try {
-          const logoUrl = this.configService.get<string>('EMAIL_LOGO_URL');
+          const logoUrl = this.configService.get<string>('EMAIL_LOGO_URL_SECONDARY');
           const html = renderAdmissionStatusEmail({
             applicantName: app.name,
             applicationNumber: app.applicationNumber,
@@ -293,7 +293,7 @@ export class AdmissionService {
       try {
         const baseUrl = this.getBaseUrl();
         const admitCardUrl = `${baseUrl}/registration/admit-card?applicationId=${encodeURIComponent(app.id)}&type=written`;
-        const logoUrl = this.configService.get<string>('EMAIL_LOGO_URL');
+        const logoUrl = this.configService.get<string>('EMAIL_LOGO_URL_SECONDARY');
         const html = renderAdmissionStepAdmitEmail({
           applicantName: app.name,
           applicationNumber: app.applicationNumber,
@@ -363,7 +363,7 @@ export class AdmissionService {
     const recipients = dedupeEmails([app.email, app.guardianEmail]);
     if (recipients.length > 0) {
       try {
-        const logoUrl = this.configService.get<string>('EMAIL_LOGO_URL');
+        const logoUrl = this.configService.get<string>('EMAIL_LOGO_URL_SECONDARY');
         const html = renderAdmissionApprovedEmail({
           applicantName: app.name,
           applicationNumber: app.applicationNumber,
