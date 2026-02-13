@@ -53,7 +53,7 @@ export function renderBaseEmailLayout(options: BaseLayoutOptions): string {
       <td align="center" style="padding:32px 16px;">
         <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="max-width:560px;margin:0 auto;background-color:${white};border-radius:12px;overflow:hidden;box-shadow:0 4px 6px rgba(0,0,0,0.06);">
           <tr>
-            <td style="background:linear-gradient(135deg, ${primary} 0%, ${primaryDark} 100%);padding:32px 40px;text-align:center;">
+            <td style="background:linear-gradient(135deg, ${primary} 0%, ${primaryDark} 100%);padding:32px 40px;text-align:center; display: flex; justify-content: center; align-items: center;">
               ${logoBlock}
             </td>
           </tr>

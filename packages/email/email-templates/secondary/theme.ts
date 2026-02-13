@@ -38,7 +38,7 @@ export interface EmailBrandOptions {
 export function buildSecondaryLogoBlock(options: EmailBrandOptions): string {
   const { logoUrl, brandName = SECONDARY_BRAND_NAME } = options;
   if (logoUrl) {
-    return `<img src="${escapeHtml(logoUrl)}" alt="${escapeHtml(brandName)}" width="140" height="auto" style="display:block;max-width:140px;height:auto;" />`;
+    return `<img src="${escapeHtml(logoUrl)}" alt="${escapeHtml(brandName)}" width="140" height="auto" style="display:block;max-width:140px;height:auto; border-radius: 10px;" />`;
   }
   return `<span style="font-size:24px;font-weight:700;color:${COLOR_HEADER_TEXT};letter-spacing:0.02em;">${escapeHtml(brandName)}</span>`;
 }
