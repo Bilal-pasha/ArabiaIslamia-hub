@@ -102,8 +102,8 @@ export class AuthService {
     });
     const saved = await this.userRepository.save(user);
 
-    const baseUrl = this.configService.get<string>('FRONTEND_URL') || this.configService.get<string>('SECONDARY_APP_URL') || 'http://localhost:3000';
-    const setPasswordUrl = `${baseUrl.replace(/\/$/, '')}/registration/set-password?token=${encodeURIComponent(token)}`;
+    const baseUrl = this.configService.get<string>('NEXT_PUBLIC_SECONDARY_APP_URL');
+    const setPasswordUrl = `${baseUrl}/registration/set-password?token=${encodeURIComponent(token)}`;
     const logoUrl = this.configService.get<string>('EMAIL_LOGO_URL_SECONDARY');
 
     try {

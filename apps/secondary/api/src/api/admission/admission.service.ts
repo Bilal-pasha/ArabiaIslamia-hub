@@ -389,11 +389,7 @@ export class AdmissionService {
   }
 
   private getBaseUrl(): string {
-    return (
-      this.configService.get<string>('FRONTEND_URL') ||
-      this.configService.get<string>('SECONDARY_APP_URL') ||
-      'http://localhost:3000'
-    ).replace(/\/$/, '');
+    return this.configService.get<string>('NEXT_PUBLIC_SECONDARY_APP_URL');
   }
 
   async getAcademicSessions(): Promise<AcademicSessionDto[]> {
