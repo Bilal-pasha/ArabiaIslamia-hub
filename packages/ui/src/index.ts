@@ -91,6 +91,8 @@ export {
   AlertDialogCancel,
 } from './components/alert-dialog';
 export { ClientOnly } from './components/client-only';
+export { ModalProvider, useModal } from './modal';
+export type { ConfirmationModalOptions, AlertModalOptions, CustomModalOptions } from './modal';
 export {
   useForm,
   useFormContext,

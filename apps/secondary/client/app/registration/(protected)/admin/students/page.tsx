@@ -15,13 +15,7 @@ import {
   Button,
   TableSkeleton,
   toast,
-  AlertDialog,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
+  useModal,
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
@@ -36,9 +30,7 @@ export default function AdminStudentsPage() {
   const [students, setStudents] = useState<Student[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
-  const [studentToDelete, setStudentToDelete] = useState<Student | null>(null);
-  const [deleting, setDeleting] = useState(false);
+  const modal = useModal();
 
   const loadStudents = useCallback(() => {
     setLoading(true);
@@ -58,25 +50,19 @@ export default function AdminStudentsPage() {
   }, [loadStudents]);
 
   const handleDeleteClick = (s: Student) => {
-    setStudentToDelete(s);
-    setDeleteDialogOpen(true);
-  };
-
-  const handleDeleteConfirm = async () => {
-    if (!studentToDelete) return;
-    setDeleting(true);
-    try {
-      await deleteStudent(studentToDelete.id);
-      toast.success('Student deleted.');
-      setDeleteDialogOpen(false);
-      setStudentToDelete(null);
-      loadStudents();
-    } catch (err) {
-      const msg = err instanceof Error ? err.message : 'Delete failed';
-      toast.error(msg);
-    } finally {
-      setDeleting(false);
-    }
+    modal.confirmation({
+      title: 'Delete student?',
+      description: `This will permanently delete ${s.name} (Roll: ${s.rollNumber ?? '—'}) and all related data: registrations, renewals, fee records, and uploaded files. This cannot be undone.`,
+      confirmText: 'Delete',
+      cancelText: 'Cancel',
+      variant: 'destructive',
+      confirmIcon: <Trash2 className="h-4 w-4" />,
+      onConfirm: async () => {
+        await deleteStudent(s.id);
+        toast.success('Student deleted.');
+        loadStudents();
+      },
+    });
   };
 
   return (
@@ -163,27 +149,6 @@ export default function AdminStudentsPage() {
         )}
       </div>
 
-      <AlertDialog open={deleteDialogOpen} onOpenChange={setDeleteDialogOpen}>
-        <AlertDialogContent>
-          <AlertDialogHeader>
-            <AlertDialogTitle>Delete student?</AlertDialogTitle>
-            <AlertDialogDescription>
-              This will permanently delete {studentToDelete?.name} (Roll: {studentToDelete?.rollNumber ?? '—'})
-              and all related data: registrations, renewals, fee records, and uploaded files. This cannot be undone.
-            </AlertDialogDescription>
-          </AlertDialogHeader>
-          <AlertDialogFooter>
-            <AlertDialogCancel className="flex text-black items-center gap-2" disabled={deleting}>Cancel</AlertDialogCancel>
-            <Button
-              variant="destructive"
-              onClick={handleDeleteConfirm}
-              disabled={deleting}
-            >
-              {deleting ? 'Deleting…' : <><Trash2 className="h-4 w-4 mr-2" /> Delete</>}
-            </Button>
-          </AlertDialogFooter>
-        </AlertDialogContent>
-      </AlertDialog>
     </motion.div>
   );
 }

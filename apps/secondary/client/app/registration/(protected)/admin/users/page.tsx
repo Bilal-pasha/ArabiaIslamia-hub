@@ -20,7 +20,9 @@ import {
   Badge,
   TableSkeleton,
   toast,
+  useModal,
 } from '@arabiaaislamia/ui';
+import { Trash2 } from 'lucide-react';
 import { fadeInUp, defaultTransition } from '@arabiaaislamia/animations';
 import { apiClient } from '@/utils/axios-instance';
 import { privateRoutes } from '@/constants/route';
@@ -44,6 +46,7 @@ export default function AdminUsersPage() {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const modal = useModal();
 
   const fetchUsers = () => {
     setLoading(true);
@@ -86,6 +89,24 @@ export default function AdminUsersPage() {
     } finally {
       setSubmitting(false);
     }
+  };
+
+  const handleDeleteClick = (u: UserRow) => {
+    modal.confirmation({
+      title: 'Delete admin?',
+      description: `This will permanently remove ${u.name} (${u.email}) from the system. This action cannot be undone.`,
+      confirmText: 'Delete',
+      cancelText: 'Cancel',
+      variant: 'destructive',
+      contentClassName: 'border-white/10 bg-slate-800/95 text-white',
+      cancelClassName: 'border-white/20 bg-white/5 text-slate-200 hover:bg-white/10',
+      confirmIcon: <Trash2 className="h-4 w-4" />,
+      onConfirm: async () => {
+        await apiClient.delete(`/api/auth/admins/${u.id}`);
+        fetchUsers();
+        toast.success('Admin deleted');
+      },
+    });
   };
 
   return (
@@ -202,6 +223,7 @@ export default function AdminUsersPage() {
                     <TableHead className="text-slate-200">Email</TableHead>
                     <TableHead className="text-slate-200">Role</TableHead>
                     <TableHead className="text-slate-200">Created</TableHead>
+                    <TableHead className="text-slate-200 text-right w-[100px]">Actions</TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
@@ -219,6 +241,18 @@ export default function AdminUsersPage() {
                       </TableCell>
                       <TableCell className="text-slate-400 text-sm">
                         {new Date(u.createdAt).toLocaleDateString()}
+                      </TableCell>
+                      <TableCell className="text-right">
+                        <Button
+                          type="button"
+                          variant="ghost"
+                          size="sm"
+                          className="text-red-400 hover:text-red-300 hover:bg-red-500/10"
+                          onClick={() => handleDeleteClick(u)}
+                          aria-label={`Delete ${u.name}`}
+                        >
+                          <Trash2 className="h-4 w-4" />
+                        </Button>
                       </TableCell>
                     </TableRow>
                   ))}

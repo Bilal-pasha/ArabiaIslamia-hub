@@ -16,13 +16,7 @@ import {
   Badge,
   TableSkeleton,
   toast,
-  AlertDialog,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
+  useModal,
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
@@ -49,9 +43,7 @@ export default function AdminApplicationsPage() {
   const [applications, setApplications] = useState<AdmissionApplication[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
-  const [appToDelete, setAppToDelete] = useState<AdmissionApplication | null>(null);
-  const [deleting, setDeleting] = useState(false);
+  const modal = useModal();
 
   const loadApplications = useCallback(() => {
     setLoading(true);
@@ -71,25 +63,19 @@ export default function AdminApplicationsPage() {
   }, [loadApplications]);
 
   const handleDeleteClick = (app: AdmissionApplication) => {
-    setAppToDelete(app);
-    setDeleteDialogOpen(true);
-  };
-
-  const handleDeleteConfirm = async () => {
-    if (!appToDelete) return;
-    setDeleting(true);
-    try {
-      await deleteApplication(appToDelete.id);
-      toast.success('Application deleted.');
-      setDeleteDialogOpen(false);
-      setAppToDelete(null);
-      loadApplications();
-    } catch (err) {
-      const msg = err instanceof Error ? err.message : 'Delete failed';
-      toast.error(msg);
-    } finally {
-      setDeleting(false);
-    }
+    modal.confirmation({
+      title: 'Delete application?',
+      description: `This will permanently delete the application for ${app.name} (${app.applicationNumber}) and all attached files. This cannot be undone.`,
+      confirmText: 'Delete',
+      cancelText: 'Cancel',
+      variant: 'destructive',
+      confirmIcon: <Trash2 className="h-4 w-4" />,
+      onConfirm: async () => {
+        await deleteApplication(app.id);
+        toast.success('Application deleted.');
+        loadApplications();
+      },
+    });
   };
 
   return (
@@ -183,27 +169,6 @@ export default function AdminApplicationsPage() {
         )}
       </div>
 
-      <AlertDialog open={deleteDialogOpen} onOpenChange={setDeleteDialogOpen}>
-        <AlertDialogContent>
-          <AlertDialogHeader>
-            <AlertDialogTitle>Delete application?</AlertDialogTitle>
-            <AlertDialogDescription>
-              This will permanently delete the application for {appToDelete?.name} ({appToDelete?.applicationNumber})
-              and all attached files. This cannot be undone.
-            </AlertDialogDescription>
-          </AlertDialogHeader>
-          <AlertDialogFooter>
-            <AlertDialogCancel className="flex text-black items-center gap-2" disabled={deleting}>Cancel</AlertDialogCancel>
-            <Button
-              variant="destructive"
-              onClick={handleDeleteConfirm}
-              disabled={deleting}
-            >
-              {deleting ? 'Deleting…' : <><Trash2 className="h-4 w-4 mr-2" /> Delete</>}
-            </Button>
-          </AlertDialogFooter>
-        </AlertDialogContent>
-      </AlertDialog>
     </motion.div>
   );
 }

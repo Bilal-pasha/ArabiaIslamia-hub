@@ -17,14 +17,7 @@ import {
   DialogTitle,
   DialogDescription,
   DialogFooter,
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
+  useModal,
   toast,
   Spinner,
 } from '@arabiaaislamia/ui';
@@ -55,8 +48,7 @@ export default function AdminHeroPage() {
   const [editing, setEditing] = useState<HeroSlideDto | null>(null);
   const [form, setForm] = useState(defaultSlide);
   const [saving, setSaving] = useState(false);
-  const [deleteId, setDeleteId] = useState<string | null>(null);
-  const [deleting, setDeleting] = useState(false);
+  const modal = useModal();
   const [uploadingField, setUploadingField] = useState<ImageField | null>(null);
   const desktopInputRef = useRef<HTMLInputElement>(null);
   const mobileInputRef = useRef<HTMLInputElement>(null);
@@ -112,19 +104,26 @@ export default function AdminHeroPage() {
     }
   };
 
-  const handleDelete = async () => {
-    if (!deleteId) return;
-    setDeleting(true);
-    try {
-      await deleteHeroSlide(deleteId);
-      toast.success('Slide deleted');
-      setDeleteId(null);
-      load();
-    } catch (err) {
-      toast.error(err instanceof Error ? err.message : 'Failed to delete');
-    } finally {
-      setDeleting(false);
-    }
+  const handleDeleteClick = (slideId: string) => {
+    modal.confirmation({
+      title: 'Delete slide?',
+      description: 'This slide will be removed from the hero carousel. This cannot be undone.',
+      confirmText: 'Delete',
+      cancelText: 'Cancel',
+      variant: 'destructive',
+      contentClassName: 'border-amber-200/80 bg-white shadow-lg',
+      cancelClassName: 'border-amber-200 text-amber-900 hover:bg-amber-50',
+      onConfirm: async () => {
+        try {
+          await deleteHeroSlide(slideId);
+          toast.success('Slide deleted');
+          load();
+        } catch (err) {
+          toast.error(err instanceof Error ? err.message : 'Failed to delete');
+          throw err;
+        }
+      },
+    });
   };
 
   const handleFileSelect = async (field: ImageField, file: File | null) => {
@@ -208,7 +207,7 @@ export default function AdminHeroPage() {
                     variant="outline"
                     size="sm"
                     className="border-red-200 text-red-700 hover:bg-red-50"
-                    onClick={() => setDeleteId(slide.id)}
+                    onClick={() => handleDeleteClick(slide.id)}
                   >
                     Delete
                   </Button>
@@ -338,28 +337,6 @@ export default function AdminHeroPage() {
           </form>
         </DialogContent>
 
-        <AlertDialog open={!!deleteId} onOpenChange={(o) => !o && setDeleteId(null)}>
-          <AlertDialogContent className="border-amber-200/80 bg-white shadow-lg">
-            <AlertDialogHeader>
-              <AlertDialogTitle className="text-amber-950">Delete slide?</AlertDialogTitle>
-              <AlertDialogDescription className="text-amber-700">
-                This slide will be removed from the hero carousel. This cannot be undone.
-              </AlertDialogDescription>
-            </AlertDialogHeader>
-            <AlertDialogFooter>
-              <AlertDialogCancel className="border-amber-200 text-amber-900 hover:bg-amber-50">
-                Cancel
-              </AlertDialogCancel>
-              <AlertDialogAction
-                onClick={handleDelete}
-                disabled={deleting}
-                className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
-              >
-                {deleting ? 'Deleting...' : 'Delete'}
-              </AlertDialogAction>
-            </AlertDialogFooter>
-          </AlertDialogContent>
-        </AlertDialog>
       </div>
     </Dialog>
   );

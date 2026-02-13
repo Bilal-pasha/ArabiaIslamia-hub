@@ -2,7 +2,7 @@
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/Button/Button";
 import { useRef, useState } from "react";
-import { toast, TableSkeleton, AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from "@arabiaaislamia/ui";
+import { toast, TableSkeleton, useModal } from "@arabiaaislamia/ui";
 import StudentModal from "@/components/StudentModal/StudenModal";
 import { FaArrowLeft } from "react-icons/fa";
 import { useReactToPrint } from "react-to-print";
@@ -11,7 +11,7 @@ import { FaPrint, FaTrash, FaEdit } from "react-icons/fa";
 import { useStudent, useDeleteStudent } from "@/hooks/useStudentQueries";
 
 export default function Page({ params }: { params: { id: string } }) {
-  const [modal, setModal] = useState(false);
+  const modal = useModal();
   const [updateModal, setUpdateModal] = useState<boolean>(false);
   const [students, setStudents] = useState<unknown[]>([]);
   const router = useRouter();
@@ -19,17 +19,22 @@ export default function Page({ params }: { params: { id: string } }) {
   const { data: student, isLoading, refetch } = useStudent(params?.id ?? null);
   const setStudent = () => { refetch(); };
   const deleteMutation = useDeleteStudent();
-  const handleDeleteButton = async (studentId: string) => {
-    try {
-      const res = await deleteMutation.mutateAsync(studentId);
-      if (res?.success ?? true) {
-        setModal(false);
-        router.back();
-        toast.success(res?.message ?? "Deleted");
-      }
-    } catch (error: unknown) {
-      toast.error(error instanceof Error ? error.message : "Failed to delete");
-    }
+  const handleDeleteClick = () => {
+    modal.confirmation({
+      title: "Confirm Delete",
+      description: `Are you sure you want to delete ${student?.name ?? "this student"}?`,
+      confirmText: "Delete",
+      cancelText: "Cancel",
+      variant: "destructive",
+      confirmIcon: <FaTrash className="h-4 w-4" />,
+      onConfirm: async () => {
+        const res = await deleteMutation.mutateAsync(params.id);
+        if (res?.success ?? true) {
+          router.back();
+          toast.success(res?.message ?? "Deleted");
+        }
+      },
+    });
   };
   const handlePrint = useReactToPrint({
     content: () => invoiceRef.current,
@@ -95,27 +100,13 @@ export default function Page({ params }: { params: { id: string } }) {
                   <FaEdit className="inline-block mr-2 w-5 h-5" />
                   Update
                 </Button>
-                <Button variant="danger" size="md" className="!px-4" onClick={() => setModal(true)}>
+                <Button variant="danger" size="md" className="!px-4" onClick={handleDeleteClick}>
                   <FaTrash className="inline-block mr-2 w-5 h-5" />
                   Delete
                 </Button>
               </div>
             </div>
             {updateModal && <StudentModal setStudents={setStudents} students={students} setIsModalOpen={setUpdateModal} id={params.id} studentData={student} setStudent={setStudent} />}
-            <AlertDialog open={modal} onOpenChange={setModal}>
-              <AlertDialogContent>
-                <AlertDialogHeader>
-                  <AlertDialogTitle>Confirm Delete</AlertDialogTitle>
-                  <AlertDialogDescription>
-                    {`Are you sure you want to delete ${student?.name ?? "this student"}?`}
-                  </AlertDialogDescription>
-                </AlertDialogHeader>
-                <AlertDialogFooter>
-                  <AlertDialogCancel>Cancel</AlertDialogCancel>
-                  <AlertDialogAction onClick={() => handleDeleteButton(params.id)}>Delete</AlertDialogAction>
-                </AlertDialogFooter>
-              </AlertDialogContent>
-            </AlertDialog>
             <Invoice ref={invoiceRef} student={student} />
           </>
         )}

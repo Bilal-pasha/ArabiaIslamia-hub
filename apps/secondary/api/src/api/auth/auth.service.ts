@@ -76,6 +76,15 @@ export class AuthService {
     return this.toResponse(saved);
   }
 
+  async deleteAdmin(userId: string, currentUserId: string): Promise<void> {
+    if (userId === currentUserId) {
+      throw new BadRequestException('Cannot delete your own account');
+    }
+    const user = await this.userRepository.findOne({ where: { id: userId } });
+    if (!user) throw new BadRequestException('User not found');
+    await this.userRepository.remove(user);
+  }
+
   async findAllUsers(): Promise<UserResponseDto[]> {
     const users = await this.userRepository.find({
       order: { createdAt: 'DESC' },

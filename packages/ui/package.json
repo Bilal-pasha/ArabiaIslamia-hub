@@ -26,6 +26,7 @@
     "./components/alert-dialog": "./src/components/alert-dialog.tsx",
     "./components/checkbox": "./src/components/checkbox.tsx",
     "./components/client-only": "./src/components/client-only.tsx",
+    "./modal": "./src/modal/index.ts",
     "./form": "./src/form.ts",
     "./lib/utils": "./src/lib/utils.ts"
   },

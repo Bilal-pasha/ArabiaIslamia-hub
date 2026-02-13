@@ -4,6 +4,8 @@ import {
   Body,
   Get,
   Put,
+  Delete,
+  Param,
   UseGuards,
   HttpCode,
   HttpStatus,
@@ -125,6 +127,15 @@ export class AuthController {
       message: 'Admin created',
       data: { user },
     } satisfies AuthResponseDto;
+  }
+
+  @Delete('admins/:id')
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles('superadmin')
+  @HttpCode(HttpStatus.OK)
+  async deleteAdmin(@Param('id') id: string, @CurrentUser() currentUser: User) {
+    await this.authService.deleteAdmin(id, currentUser.id);
+    return { success: true, message: 'Admin deleted' };
   }
 
   @Put('profile')
