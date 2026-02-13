@@ -89,14 +89,18 @@ jobs:
             sudo docker pull "$REGISTRY/$IMAGE_NAME_LOWER-scouts-portal-api:$IMAGE_TAG"
             sudo docker pull "$REGISTRY/$IMAGE_NAME_LOWER-scouts-portal-app:$IMAGE_TAG"
             
-            echo "🛑 Stopping all containers"
-            sudo docker compose -f docker-compose.prod.yml down
+            echo "🛑 Stopping containers managed by Compose"
+            COMPOSE_PROJECT_DIR=/home/${{ secrets.EC2_USERNAME }}/${{ env.DEPLOY_DIR }}
+            sudo docker compose -f "$COMPOSE_PROJECT_DIR/docker-compose.prod.yml" down --remove-orphans || echo "No containers to stop"
+
+            echo "📥 Pulling latest images (ensure up-to-date)"
+            sudo docker compose -f "$COMPOSE_PROJECT_DIR/docker-compose.prod.yml" pull
 
             echo "♻️ Starting updated containers"
-            sudo docker compose -f docker-compose.prod.yml up -d --remove-orphans
+            sudo docker compose -f "$COMPOSE_PROJECT_DIR/docker-compose.prod.yml" up -d --remove-orphans
 
-            echo "🧹 Cleaning up unused images"
-            sudo docker image prune -f
-            sudo docker logout ghcr.io
+            echo "🧹 Cleaning up dangling images (won't touch running containers)"
+            sudo docker image prune -f || echo "No dangling images to prune"
 
-            echo "✅ Deployment completed successfully"
+            echo "✅ Compose deployment completed safely"
+
