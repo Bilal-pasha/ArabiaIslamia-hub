@@ -46,9 +46,9 @@ jobs:
             sudo chmod -R 755 /home/${{ secrets.EC2_USERNAME }}/${{ env.DEPLOY_DIR }}
 
       # ─────────────────────────────────────────────
-      # Copy Docker Compose and config files
+      # Copy Docker-Compose and config files
       # ─────────────────────────────────────────────
-      - name: Copy Docker Compose and config
+      - name: Copy Docker-Compose and config
         uses: appleboy/scp-action@v0.1.7
         with:
           host: ${{ secrets.EC2_HOST }}
@@ -91,13 +91,13 @@ jobs:
             
             echo "🛑 Stopping containers managed by Compose"
             COMPOSE_PROJECT_DIR=/home/${{ secrets.EC2_USERNAME }}/${{ env.DEPLOY_DIR }}
-            sudo docker compose -f "$COMPOSE_PROJECT_DIR/docker-compose.prod.yml" down --remove-orphans || echo "No containers to stop"
+            sudo docker-compose -f "$COMPOSE_PROJECT_DIR/docker-compose.prod.yml" down --remove-orphans || echo "No containers to stop"
 
             echo "📥 Pulling latest images (ensure up-to-date)"
-            sudo docker compose -f "$COMPOSE_PROJECT_DIR/docker-compose.prod.yml" pull
+            sudo docker-compose -f "$COMPOSE_PROJECT_DIR/docker-compose.prod.yml" pull
 
             echo "♻️ Starting updated containers"
-            sudo docker compose -f "$COMPOSE_PROJECT_DIR/docker-compose.prod.yml" up -d --remove-orphans
+            sudo docker-compose -f "$COMPOSE_PROJECT_DIR/docker-compose.prod.yml" up -d --remove-orphans
 
             echo "🧹 Cleaning up dangling images (won't touch running containers)"
             sudo docker image prune -f || echo "No dangling images to prune"
