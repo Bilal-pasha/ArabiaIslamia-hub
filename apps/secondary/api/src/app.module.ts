@@ -8,6 +8,7 @@ import { AppService } from './app.service';
 import { AuthModule } from './api/auth/auth.module';
 import { AdmissionModule } from './api/admission/admission.module';
 import { UploadModule } from './api/upload/upload.module';
+import { EmailLogsModule } from './api/email-logs/email-logs.module';
 
 @Module({
   imports: [
@@ -24,8 +25,9 @@ import { UploadModule } from './api/upload/upload.module';
     AuthModule,
     AdmissionModule,
     UploadModule,
+    EmailLogsModule,
   ],
   controllers: [AppController],
   providers: [AppService],
 })
-export class AppModule {}
+export class AppModule { }

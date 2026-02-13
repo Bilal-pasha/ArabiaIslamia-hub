@@ -45,7 +45,6 @@ export default function AdminUsersPage() {
   const [formError, setFormError] = useState<string | null>(null);
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
   const modal = useModal();
 
   const fetchUsers = () => {
@@ -70,20 +69,19 @@ export default function AdminUsersPage() {
     fetchUsers();
   }, []);
 
-  const handleAddAdmin = async (e: React.FormEvent) => {
+  const handleInviteAdmin = async (e: React.FormEvent) => {
     e.preventDefault();
     setFormError(null);
     setSubmitting(true);
     try {
-      await apiClient.post('/api/auth/admins', { name: name.trim(), email: email.toLowerCase().trim(), password });
+      await apiClient.post('/api/auth/invite-admin', { name: name.trim(), email: email.toLowerCase().trim() });
       setName('');
       setEmail('');
-      setPassword('');
       setShowForm(false);
       fetchUsers();
-      toast.success('Admin created');
+      toast.success('Invite sent – they will receive an email to set their password');
     } catch (err) {
-      const msg = err instanceof Error ? err.message : 'Failed to create admin';
+      const msg = err instanceof Error ? err.message : 'Failed to send invite';
       setFormError(msg);
       toast.error(msg);
     } finally {
@@ -127,18 +125,18 @@ export default function AdminUsersPage() {
           onClick={() => setShowForm(true)}
           className="bg-orange-500 hover:bg-orange-600 text-white shrink-0"
         >
-          Add admin
+          Invite admin
         </Button>
       </div>
 
       {showForm && (
         <Card className="secondary-card border border-white/10 backdrop-blur-xl">
           <CardHeader className="pb-2">
-            <CardTitle className="text-white">New admin</CardTitle>
-            <p className="text-slate-400 text-sm">Password must include uppercase, lowercase, number, and special character.</p>
+            <CardTitle className="text-white">Invite admin</CardTitle>
+            <p className="text-slate-400 text-sm">They will receive an email with a link to set their password.</p>
           </CardHeader>
           <CardContent>
-            <form onSubmit={handleAddAdmin} className="space-y-4 max-w-md">
+            <form onSubmit={handleInviteAdmin} className="space-y-4 max-w-md">
               <div>
                 <Label htmlFor="admin-name" className="mb-1.5 block text-slate-200">Name</Label>
                 <Input
@@ -162,19 +160,6 @@ export default function AdminUsersPage() {
                   required
                 />
               </div>
-              <div>
-                <Label htmlFor="admin-password" className="mb-1.5 block text-slate-200">Password</Label>
-                <Input
-                  id="admin-password"
-                  type="password"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  className="bg-white/5 border-white/20 text-white placeholder:text-slate-500"
-                  placeholder="Min 8 characters"
-                  required
-                  minLength={8}
-                />
-              </div>
               {formError && (
                 <p className="text-sm text-red-300">{formError}</p>
               )}
@@ -184,7 +169,7 @@ export default function AdminUsersPage() {
                   disabled={submitting}
                   className="bg-orange-500 hover:bg-orange-600 text-white"
                 >
-                  {submitting ? 'Creating...' : 'Create admin'}
+                  {submitting ? 'Sending invite...' : 'Send invite'}
                 </Button>
                 <Button
                   type="button"

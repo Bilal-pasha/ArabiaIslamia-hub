@@ -8,12 +8,12 @@ import { AuthController } from './auth.controller';
 import { AuthService } from './auth.service';
 import { JwtStrategy } from './strategies/jwt.strategy';
 import { RolesGuard } from './guards/roles.guard';
-import { EmailModule } from '../../common/email.module';
+import { EmailLogsModule } from '../email-logs/email-logs.module';
 
 @Module({
   imports: [
     TypeOrmModule.forFeature([User]),
-    EmailModule,
+    EmailLogsModule,
     PassportModule,
     JwtModule.registerAsync({
       imports: [ConfigModule],

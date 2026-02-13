@@ -34,6 +34,12 @@ export class User {
   @Column({ type: 'varchar', length: 255, nullable: true, name: 'oauth_id' })
   oauthId: string | null;
 
+  @Column({ type: 'varchar', length: 64, nullable: true, name: 'invite_token' })
+  inviteToken: string | null;
+
+  @Column({ type: 'timestamp', nullable: true, name: 'invite_token_expires_at' })
+  inviteTokenExpiresAt: Date | null;
+
   @CreateDateColumn({ type: 'timestamp', name: 'created_at' })
   createdAt: Date;
 

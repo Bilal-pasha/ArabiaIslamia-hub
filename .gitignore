@@ -44,3 +44,4 @@ Thumbs.db
 *.tsbuildinfo
 .cache/
 .pnpm-store/
+id_*

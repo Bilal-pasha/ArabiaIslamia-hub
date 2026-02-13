@@ -2,6 +2,7 @@ import { TypeOrmModuleOptions } from '@nestjs/typeorm';
 import {
   createDataSourceOptions,
   User,
+  EmailLog,
   Class,
   Section,
   AcademicSession,
@@ -24,6 +25,7 @@ export function getTypeOrmOptions(): TypeOrmModuleOptions {
     ...options,
     entities: [
       User,
+      EmailLog,
       Class,
       Section,
       AcademicSession,

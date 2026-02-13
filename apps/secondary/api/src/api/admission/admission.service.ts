@@ -1,6 +1,7 @@
 import { Injectable, BadRequestException, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository, DeepPartial } from 'typeorm';
+import { ConfigService } from '@nestjs/config';
 import {
   AdmissionApplication,
   Student,
@@ -10,9 +11,16 @@ import {
   RenewalApplication,
   Registration,
 } from '@arabiaaislamia/database';
+import {
+  renderAdmissionSubmittedEmail,
+  renderAdmissionStatusEmail,
+  renderAdmissionApprovedEmail,
+  renderAdmissionStepAdmitEmail,
+} from '@arabiaaislamia/email';
 import { SubmitAdmissionDto } from './dto/submit-admission.dto';
 import { SubmitRenewalDto } from './dto/submit-renewal.dto';
 import { UploadService } from '../upload/upload.service';
+import { EmailLogService } from '../email-logs/email-log.service';
 
 export interface StudentByRollDto {
   id: string;
@@ -65,6 +73,16 @@ export interface RenewalDto {
   section?: { id: string; name: string };
 }
 
+const BRAND_NAME = 'Jamia Arabia';
+
+function dedupeEmails(emails: (string | null | undefined)[]): string[] {
+  const set = new Set<string>();
+  for (const e of emails) {
+    if (e && e.trim()) set.add(e.trim().toLowerCase());
+  }
+  return Array.from(set);
+}
+
 @Injectable()
 export class AdmissionService {
   constructor(
@@ -83,6 +101,8 @@ export class AdmissionService {
     @InjectRepository(Registration)
     private readonly registrationRepo: Repository<Registration>,
     private readonly uploadService: UploadService,
+    private readonly emailLogService: EmailLogService,
+    private readonly configService: ConfigService,
   ) { }
 
   async submit(dto: SubmitAdmissionDto) {
@@ -127,6 +147,33 @@ export class AdmissionService {
     // FK column; TypeORM entity type may expose relation name only
     (application as { requiredClassId?: string }).requiredClassId = dto.requiredClassId;
     await this.repo.save(application);
+
+    const recipients = dedupeEmails([dto.email, dto.guardianEmail]);
+    if (recipients.length > 0) {
+      try {
+        const logoUrl = this.configService.get<string>('EMAIL_LOGO_URL');
+        const html = renderAdmissionSubmittedEmail({
+          applicantName: dto.name,
+          applicationNumber,
+          logoUrl: logoUrl || undefined,
+          brandName: BRAND_NAME,
+        });
+        const text = `Dear ${dto.name},\n\nWe have received your admission application. Your application number is: ${applicationNumber}.\n\nRegards,\n${BRAND_NAME} Team`;
+        for (const to of recipients) {
+          await this.emailLogService.sendAndLog({
+            to,
+            subject: `Application received – ${applicationNumber}`,
+            html,
+            text,
+            recipientName: dto.name,
+            context: 'admission_submitted',
+            metadata: { applicationNumber, applicationId: application.id },
+          });
+        }
+      } catch (err) {
+        console.error('Error sending admission submitted email', err);
+      }
+    }
     return { applicationNumber, id: application.id };
   }
 
@@ -169,6 +216,36 @@ export class AdmissionService {
     app.status = status;
     app.statusReason = reason ?? null;
     await this.repo.save(app);
+
+    const statusNorm = status === 'approved' ? 'approved' : status === 'rejected' ? 'rejected' : null;
+    if (statusNorm) {
+      const recipients = dedupeEmails([app.email, app.guardianEmail]);
+      if (recipients.length > 0) {
+        try {
+          const logoUrl = this.configService.get<string>('EMAIL_LOGO_URL');
+          const html = renderAdmissionStatusEmail({
+            applicantName: app.name,
+            applicationNumber: app.applicationNumber,
+            status: statusNorm,
+            reason: app.statusReason ?? undefined,
+            logoUrl: logoUrl || undefined,
+            brandName: BRAND_NAME,
+          });
+          for (const to of recipients) {
+            await this.emailLogService.sendAndLog({
+              to,
+              subject: `Application ${statusNorm} – ${app.applicationNumber}`,
+              html,
+              recipientName: app.name,
+              context: 'admission_status',
+              metadata: { applicationId: app.id, status },
+            });
+          }
+        } catch (err) {
+          console.error('Error sending admission status email', err);
+        }
+      }
+    }
     return app;
   }
 
@@ -210,6 +287,36 @@ export class AdmissionService {
     if (!app) throw new NotFoundException('Application not found');
     app.writtenAdmitEligible = true;
     await this.repo.save(app);
+
+    const recipients = dedupeEmails([app.email, app.guardianEmail]);
+    if (recipients.length > 0) {
+      try {
+        const baseUrl = this.getBaseUrl();
+        const admitCardUrl = `${baseUrl}/registration/admit-card?applicationId=${encodeURIComponent(app.id)}&type=written`;
+        const logoUrl = this.configService.get<string>('EMAIL_LOGO_URL');
+        const html = renderAdmissionStepAdmitEmail({
+          applicantName: app.name,
+          applicationNumber: app.applicationNumber,
+          stepName: 'Written test – admit card',
+          stepDescription: 'You are eligible for the written test. Please download your admit card using the link below and bring it with you.',
+          admitCardUrl,
+          logoUrl: logoUrl || undefined,
+          brandName: BRAND_NAME,
+        });
+        for (const to of recipients) {
+          await this.emailLogService.sendAndLog({
+            to,
+            subject: `Written test admit card – ${app.applicationNumber}`,
+            html,
+            recipientName: app.name,
+            context: 'admission_written_admit',
+            metadata: { applicationId: app.id },
+          });
+        }
+      } catch (err) {
+        console.error('Error sending written admit email', err);
+      }
+    }
     return app;
   }
 
@@ -253,7 +360,40 @@ export class AdmissionService {
     app.statusReason = null;
     await this.repo.save(app);
 
+    const recipients = dedupeEmails([app.email, app.guardianEmail]);
+    if (recipients.length > 0) {
+      try {
+        const logoUrl = this.configService.get<string>('EMAIL_LOGO_URL');
+        const html = renderAdmissionApprovedEmail({
+          applicantName: app.name,
+          applicationNumber: app.applicationNumber,
+          rollNumber: student.rollNumber ?? app.applicationNumber,
+          logoUrl: logoUrl || undefined,
+          brandName: BRAND_NAME,
+        });
+        for (const to of recipients) {
+          await this.emailLogService.sendAndLog({
+            to,
+            subject: `Admission confirmed – ${app.applicationNumber}`,
+            html,
+            recipientName: app.name,
+            context: 'admission_approved',
+            metadata: { applicationId: app.id, studentId: student.id },
+          });
+        }
+      } catch (err) {
+        console.error('Error sending admission approved email', err);
+      }
+    }
     return { application: app, student };
+  }
+
+  private getBaseUrl(): string {
+    return (
+      this.configService.get<string>('FRONTEND_URL') ||
+      this.configService.get<string>('SECONDARY_APP_URL') ||
+      'http://localhost:3000'
+    ).replace(/\/$/, '');
   }
 
   async getAcademicSessions(): Promise<AcademicSessionDto[]> {

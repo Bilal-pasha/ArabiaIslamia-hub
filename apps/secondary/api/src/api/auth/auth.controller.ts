@@ -17,7 +17,7 @@ import {
 import type { Response, Request } from 'express';
 import { ConfigService } from '@nestjs/config';
 import { AuthService } from './auth.service';
-import { RegisterDto, LoginDto, RefreshTokenDto, UpdateProfileDto, UpdatePasswordDto, GoogleAuthDto } from './dto';
+import { RegisterDto, LoginDto, RefreshTokenDto, UpdateProfileDto, UpdatePasswordDto, GoogleAuthDto, InviteAdminDto, SetPasswordDto } from './dto';
 import { AuthResponseDto } from './dto/auth-response.dto';
 import { JwtAuthGuard } from './guards/jwt-auth.guard';
 import { RolesGuard } from './guards/roles.guard';
@@ -127,6 +127,26 @@ export class AuthController {
       message: 'Admin created',
       data: { user },
     } satisfies AuthResponseDto;
+  }
+
+  @Post('invite-admin')
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles('superadmin')
+  @HttpCode(HttpStatus.CREATED)
+  async inviteAdmin(@Body() dto: InviteAdminDto) {
+    const user = await this.authService.inviteAdmin(dto.name, dto.email);
+    return {
+      success: true,
+      message: 'Invite sent',
+      data: { user },
+    } satisfies AuthResponseDto;
+  }
+
+  @Post('set-password')
+  @HttpCode(HttpStatus.OK)
+  async setPassword(@Body() dto: SetPasswordDto) {
+    await this.authService.setPasswordByToken(dto.token, dto.newPassword);
+    return { success: true, message: 'Password set. You can now sign in.' };
   }
 
   @Delete('admins/:id')

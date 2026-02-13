@@ -27,6 +27,23 @@ export class AdmissionController {
     return app;
   }
 
+  @Get('admit-card/:applicationId')
+  async getAdmitCard(
+    @Param('applicationId') applicationId: string,
+    @Query('type') type?: string,
+  ) {
+    const app = await this.admissionService.findOne(applicationId);
+    if (!app) return null;
+    return {
+      id: app.id,
+      applicationNumber: app.applicationNumber,
+      name: app.name,
+      fatherName: app.fatherName,
+      class: app.class ? { id: app.class.id, name: app.class.name } : null,
+      type: type || 'written',
+    };
+  }
+
   @Get('academic-sessions')
   async getAcademicSessions() {
     return this.admissionService.getAcademicSessions();

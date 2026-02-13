@@ -12,6 +12,7 @@ import {
   X,
   GraduationCap,
   RefreshCw,
+  Mail,
 } from 'lucide-react';
 import { Button, SecondaryLogo, toast } from '@arabiaaislamia/ui';
 import { apiClient } from '@/utils/axios-instance';
@@ -31,6 +32,7 @@ function getPageTitle(pathname: string): string {
   if (!pathname) return 'Dashboard';
   if (pathname === privateRoutes.dashboard || pathname === '/registration/admin') return 'Dashboard';
   if (pathname.startsWith(privateRoutes.users)) return 'Users';
+  if (pathname.startsWith(privateRoutes.emailLogs)) return 'Email logs';
   if (pathname === privateRoutes.applications) return 'Applications';
   if (pathname.match(/\/applications\/[^/]+$/)) return 'Application detail';
   if (pathname === privateRoutes.renewals) return 'Renewals';
@@ -79,8 +81,13 @@ export function AdminDashboardLayout({
     { href: privateRoutes.renewals, label: 'Renewals', icon: RefreshCw },
     { href: privateRoutes.students, label: 'Students', icon: GraduationCap },
     ...(user?.role === 'superadmin'
-      ? [{ href: privateRoutes.users, label: 'Users', icon: Users }]
-      : []),
+      ? [
+        { href: privateRoutes.users, label: 'Users', icon: Users },
+        { href: privateRoutes.emailLogs, label: 'Email logs', icon: Mail },
+      ]
+      : user?.role === 'admin'
+        ? [{ href: privateRoutes.emailLogs, label: 'Email logs', icon: Mail }]
+        : []),
   ];
 
   const title = getPageTitle(pathname ?? '');

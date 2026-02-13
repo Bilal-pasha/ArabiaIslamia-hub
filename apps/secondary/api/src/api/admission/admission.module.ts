@@ -11,6 +11,7 @@ import {
 } from '@arabiaaislamia/database';
 import { AuthModule } from '../auth/auth.module';
 import { UploadModule } from '../upload/upload.module';
+import { EmailLogsModule } from '../email-logs/email-logs.module';
 import { AdmissionController } from './admission.controller';
 import { AdmissionService } from './admission.service';
 
@@ -27,6 +28,7 @@ import { AdmissionService } from './admission.service';
     ]),
     AuthModule,
     UploadModule,
+    EmailLogsModule,
   ],
   controllers: [AdmissionController],
   providers: [AdmissionService],

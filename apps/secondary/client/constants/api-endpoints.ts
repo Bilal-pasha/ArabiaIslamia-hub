@@ -9,6 +9,10 @@ export const admissionEndpoints = {
   detail: (id: string) => `/admission/${id}`,
   byNumber: (applicationNumber: string) =>
     `/admission/by-number/${encodeURIComponent(applicationNumber)}`,
+  admitCard: (applicationId: string, type?: string) =>
+    type
+      ? `/admission/admit-card/${applicationId}?type=${encodeURIComponent(type)}`
+      : `/admission/admit-card/${applicationId}`,
   status: (id: string) => `/admission/${id}/status`,
   quranTest: (id: string) => `/admission/${id}/quran-test`,
   oralTest: (id: string) => `/admission/${id}/oral-test`,

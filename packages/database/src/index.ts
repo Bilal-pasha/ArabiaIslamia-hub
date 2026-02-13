@@ -1,4 +1,5 @@
 export { User } from './entities/user.entity';
+export { EmailLog } from './entities/email-log.entity';
 export { Class } from './entities/class.entity';
 export { Section } from './entities/section.entity';
 export { AcademicSession } from './entities/academic-session.entity';

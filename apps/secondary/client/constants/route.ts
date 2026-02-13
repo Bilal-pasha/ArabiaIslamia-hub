@@ -4,6 +4,8 @@ export const publicRoutes = {
   status: '/registration/status',
   renew: '/registration/renew',
   submitted: '/registration/submitted',
+  setPassword: '/registration/set-password',
+  admitCard: '/registration/admit-card',
 } as const;
 
 export const privateRoutes = {
@@ -15,6 +17,7 @@ export const privateRoutes = {
   students: '/registration/admin/students',
   studentDetail: (id: string) => `/registration/admin/students/${id}`,
   users: '/registration/admin/users',
+  emailLogs: '/registration/admin/email-logs',
   signin: '/registration/admin/signin',
 } as const;
 

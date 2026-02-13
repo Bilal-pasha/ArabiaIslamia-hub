@@ -8,6 +8,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { JwtService } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
+import * as bcrypt from 'bcrypt';
 import { User } from '@arabiaaislamia/database';
 import { RegisterDto } from './dto/register.dto';
 import { LoginDto } from './dto/login.dto';
@@ -15,7 +16,10 @@ import { UserResponseDto } from './dto/auth-response.dto';
 import { UpdateProfileDto } from './dto/update-profile.dto';
 import { UpdatePasswordDto } from './dto/update-password.dto';
 import { GoogleUserDto } from './dto/google-auth.dto';
-import { EmailService, renderWelcomeAdminEmail } from '@arabiaaislamia/email';
+import { renderWelcomeAdminEmail, renderInviteAdminSetPasswordEmail } from '@arabiaaislamia/email';
+import { EmailLogService } from '../email-logs/email-log.service';
+
+const INVITE_TOKEN_EXPIRY_DAYS = 7;
 
 @Injectable()
 export class AuthService {
@@ -24,7 +28,7 @@ export class AuthService {
     private readonly userRepository: Repository<User>,
     private readonly jwtService: JwtService,
     private readonly configService: ConfigService,
-    private readonly emailService: EmailService,
+    private readonly emailLogService: EmailLogService,
   ) { }
 
   async register(registerDto: RegisterDto) {
@@ -63,17 +67,85 @@ export class AuthService {
         logoUrl: logoUrl || undefined,
         brandName: 'Jamia Arabia',
       });
-      await this.emailService.sendMail({
+      await this.emailLogService.sendAndLog({
         to: saved.email,
         subject: 'Welcome Admin – Jamia Arabia',
         text: `Hello ${saved.name},\n\nYour admin account has been created. You can now sign in to the admin dashboard.\n\nRegards,\nJamia Arabia Team`,
         html,
+        recipientName: saved.name,
+        context: 'welcome_admin',
       });
     } catch (err) {
       console.error('Error sending admin email', err);
-      // optionally: continue without failing creation
     }
     return this.toResponse(saved);
+  }
+
+  async inviteAdmin(name: string, email: string): Promise<UserResponseDto> {
+    const normalizedEmail = email.toLowerCase().trim();
+    const existing = await this.userRepository.findOne({
+      where: { email: normalizedEmail },
+    });
+    if (existing) throw new ConflictException('User already exists');
+
+    const token = this.generateInviteToken();
+    const expiresAt = new Date();
+    expiresAt.setDate(expiresAt.getDate() + INVITE_TOKEN_EXPIRY_DAYS);
+
+    const user = this.userRepository.create({
+      email: normalizedEmail,
+      name: name.trim(),
+      password: null,
+      role: 'admin',
+      inviteToken: token,
+      inviteTokenExpiresAt: expiresAt,
+    });
+    const saved = await this.userRepository.save(user);
+
+    const baseUrl = this.configService.get<string>('FRONTEND_URL') || this.configService.get<string>('SECONDARY_APP_URL') || 'http://localhost:3000';
+    const setPasswordUrl = `${baseUrl.replace(/\/$/, '')}/registration/set-password?token=${encodeURIComponent(token)}`;
+    const logoUrl = this.configService.get<string>('EMAIL_LOGO_URL');
+
+    try {
+      const html = renderInviteAdminSetPasswordEmail({
+        name: saved.name,
+        setPasswordUrl,
+        logoUrl: logoUrl || undefined,
+        brandName: 'Jamia Arabia',
+        expiresInDays: INVITE_TOKEN_EXPIRY_DAYS,
+      });
+      await this.emailLogService.sendAndLog({
+        to: saved.email,
+        subject: 'Set your password – Jamia Arabia',
+        text: `Hello ${saved.name},\n\nYou have been invited to join as an admin. Set your password here: ${setPasswordUrl}\n\nThis link expires in ${INVITE_TOKEN_EXPIRY_DAYS} days.\n\nRegards,\nJamia Arabia Team`,
+        html,
+        recipientName: saved.name,
+        context: 'invite_admin',
+      });
+    } catch (err) {
+      console.error('Error sending invite email', err);
+    }
+    return this.toResponse(saved);
+  }
+
+  async setPasswordByToken(token: string, newPassword: string): Promise<void> {
+    const user = await this.userRepository.findOne({
+      where: { inviteToken: token },
+    });
+    if (!user) throw new BadRequestException('Invalid or expired link');
+    if (!user.inviteTokenExpiresAt || user.inviteTokenExpiresAt < new Date()) {
+      throw new BadRequestException('This link has expired');
+    }
+    const salt = await bcrypt.genSalt(10);
+    user.password = await bcrypt.hash(newPassword, salt);
+    user.inviteToken = null;
+    user.inviteTokenExpiresAt = null;
+    await this.userRepository.save(user);
+  }
+
+  private generateInviteToken(): string {
+    const crypto = require('crypto');
+    return crypto.randomBytes(32).toString('hex');
   }
 
   async deleteAdmin(userId: string, currentUserId: string): Promise<void> {
