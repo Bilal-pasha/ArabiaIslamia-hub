@@ -2,7 +2,7 @@ name: Deploy to Google Cloud VM
 
 on:
   workflow_run:
-    workflows: ["Build Docker Images"]
+    workflows: ["Build Library Docker Images"]
     types:
       - completed
   workflow_dispatch:
@@ -22,7 +22,7 @@ on:
 
 env:
   REGISTRY: ghcr.io
-  DEPLOY_DIR: video-vault-application
+  DEPLOY_DIR: library-application
 
 jobs:
   deploy:
@@ -63,7 +63,7 @@ jobs:
           host: ${{ secrets.GCP_HOST }}
           username: ${{ secrets.GCP_USERNAME }}
           key: ${{ secrets.GCP_SSH_KEY }}
-          source: "infra/library/prod/docker-compose.prod.yml,infra/library/prod/init-databases.sql,infra/library/prod/.env,infra/library/prod/config/Caddyfile"
+          source: "infra/library/prod/docker-compose.yml,infra/library/prod/init-databases.sql,infra/library/prod/.env,infra/library/prod/config/Caddyfile"
           target: "/home/${{ secrets.GCP_USERNAME }}/${{ env.DEPLOY_DIR }}"
           strip_components: 2
 
