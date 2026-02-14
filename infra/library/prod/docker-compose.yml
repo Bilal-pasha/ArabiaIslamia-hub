@@ -29,6 +29,14 @@ services:
     restart: unless-stopped
     env_file:
       - ./.env
+    environment:
+      NODE_ENV: production
+      SERVER_PORT: 8004
+      DB_HOST: postgres
+      DB_PORT: 5432
+      LIBRARY_DB_NAME: library_db
+      CORS_ORIGIN: https://library.jamiaarabiaislamia.com
+      COOKIE_DOMAIN: .jamiaarabiaislamia.com
     networks:
       - app-network
     depends_on:
