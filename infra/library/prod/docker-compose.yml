@@ -9,6 +9,9 @@ services:
     restart: unless-stopped
     env_file:
       - ./.env
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-postgres}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?POSTGRES_PASSWORD must be set in .env}
     ports:
       - "127.0.0.1:5432:5432"
     volumes:
@@ -17,11 +20,11 @@ services:
     networks:
       - app-network
     healthcheck:
-      test: [ "CMD-SHELL", "pg_isready -U postgres" ]
+      test: [ "CMD-SHELL", "pg_isready -U postgres || pg_isready -U \"$POSTGRES_USER\"" ]
       interval: 5s
       timeout: 5s
-      retries: 12
-      start_period: 30s
+      retries: 18
+      start_period: 60s
 
   library-api:
     image: ${REGISTRY}/${IMAGE_NAME_LOWER}-library-api:${IMAGE_TAG:-latest}

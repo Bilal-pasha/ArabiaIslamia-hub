@@ -48,3 +48,19 @@ Deploy the library app at **library.jamiaarabiaislamia.com** and **api.library.j
 Caddy serves:
 - `library.jamiaarabiaislamia.com` → library-app:3013  
 - `api.library.jamiaarabiaislamia.com` → library-api:8004  
+
+## Troubleshooting
+
+**Postgres unhealthy / dependency failed to start**
+
+1. Ensure `.env` has `POSTGRES_PASSWORD` set (required). If missing, `docker compose up` will fail with a clear error.
+2. On the server, check Postgres logs:
+   ```bash
+   docker logs library-postgres
+   ```
+   Look for: “port 5432 already in use” (stop host Postgres or change compose port), “POSTGRES_PASSWORD”, or init script errors.
+3. If the volume was created with a different password, remove it and redeploy (data will be recreated from init):
+   ```bash
+   docker compose -f docker-compose.yml down -v
+   # then up again
+   ```
