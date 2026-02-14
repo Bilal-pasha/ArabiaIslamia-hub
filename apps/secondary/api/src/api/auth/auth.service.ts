@@ -65,11 +65,11 @@ export class AuthService {
       const html = renderWelcomeAdminEmail({
         name: saved.name,
         logoUrl: logoUrl || undefined,
-        brandName: 'Jamia Arabia',
+        brandName: 'Jamia Arabia Islamia Secondary Educational System',
       });
       await this.emailLogService.sendAndLog({
         to: saved.email,
-        subject: 'Welcome Admin – Jamia Arabia',
+        subject: 'Welcome Admin – Jamia Arabia Islamia Secondary Educational System',
         text: `Hello ${saved.name},\n\nYour admin account has been created. You can now sign in to the admin dashboard.\n\nRegards,\nJamia Arabia Team`,
         html,
         recipientName: saved.name,
@@ -111,12 +111,12 @@ export class AuthService {
         name: saved.name,
         setPasswordUrl,
         logoUrl: logoUrl || undefined,
-        brandName: 'Jamia Arabia',
+        brandName: 'Jamia Arabia Islamia Secondary Educational System',
         expiresInDays: INVITE_TOKEN_EXPIRY_DAYS,
       });
       await this.emailLogService.sendAndLog({
         to: saved.email,
-        subject: 'Set your password – Jamia Arabia',
+        subject: 'Set your password – Jamia Arabia Islamia Secondary Educational System',
         text: `Hello ${saved.name},\n\nYou have been invited to join as an admin. Set your password here: ${setPasswordUrl}\n\nThis link expires in ${INVITE_TOKEN_EXPIRY_DAYS} days.\n\nRegards,\nJamia Arabia Team`,
         html,
         recipientName: saved.name,
