@@ -4,6 +4,13 @@ import React from 'react';
 import Lottie from 'lottie-react';
 import loadingAnimationData from './LoadingAnimation.json';
 
+// Cast for compatibility with @types/react ReactNode (ReactPortal) strictness
+const LottiePlayer = Lottie as React.ComponentType<{
+  animationData: object;
+  loop?: boolean;
+  style?: React.CSSProperties;
+}>;
+
 export interface GlobalLoadingProps {
   /** Optional class name for the wrapper (e.g. for background). */
   className?: string;
@@ -30,19 +37,19 @@ export function GlobalLoading({
   className = '',
   width = 200,
   height = 200,
-}: GlobalLoadingProps): React.ReactElement {
-  return React.createElement(
-    'div',
-    {
-      className,
-      style: defaultWrapperStyle,
-      role: 'status',
-      'aria-label': 'Loading',
-    },
-    React.createElement(Lottie, {
-      animationData: loadingAnimationData as object,
-      loop: true,
-      style: { width, height },
-    })
+}: GlobalLoadingProps) {
+  return (
+    <div
+      className={className}
+      style={defaultWrapperStyle}
+      role="status"
+      aria-label="Loading"
+    >
+      <LottiePlayer
+        animationData={loadingAnimationData as object}
+        loop
+        style={{ width, height }}
+      />
+    </div>
   );
 }
