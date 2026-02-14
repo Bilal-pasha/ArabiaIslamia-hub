@@ -9,9 +9,6 @@ services:
     restart: unless-stopped
     env_file:
       - ./.env
-    environment:
-      POSTGRES_USER: ${POSTGRES_USER:-postgres}
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?POSTGRES_PASSWORD must be set in .env}
     ports:
       - "127.0.0.1:5432:5432"
     volumes:
@@ -32,13 +29,6 @@ services:
     restart: unless-stopped
     env_file:
       - ./.env
-    environment:
-      NODE_ENV: production
-      SERVER_PORT: 8004
-      DB_HOST: postgres
-      LIBRARY_DB_NAME: library_db
-      CORS_ORIGIN: https://library.jamiaarabiaislamia.com
-      COOKIE_DOMAIN: .jamiaarabiaislamia.com
     networks:
       - app-network
     depends_on:
