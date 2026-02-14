@@ -65,7 +65,7 @@ jobs:
           key: ${{ secrets.GCP_SSH_KEY }}
           source: "infra/library/prod/docker-compose.yml,infra/library/prod/init-databases.sql,infra/library/prod/.env,infra/library/prod/config/Caddyfile"
           target: "/home/${{ secrets.GCP_USERNAME }}/${{ env.DEPLOY_DIR }}"
-          strip_components: 2
+          strip_components: 3
 
       # ─────────────────────────────────────────────
       # Deploy on Google Cloud VM
@@ -88,7 +88,7 @@ jobs:
 
             echo "$GITHUB_TOKEN" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
 
-            IMAGE_TAG="${{ github.event.inputs.image-tag || github.event.workflow_run.head_sha || 'latest' }}"
+            export IMAGE_TAG="${{ github.event.inputs.image-tag || github.event.workflow_run.head_sha || 'latest' }}"
             IMAGE_URL_API="$REGISTRY/$IMAGE_NAME_LOWER-library-api:$IMAGE_TAG"
             IMAGE_URL_APP="$REGISTRY/$IMAGE_NAME_LOWER-library-app:$IMAGE_TAG"
 
@@ -97,10 +97,10 @@ jobs:
             echo "📥 Pulling Docker image: $IMAGE_URL_APP"
             docker pull "$IMAGE_URL_APP"
             echo "🛑 Stopping containers"
-            docker compose -f docker-compose.prod.yml down --remove-orphans
+            docker compose -f docker-compose.yml down --remove-orphans
 
             echo "♻️ Starting new version"
-            docker compose -f docker-compose.prod.yml up -d --remove-orphans
+            docker compose -f docker-compose.yml up -d --remove-orphans
 
             echo "🧹 Cleanup"
             docker image prune -f
