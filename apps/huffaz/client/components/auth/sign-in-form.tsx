@@ -1,6 +1,7 @@
 'use client';
 
 import Link from 'next/link';
+import { Input, PasswordInput } from '@arabiaaislamia/ui';
 
 interface SignInFormProps {
   email: string;
@@ -17,7 +18,7 @@ export function SignInForm({ email, setEmail, password, setPassword, onSubmit }:
       <form onSubmit={onSubmit} className="space-y-4">
         <div>
           <label className="block text-sm font-medium mb-1">Email</label>
-          <input
+          <Input
             type="email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
@@ -27,8 +28,7 @@ export function SignInForm({ email, setEmail, password, setPassword, onSubmit }:
         </div>
         <div>
           <label className="block text-sm font-medium mb-1">Password</label>
-          <input
-            type="password"
+          <PasswordInput
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             className="w-full border rounded px-3 py-2"

@@ -5,7 +5,7 @@ import { useRouter, useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import Image from 'next/image';
 import { Card, CardContent, CardTitle, Skeleton, toast } from '@arabiaaislamia/ui';
-import { Button, Input, Label } from '@arabiaaislamia/ui';
+import { Button, Input, Label, PasswordInput } from '@arabiaaislamia/ui';
 import { adminRoutes, publicRoutes } from '@/constants/route';
 import { apiClient } from '@/utils/axios-instance';
 
@@ -74,9 +74,8 @@ function AdminLoginContent() {
                 <Label htmlFor="password" className="mb-1.5 block text-amber-900">
                   Password
                 </Label>
-                <Input
+                <PasswordInput
                   id="password"
-                  type="password"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   className="h-10 border-amber-200 bg-white text-amber-950 placeholder:text-amber-500"

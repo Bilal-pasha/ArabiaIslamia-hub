@@ -1,6 +1,7 @@
 'use client';
 
 import Link from 'next/link';
+import { Input, PasswordInput } from '@arabiaaislamia/ui';
 
 interface SignUpFormProps {
   name: string;
@@ -27,7 +28,7 @@ export function SignUpForm({
       <form onSubmit={onSubmit} className="space-y-4">
         <div>
           <label className="block text-sm font-medium mb-1">Name</label>
-          <input
+          <Input
             type="text"
             value={name}
             onChange={(e) => setName(e.target.value)}
@@ -37,7 +38,7 @@ export function SignUpForm({
         </div>
         <div>
           <label className="block text-sm font-medium mb-1">Email</label>
-          <input
+          <Input
             type="email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
@@ -47,8 +48,7 @@ export function SignUpForm({
         </div>
         <div>
           <label className="block text-sm font-medium mb-1">Password</label>
-          <input
-            type="password"
+          <PasswordInput
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             className="w-full border rounded px-3 py-2"

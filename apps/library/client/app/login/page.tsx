@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { motion } from 'framer-motion';
-import { Button, Input, Label, Card, CardHeader, CardTitle, CardContent } from '@arabiaaislamia/ui';
+import { Button, Input, Label, PasswordInput, Card, CardHeader, CardTitle, CardContent } from '@arabiaaislamia/ui';
 import { fadeInUp, staggerContainer, defaultTransition } from '@arabiaaislamia/animations';
 import { useLocale } from '@/lib/locale';
 import { api } from '@/lib/api';
@@ -75,9 +75,8 @@ export default function LoginPage() {
                 </div>
                 <div className="space-y-2">
                   <Label htmlFor="password">{t('auth.password')}</Label>
-                  <Input
+                  <PasswordInput
                     id="password"
-                    type="password"
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
                     required

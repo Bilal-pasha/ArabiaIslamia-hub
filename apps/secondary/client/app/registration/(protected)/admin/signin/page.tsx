@@ -4,7 +4,7 @@ import { Suspense, useState } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import { Card, CardContent, CardTitle, Skeleton, toast } from '@arabiaaislamia/ui';
-import { Button, Input, Label } from '@arabiaaislamia/ui';
+import { Button, Input, Label, PasswordInput } from '@arabiaaislamia/ui';
 import { SecondaryLogo } from '@/components/logo';
 import { publicRoutes, privateRoutes } from '@/constants/route';
 import { apiClient } from '@/utils/axios-instance';
@@ -64,9 +64,8 @@ function AdminSigninContent() {
               </div>
               <div>
                 <Label htmlFor="password" className="mb-1.5 block text-slate-200">Password</Label>
-                <Input
+                <PasswordInput
                   id="password"
-                  type="password"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   className="h-10 bg-white/5 border-white/20 text-white placeholder:text-slate-500"

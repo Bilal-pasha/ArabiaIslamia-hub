@@ -3,7 +3,7 @@
 import { useState, useEffect, Suspense } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import Link from 'next/link';
-import { Card, CardContent, CardHeader, CardTitle, Button, Input, Label, toast } from '@arabiaaislamia/ui';
+import { Card, CardContent, CardHeader, CardTitle, Button, Input, Label, PasswordInput, toast } from '@arabiaaislamia/ui';
 import { apiClient } from '@/utils/axios-instance';
 import { publicRoutes, privateRoutes } from '@/constants/route';
 
@@ -73,9 +73,8 @@ function SetPasswordForm() {
           <form onSubmit={handleSubmit} className="space-y-4">
             <div>
               <Label htmlFor="password" className="text-slate-200">Password</Label>
-              <Input
+              <PasswordInput
                 id="password"
-                type="password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 className="bg-white/5 border-white/20 text-white mt-1.5"
@@ -86,9 +85,8 @@ function SetPasswordForm() {
             </div>
             <div>
               <Label htmlFor="confirm" className="text-slate-200">Confirm password</Label>
-              <Input
+              <PasswordInput
                 id="confirm"
-                type="password"
                 value={confirm}
                 onChange={(e) => setConfirm(e.target.value)}
                 className="bg-white/5 border-white/20 text-white mt-1.5"
