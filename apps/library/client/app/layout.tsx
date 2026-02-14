@@ -2,6 +2,7 @@ import './globals.css';
 import { Providers } from '@/components/providers';
 import { ClientLocaleDir } from '@/components/client-locale-dir';
 import { Toaster } from '@arabiaaislamia/ui';
+import { appRtlFont } from '@/lib/font';
 
 export const metadata = {
   title: { default: 'کتب خانہ | جامعہ عربیہ اسلامیہ', template: '%s | کتب خانہ' },
@@ -10,16 +11,17 @@ export const metadata = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="ur" dir="rtl" suppressHydrationWarning>
+    <html lang="ur" dir="rtl" suppressHydrationWarning className={appRtlFont.className}>
       <head>
-        <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
-        <link
-          href="https://fonts.googleapis.com/css2?family=Noto+Naskh+Arabic:wght@400;600;700&family=Noto+Nastaliq+Urdu:wght@400;700&family=Poppins:wght@400;500;600;700&display=swap"
-          rel="stylesheet"
-        />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta name="description" content="کتب اور جاریات کا نظم – جامعہ عربیہ اسلامیہ لائبریری" />
+        <meta name="keywords" content="کتب, جاریات, جامعہ عربیہ اسلامیہ, لائبریری" />
+        <meta name="author" content="جامعہ عربیہ اسلامیہ لائبریری" />
+        <meta name="robots" content="index, follow" />
+        <meta name="googlebot" content="index, follow" />
+        <meta name="google" content="notranslate" />
       </head>
-      <body className="min-h-screen antialiased font-sans">
+      <body className="min-h-screen antialiased">
         <Providers>
           <ClientLocaleDir />
           {children}
