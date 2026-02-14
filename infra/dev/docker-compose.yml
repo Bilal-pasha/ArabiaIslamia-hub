@@ -102,7 +102,7 @@ services:
     depends_on:
       postgres:
         condition: service_healthy
-    command: sh -c "sleep 2 && cd /app && pnpm install && pnpm --filter @arabiaaislamia/database run build && pnpm --filter @arabiaaislamia/storage run build && cd apps/secondary/api && pnpm run start:dev"
+    command: sh -c "sleep 2 && cd /app && pnpm install && pnpm --filter @arabiaaislamia/database run build && pnpm --filter @arabiaaislamia/storage run build && pnpm db:migrate:secondary && cd apps/secondary/api && pnpm run start:dev"
 
   # --- Frontend (UI) containers ---
   # main-website:

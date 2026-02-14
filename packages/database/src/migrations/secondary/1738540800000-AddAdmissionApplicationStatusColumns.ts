@@ -1,40 +1,19 @@
-import { MigrationInterface, QueryRunner, TableColumn } from 'typeorm';
+import { MigrationInterface, QueryRunner } from 'typeorm';
 
 export class AddAdmissionApplicationStatusColumns1738540800000 implements MigrationInterface {
   public async up(queryRunner: QueryRunner): Promise<void> {
-    await queryRunner.addColumn(
-      'admission_applications',
-      new TableColumn({
-        name: 'status_reason',
-        type: 'varchar',
-        length: '500',
-        isNullable: true,
-      })
+    // Use IF NOT EXISTS so migration is safe when columns were already created by synchronize
+    await queryRunner.query(
+      `ALTER TABLE "admission_applications" ADD COLUMN IF NOT EXISTS "status_reason" varchar(500)`,
     );
-    await queryRunner.addColumn(
-      'admission_applications',
-      new TableColumn({
-        name: 'oral_test_marks',
-        type: 'varchar',
-        length: '20',
-        isNullable: true,
-      })
+    await queryRunner.query(
+      `ALTER TABLE "admission_applications" ADD COLUMN IF NOT EXISTS "oral_test_marks" varchar(20)`,
     );
-    await queryRunner.addColumn(
-      'admission_applications',
-      new TableColumn({
-        name: 'oral_test_passed',
-        type: 'boolean',
-        isNullable: true,
-      })
+    await queryRunner.query(
+      `ALTER TABLE "admission_applications" ADD COLUMN IF NOT EXISTS "oral_test_passed" boolean`,
     );
-    await queryRunner.addColumn(
-      'admission_applications',
-      new TableColumn({
-        name: 'written_admit_eligible',
-        type: 'boolean',
-        default: false,
-      })
+    await queryRunner.query(
+      `ALTER TABLE "admission_applications" ADD COLUMN IF NOT EXISTS "written_admit_eligible" boolean DEFAULT false`,
     );
   }
 

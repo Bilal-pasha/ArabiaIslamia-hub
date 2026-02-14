@@ -1,5 +1,27 @@
 import { MigrationInterface, QueryRunner, Table, TableForeignKey } from 'typeorm';
 
+let fkSavepointId = 0;
+
+async function createForeignKeyIfNotExists(
+  queryRunner: QueryRunner,
+  table: string,
+  fk: TableForeignKey,
+): Promise<void> {
+  const spName = `sp_fk_${table}_${++fkSavepointId}`;
+  await queryRunner.query(`SAVEPOINT ${spName}`);
+  try {
+    await queryRunner.createForeignKey(table, fk);
+  } catch (err: unknown) {
+    const e = err as { code?: string; driverError?: { code?: string } };
+    const code = e?.code ?? e?.driverError?.code;
+    if (code === '42710') {
+      await queryRunner.query(`ROLLBACK TO SAVEPOINT ${spName}`);
+    } else {
+      throw err;
+    }
+  }
+}
+
 export class CreateRenewalApplicationsTable1738541200000 implements MigrationInterface {
   public async up(queryRunner: QueryRunner): Promise<void> {
     await queryRunner.createTable(
@@ -21,7 +43,8 @@ export class CreateRenewalApplicationsTable1738541200000 implements MigrationInt
       true,
     );
 
-    await queryRunner.createForeignKey(
+    await createForeignKeyIfNotExists(
+      queryRunner,
       'renewal_applications',
       new TableForeignKey({
         columnNames: ['student_id'],
@@ -30,7 +53,8 @@ export class CreateRenewalApplicationsTable1738541200000 implements MigrationInt
         onDelete: 'CASCADE',
       }),
     );
-    await queryRunner.createForeignKey(
+    await createForeignKeyIfNotExists(
+      queryRunner,
       'renewal_applications',
       new TableForeignKey({
         columnNames: ['academic_session_id'],
@@ -39,7 +63,8 @@ export class CreateRenewalApplicationsTable1738541200000 implements MigrationInt
         onDelete: 'RESTRICT',
       }),
     );
-    await queryRunner.createForeignKey(
+    await createForeignKeyIfNotExists(
+      queryRunner,
       'renewal_applications',
       new TableForeignKey({
         columnNames: ['class_id'],
@@ -48,7 +73,8 @@ export class CreateRenewalApplicationsTable1738541200000 implements MigrationInt
         onDelete: 'RESTRICT',
       }),
     );
-    await queryRunner.createForeignKey(
+    await createForeignKeyIfNotExists(
+      queryRunner,
       'renewal_applications',
       new TableForeignKey({
         columnNames: ['section_id'],

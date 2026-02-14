@@ -30,7 +30,6 @@ export interface EmailBrandOptions {
   logoUrl?: string;
   brandName?: string;
 }
-
 /**
  * Build the header logo block for secondary emails.
  * Header uses dark blue; logo image or brand name in light blue for contrast.
@@ -38,7 +37,30 @@ export interface EmailBrandOptions {
 export function buildSecondaryLogoBlock(options: EmailBrandOptions): string {
   const { logoUrl, brandName = SECONDARY_BRAND_NAME } = options;
   if (logoUrl) {
-    return `<img src="${escapeHtml(logoUrl)}" alt="${escapeHtml(brandName)}" width="140" height="auto" style="display:block;max-width:140px;height:auto; border-radius: 10px;" />`;
+    return `
+      <div style="
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        border-radius: 20px;
+        background: rgba(255, 255, 255, 0.1);
+        backdrop-filter: blur(10px);
+        padding: 16px;
+        box-shadow: 0 10px 15px rgba(0, 0, 0, 0.1);
+      ">
+        <img src="${escapeHtml(logoUrl)}" 
+             alt="${escapeHtml(brandName)}" 
+             width="100" 
+             height="100" 
+             style="
+               display: block;
+               max-width: 100px;
+               height: auto;
+               border-radius: 10px;
+             " />
+      </div>
+    `;
   }
+
   return `<span style="font-size:24px;font-weight:700;color:${COLOR_HEADER_TEXT};letter-spacing:0.02em;">${escapeHtml(brandName)}</span>`;
 }

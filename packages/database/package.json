@@ -6,10 +6,10 @@
   "types": "./dist/index.d.ts",
   "scripts": {
     "build": "tsc",
-    "migrate:huffaz": "ts-node -r tsconfig-paths/register ./node_modules/typeorm/cli.js migration:run -d ./src/data-source.huffaz.ts",
-    "migrate:secondary": "ts-node -r tsconfig-paths/register ./node_modules/typeorm/cli.js migration:run -d ./src/data-source.secondary.ts",
-    "migrate:scouts-portal": "ts-node -r tsconfig-paths/register ./node_modules/typeorm/cli.js migration:run -d ./src/data-source.scouts-portal.ts",
-    "migrate:main-website": "ts-node -r tsconfig-paths/register ./node_modules/typeorm/cli.js migration:run -d ./src/data-source.main-website.ts"
+    "migrate:huffaz": "node ./node_modules/typeorm/cli.js migration:run -d ./dist/data-source.huffaz.js",
+    "migrate:secondary": "node ./node_modules/typeorm/cli.js migration:run -d ./dist/data-source.secondary.js",
+    "migrate:scouts-portal": "node ./node_modules/typeorm/cli.js migration:run -d ./dist/data-source.scouts-portal.js",
+    "migrate:main-website": "node ./node_modules/typeorm/cli.js migration:run -d ./dist/data-source.main-website.js"
   },
   "dependencies": {
     "bcrypt": "^6.0.0",

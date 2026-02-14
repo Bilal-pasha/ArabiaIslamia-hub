@@ -5,6 +5,29 @@ import {
   TableForeignKey,
 } from 'typeorm';
 
+let fkSavepointId = 0;
+
+/** Add FK only if it does not already exist (safe when DB was created by synchronize). Uses savepoint so a duplicate does not abort the transaction. */
+async function createForeignKeyIfNotExists(
+  queryRunner: QueryRunner,
+  table: string,
+  fk: TableForeignKey,
+): Promise<void> {
+  const spName = `sp_fk_${table}_${++fkSavepointId}`;
+  await queryRunner.query(`SAVEPOINT ${spName}`);
+  try {
+    await queryRunner.createForeignKey(table, fk);
+  } catch (err: unknown) {
+    const e = err as { code?: string; driverError?: { code?: string } };
+    const code = e?.code ?? e?.driverError?.code;
+    if (code === '42710') {
+      await queryRunner.query(`ROLLBACK TO SAVEPOINT ${spName}`);
+    } else {
+      throw err;
+    }
+  }
+}
+
 export class CreateSchoolTables1735296200000 implements MigrationInterface {
   public async up(queryRunner: QueryRunner): Promise<void> {
     // 1. classes
@@ -37,7 +60,7 @@ export class CreateSchoolTables1735296200000 implements MigrationInterface {
       }),
       true,
     );
-    await queryRunner.createForeignKey('sections', new TableForeignKey({ columnNames: ['class_id'], referencedTableName: 'classes', referencedColumnNames: ['id'], onDelete: 'CASCADE' }));
+    await createForeignKeyIfNotExists(queryRunner, 'sections', new TableForeignKey({ columnNames: ['class_id'], referencedTableName: 'classes', referencedColumnNames: ['id'], onDelete: 'CASCADE' }));
 
     // 3. academic_sessions
     await queryRunner.createTable(
@@ -89,7 +112,7 @@ export class CreateSchoolTables1735296200000 implements MigrationInterface {
       }),
       true,
     );
-    await queryRunner.createForeignKey('parents', new TableForeignKey({ columnNames: ['user_id'], referencedTableName: 'users', referencedColumnNames: ['id'], onDelete: 'SET NULL' }));
+    await createForeignKeyIfNotExists(queryRunner, 'parents', new TableForeignKey({ columnNames: ['user_id'], referencedTableName: 'users', referencedColumnNames: ['id'], onDelete: 'SET NULL' }));
 
     // 6. students
     await queryRunner.createTable(
@@ -113,8 +136,8 @@ export class CreateSchoolTables1735296200000 implements MigrationInterface {
       }),
       true,
     );
-    await queryRunner.createForeignKey('students', new TableForeignKey({ columnNames: ['user_id'], referencedTableName: 'users', referencedColumnNames: ['id'], onDelete: 'SET NULL' }));
-    await queryRunner.createForeignKey('students', new TableForeignKey({ columnNames: ['parent_id'], referencedTableName: 'parents', referencedColumnNames: ['id'], onDelete: 'SET NULL' }));
+    await createForeignKeyIfNotExists(queryRunner, 'students', new TableForeignKey({ columnNames: ['user_id'], referencedTableName: 'users', referencedColumnNames: ['id'], onDelete: 'SET NULL' }));
+    await createForeignKeyIfNotExists(queryRunner, 'students', new TableForeignKey({ columnNames: ['parent_id'], referencedTableName: 'parents', referencedColumnNames: ['id'], onDelete: 'SET NULL' }));
 
     // 7. teachers
     await queryRunner.createTable(
@@ -133,8 +156,8 @@ export class CreateSchoolTables1735296200000 implements MigrationInterface {
       }),
       true,
     );
-    await queryRunner.createForeignKey('teachers', new TableForeignKey({ columnNames: ['user_id'], referencedTableName: 'users', referencedColumnNames: ['id'], onDelete: 'SET NULL' }));
-    await queryRunner.createForeignKey('teachers', new TableForeignKey({ columnNames: ['subject_id'], referencedTableName: 'subjects', referencedColumnNames: ['id'], onDelete: 'SET NULL' }));
+    await createForeignKeyIfNotExists(queryRunner, 'teachers', new TableForeignKey({ columnNames: ['user_id'], referencedTableName: 'users', referencedColumnNames: ['id'], onDelete: 'SET NULL' }));
+    await createForeignKeyIfNotExists(queryRunner, 'teachers', new TableForeignKey({ columnNames: ['subject_id'], referencedTableName: 'subjects', referencedColumnNames: ['id'], onDelete: 'SET NULL' }));
 
     // 8. registrations
     await queryRunner.createTable(
@@ -154,10 +177,10 @@ export class CreateSchoolTables1735296200000 implements MigrationInterface {
       }),
       true,
     );
-    await queryRunner.createForeignKey('registrations', new TableForeignKey({ columnNames: ['student_id'], referencedTableName: 'students', referencedColumnNames: ['id'], onDelete: 'CASCADE' }));
-    await queryRunner.createForeignKey('registrations', new TableForeignKey({ columnNames: ['class_id'], referencedTableName: 'classes', referencedColumnNames: ['id'], onDelete: 'CASCADE' }));
-    await queryRunner.createForeignKey('registrations', new TableForeignKey({ columnNames: ['section_id'], referencedTableName: 'sections', referencedColumnNames: ['id'], onDelete: 'CASCADE' }));
-    await queryRunner.createForeignKey('registrations', new TableForeignKey({ columnNames: ['academic_session_id'], referencedTableName: 'academic_sessions', referencedColumnNames: ['id'], onDelete: 'CASCADE' }));
+    await createForeignKeyIfNotExists(queryRunner, 'registrations', new TableForeignKey({ columnNames: ['student_id'], referencedTableName: 'students', referencedColumnNames: ['id'], onDelete: 'CASCADE' }));
+    await createForeignKeyIfNotExists(queryRunner, 'registrations', new TableForeignKey({ columnNames: ['class_id'], referencedTableName: 'classes', referencedColumnNames: ['id'], onDelete: 'CASCADE' }));
+    await createForeignKeyIfNotExists(queryRunner, 'registrations', new TableForeignKey({ columnNames: ['section_id'], referencedTableName: 'sections', referencedColumnNames: ['id'], onDelete: 'CASCADE' }));
+    await createForeignKeyIfNotExists(queryRunner, 'registrations', new TableForeignKey({ columnNames: ['academic_session_id'], referencedTableName: 'academic_sessions', referencedColumnNames: ['id'], onDelete: 'CASCADE' }));
 
     // 9. attendance
     await queryRunner.createTable(
@@ -175,8 +198,8 @@ export class CreateSchoolTables1735296200000 implements MigrationInterface {
       }),
       true,
     );
-    await queryRunner.createForeignKey('attendance', new TableForeignKey({ columnNames: ['registration_id'], referencedTableName: 'registrations', referencedColumnNames: ['id'], onDelete: 'CASCADE' }));
-    await queryRunner.createForeignKey('attendance', new TableForeignKey({ columnNames: ['academic_session_id'], referencedTableName: 'academic_sessions', referencedColumnNames: ['id'], onDelete: 'CASCADE' }));
+    await createForeignKeyIfNotExists(queryRunner, 'attendance', new TableForeignKey({ columnNames: ['registration_id'], referencedTableName: 'registrations', referencedColumnNames: ['id'], onDelete: 'CASCADE' }));
+    await createForeignKeyIfNotExists(queryRunner, 'attendance', new TableForeignKey({ columnNames: ['academic_session_id'], referencedTableName: 'academic_sessions', referencedColumnNames: ['id'], onDelete: 'CASCADE' }));
 
     // 10. fee_types
     await queryRunner.createTable(
@@ -209,9 +232,9 @@ export class CreateSchoolTables1735296200000 implements MigrationInterface {
       }),
       true,
     );
-    await queryRunner.createForeignKey('fee_structure', new TableForeignKey({ columnNames: ['class_id'], referencedTableName: 'classes', referencedColumnNames: ['id'], onDelete: 'CASCADE' }));
-    await queryRunner.createForeignKey('fee_structure', new TableForeignKey({ columnNames: ['fee_type_id'], referencedTableName: 'fee_types', referencedColumnNames: ['id'], onDelete: 'CASCADE' }));
-    await queryRunner.createForeignKey('fee_structure', new TableForeignKey({ columnNames: ['academic_session_id'], referencedTableName: 'academic_sessions', referencedColumnNames: ['id'], onDelete: 'CASCADE' }));
+    await createForeignKeyIfNotExists(queryRunner, 'fee_structure', new TableForeignKey({ columnNames: ['class_id'], referencedTableName: 'classes', referencedColumnNames: ['id'], onDelete: 'CASCADE' }));
+    await createForeignKeyIfNotExists(queryRunner, 'fee_structure', new TableForeignKey({ columnNames: ['fee_type_id'], referencedTableName: 'fee_types', referencedColumnNames: ['id'], onDelete: 'CASCADE' }));
+    await createForeignKeyIfNotExists(queryRunner, 'fee_structure', new TableForeignKey({ columnNames: ['academic_session_id'], referencedTableName: 'academic_sessions', referencedColumnNames: ['id'], onDelete: 'CASCADE' }));
 
     // 12. fee_payments
     await queryRunner.createTable(
@@ -231,9 +254,9 @@ export class CreateSchoolTables1735296200000 implements MigrationInterface {
       }),
       true,
     );
-    await queryRunner.createForeignKey('fee_payments', new TableForeignKey({ columnNames: ['student_id'], referencedTableName: 'students', referencedColumnNames: ['id'], onDelete: 'CASCADE' }));
-    await queryRunner.createForeignKey('fee_payments', new TableForeignKey({ columnNames: ['fee_type_id'], referencedTableName: 'fee_types', referencedColumnNames: ['id'], onDelete: 'CASCADE' }));
-    await queryRunner.createForeignKey('fee_payments', new TableForeignKey({ columnNames: ['academic_session_id'], referencedTableName: 'academic_sessions', referencedColumnNames: ['id'], onDelete: 'CASCADE' }));
+    await createForeignKeyIfNotExists(queryRunner, 'fee_payments', new TableForeignKey({ columnNames: ['student_id'], referencedTableName: 'students', referencedColumnNames: ['id'], onDelete: 'CASCADE' }));
+    await createForeignKeyIfNotExists(queryRunner, 'fee_payments', new TableForeignKey({ columnNames: ['fee_type_id'], referencedTableName: 'fee_types', referencedColumnNames: ['id'], onDelete: 'CASCADE' }));
+    await createForeignKeyIfNotExists(queryRunner, 'fee_payments', new TableForeignKey({ columnNames: ['academic_session_id'], referencedTableName: 'academic_sessions', referencedColumnNames: ['id'], onDelete: 'CASCADE' }));
   }
 
   public async down(queryRunner: QueryRunner): Promise<void> {

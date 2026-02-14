@@ -1,23 +1,12 @@
-import { MigrationInterface, QueryRunner, TableColumn } from 'typeorm';
+import { MigrationInterface, QueryRunner } from 'typeorm';
 
 export class AddUserInviteTokenColumns1738542000000 implements MigrationInterface {
   public async up(queryRunner: QueryRunner): Promise<void> {
-    await queryRunner.addColumn(
-      'users',
-      new TableColumn({
-        name: 'invite_token',
-        type: 'varchar',
-        length: '64',
-        isNullable: true,
-      })
+    await queryRunner.query(
+      `ALTER TABLE "users" ADD COLUMN IF NOT EXISTS "invite_token" varchar(64)`,
     );
-    await queryRunner.addColumn(
-      'users',
-      new TableColumn({
-        name: 'invite_token_expires_at',
-        type: 'timestamp',
-        isNullable: true,
-      })
+    await queryRunner.query(
+      `ALTER TABLE "users" ADD COLUMN IF NOT EXISTS "invite_token_expires_at" timestamp`,
     );
   }
 

@@ -1,37 +1,51 @@
-import { MigrationInterface, QueryRunner, TableColumn, TableForeignKey } from 'typeorm';
+import { MigrationInterface, QueryRunner, TableForeignKey } from 'typeorm';
+
+async function createForeignKeyIfNotExists(
+  queryRunner: QueryRunner,
+  table: string,
+  fk: TableForeignKey,
+): Promise<void> {
+  const spName = `sp_fk_${table}_${Date.now()}_${Math.random().toString(36).slice(2, 8)}`;
+  await queryRunner.query(`SAVEPOINT ${spName}`);
+  try {
+    await queryRunner.createForeignKey(table, fk);
+  } catch (err: unknown) {
+    const e = err as { code?: string; driverError?: { code?: string } };
+    const code = e?.code ?? e?.driverError?.code;
+    if (code === '42710') {
+      await queryRunner.query(`ROLLBACK TO SAVEPOINT ${spName}`);
+    } else {
+      throw err;
+    }
+  }
+}
 
 export class AddQuranAndWrittenTestColumns1738541100000 implements MigrationInterface {
   public async up(queryRunner: QueryRunner): Promise<void> {
-    await queryRunner.addColumn(
-      'admission_applications',
-      new TableColumn({ name: 'quran_test_passed', type: 'boolean', isNullable: true }),
+    await queryRunner.query(
+      `ALTER TABLE "admission_applications" ADD COLUMN IF NOT EXISTS "quran_test_passed" boolean`,
     );
-    await queryRunner.addColumn(
-      'admission_applications',
-      new TableColumn({ name: 'quran_test_marks', type: 'varchar', length: '20', isNullable: true }),
+    await queryRunner.query(
+      `ALTER TABLE "admission_applications" ADD COLUMN IF NOT EXISTS "quran_test_marks" varchar(20)`,
     );
-    await queryRunner.addColumn(
-      'admission_applications',
-      new TableColumn({ name: 'quran_test_reason', type: 'varchar', length: '500', isNullable: true }),
+    await queryRunner.query(
+      `ALTER TABLE "admission_applications" ADD COLUMN IF NOT EXISTS "quran_test_reason" varchar(500)`,
     );
-    await queryRunner.addColumn(
-      'admission_applications',
-      new TableColumn({ name: 'written_test_passed', type: 'boolean', isNullable: true }),
+    await queryRunner.query(
+      `ALTER TABLE "admission_applications" ADD COLUMN IF NOT EXISTS "written_test_passed" boolean`,
     );
-    await queryRunner.addColumn(
-      'admission_applications',
-      new TableColumn({ name: 'written_test_marks', type: 'varchar', length: '20', isNullable: true }),
+    await queryRunner.query(
+      `ALTER TABLE "admission_applications" ADD COLUMN IF NOT EXISTS "written_test_marks" varchar(20)`,
     );
-    await queryRunner.addColumn(
-      'admission_applications',
-      new TableColumn({ name: 'written_test_reason', type: 'varchar', length: '500', isNullable: true }),
+    await queryRunner.query(
+      `ALTER TABLE "admission_applications" ADD COLUMN IF NOT EXISTS "written_test_reason" varchar(500)`,
     );
 
-    await queryRunner.addColumn(
-      'students',
-      new TableColumn({ name: 'admission_application_id', type: 'uuid', isNullable: true }),
+    await queryRunner.query(
+      `ALTER TABLE "students" ADD COLUMN IF NOT EXISTS "admission_application_id" uuid`,
     );
-    await queryRunner.createForeignKey(
+    await createForeignKeyIfNotExists(
+      queryRunner,
       'students',
       new TableForeignKey({
         columnNames: ['admission_application_id'],
