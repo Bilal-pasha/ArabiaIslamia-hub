@@ -25,7 +25,7 @@ export default function DashboardPage() {
       animate="visible"
       transition={defaultTransition}
     >
-      <motion.div variants={fadeInUp}>
+      <motion.div variants={fadeInUp} className='flex flex-col gap-4'>
         <h1 className="text-2xl md:text-3xl font-bold text-foreground mb-1">{welcome}</h1>
         <p className="text-muted-foreground">{t('dashboard.subtitle')}</p>
       </motion.div>
