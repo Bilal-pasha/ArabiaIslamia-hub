@@ -14,6 +14,8 @@ services:
       DB_PORT: 5432
     ports:
       - "5432:5432"
+      # 8002 exposed here when secondary-api uses network_mode: service:postgres
+      - "8002:8002"
     volumes:
       - postgres_dev_data:/var/lib/postgresql/data
       - ./init-databases.sql:/docker-entrypoint-initdb.d/init-databases.sql
@@ -81,7 +83,8 @@ services:
     env_file:
       - ./.env
     environment:
-      DB_HOST: postgres
+      # Use localhost: postgres and API share the same network namespace (network_mode: service:postgres)
+      DB_HOST: 127.0.0.1
       DB_PORT: 5432
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres
@@ -89,19 +92,17 @@ services:
       NEXT_PUBLIC_SECONDARY_API_URL: http://localhost:8002
       NEXT_PUBLIC_HUFFAZ_API_URL: http://localhost:8001
       NEXT_PUBLIC_SCOUTS_API_URL: http://localhost:8003
-    ports:
-      - "8002:8002"
     volumes:
       - ../../packages/database:/app/packages/database
+      - ../../packages/email:/app/packages/email
       - ../../apps/secondary/api:/app/apps/secondary/api
       - secondary-api-node_modules:/app/apps/secondary/api/node_modules
       - secondary-database-node_modules:/app/packages/database/node_modules
-    networks:
-      - app-network-dev
+    network_mode: "service:postgres"
     depends_on:
       postgres:
         condition: service_healthy
-    command: sh -c "cd /app && pnpm install && pnpm --filter @arabiaaislamia/database run build && pnpm --filter @arabiaaislamia/storage run build && cd apps/secondary/api && pnpm run start:dev"
+    command: sh -c "sleep 2 && cd /app && pnpm install && pnpm --filter @arabiaaislamia/database run build && pnpm --filter @arabiaaislamia/storage run build && cd apps/secondary/api && pnpm run start:dev"
 
   # --- Frontend (UI) containers ---
   # main-website:

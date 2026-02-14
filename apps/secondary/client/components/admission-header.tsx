@@ -32,12 +32,6 @@ export function AdmissionHeader() {
                 Check Status
               </Link>
             </Button>
-            <Button variant="outline" size="sm" asChild className="hover:border-amber-400/50 hover:text-amber-300">
-              <Link href={privateRoutes.applications} className="inline-flex items-center gap-2 text-current">
-                <Building2 className="size-4" />
-                Admin
-              </Link>
-            </Button>
           </div>
         </div>
       </div>
