@@ -52,6 +52,7 @@ services:
     environment:
       NODE_ENV: production
       PORT: 3013
+      NEXT_PUBLIC_LIBRARY_API_URL: https://api.library.jamiaarabiaislamia.com
     networks:
       - app-network
 

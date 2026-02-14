@@ -2,7 +2,7 @@ import axios from 'axios';
 
 const baseURL =
   typeof window !== 'undefined'
-    ? (process.env.NEXT_PUBLIC_LIBRARY_API_URL || 'http://localhost:8004')
+    ? (process.env.NEXT_PUBLIC_LIBRARY_API_URL || '')
     : '';
 
 export const api = axios.create({
