@@ -9,7 +9,8 @@
     "migrate:huffaz": "node ./node_modules/typeorm/cli.js migration:run -d ./dist/data-source.huffaz.js",
     "migrate:secondary": "node ./node_modules/typeorm/cli.js migration:run -d ./dist/data-source.secondary.js",
     "migrate:scouts-portal": "node ./node_modules/typeorm/cli.js migration:run -d ./dist/data-source.scouts-portal.js",
-    "migrate:main-website": "node ./node_modules/typeorm/cli.js migration:run -d ./dist/data-source.main-website.js"
+    "migrate:main-website": "node ./node_modules/typeorm/cli.js migration:run -d ./dist/data-source.main-website.js",
+    "migrate:library": "node ./node_modules/typeorm/cli.js migration:run -d ./dist/data-source.library.js"
   },
   "dependencies": {
     "bcrypt": "^6.0.0",

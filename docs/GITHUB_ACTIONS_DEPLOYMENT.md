@@ -291,8 +291,8 @@ export IMAGE_URL="ghcr.io/YOUR_ORG/YOUR_REPO/server:latest"
 export GITHUB_TOKEN="your_github_token"
 
 # Copy files to server
-scp infra/prod/docker-compose.yml user@instance:/opt/arabiaaislamia-hub/
-scp infra/prod/config/Caddyfile user@instance:/opt/arabiaaislamia-hub/config/
+scp infra/arabia-hub/prod/docker-compose.prod.yml user@instance:/opt/arabiaaislamia-hub/
+scp infra/arabia-hub/prod/config/Caddyfile user@instance:/opt/arabiaaislamia-hub/config/
 
 # SSH and deploy
 ssh user@instance

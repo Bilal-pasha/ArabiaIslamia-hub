@@ -8,13 +8,14 @@ try {
   // dotenv not installed or not needed
 }
 
-export type ProjectId = 'huffaz' | 'secondary' | 'scouts-portal' | 'main-website';
+export type ProjectId = 'huffaz' | 'secondary' | 'scouts-portal' | 'main-website' | 'library';
 
 const PROJECT_DB_MAP: Record<ProjectId, string> = {
   huffaz: 'huffaz_db',
   secondary: 'secondary_db',
   'scouts-portal': 'scouts_portal_db',
   'main-website': 'main_website_db',
+  library: 'library_db',
 };
 
 export interface DatabaseConfigParams {

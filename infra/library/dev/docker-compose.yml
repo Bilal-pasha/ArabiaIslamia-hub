@@ -1,0 +1,100 @@
+# Library dev: postgres, library-api (NestJS), library-app (Next.js)
+# From repo root: docker compose -f infra/library/dev/docker-compose.yml up -d
+# Or: cd infra/library/dev && docker compose up -d
+
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: library-postgres-dev
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: postgres
+    ports:
+      - "5434:5432"
+    volumes:
+      - library_postgres_dev_data:/var/lib/postgresql/data
+      - ./init-databases.sql:/docker-entrypoint-initdb.d/init-databases.sql
+    networks:
+      - library-dev
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U postgres" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  library-api:
+    build:
+      context: ../../..
+      dockerfile: apps/library/api/Dockerfile.dev
+    container_name: library-api-dev
+    restart: unless-stopped
+    env_file:
+      - ./.env
+    environment:
+      NODE_ENV: development
+      SERVER_PORT: 8004
+      DB_HOST: postgres
+      DB_PORT: 5432
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      LIBRARY_DB_NAME: library_db
+      JWT_SECRET: dev-jwt-secret
+      JWT_EXPIRES_IN: 1h
+      JWT_REFRESH_SECRET: dev-refresh-secret
+      JWT_REFRESH_EXPIRES_IN: 7d
+      CORS_ORIGIN: http://localhost:3013
+      COOKIE_DOMAIN: localhost
+    ports:
+      - "8004:8004"
+    volumes:
+      - ../../../packages/database:/app/packages/database
+      - ../../../apps/library/api:/app/apps/library/api
+      - library-api-node_modules:/app/apps/library/api/node_modules
+      - library-database-node_modules:/app/packages/database/node_modules
+    networks:
+      - library-dev
+    depends_on:
+      postgres:
+        condition: service_healthy
+    command: sh -c "sleep 2 && cd /app && pnpm install && pnpm --filter @arabiaaislamia/database run build && pnpm db:migrate:library && cd apps/library/api && pnpm run start:dev"
+
+  library-app:
+    build:
+      context: ../../..
+      dockerfile: apps/library/client/Dockerfile.dev
+    container_name: library-app-dev
+    restart: unless-stopped
+    environment:
+      NEXT_PUBLIC_LIBRARY_API_URL: http://localhost:8004
+    ports:
+      - "3013:3013"
+    volumes:
+      - ../../../apps/library/client:/app/apps/library/client
+      - ../../../packages/ui:/app/packages/ui
+      - ../../../packages/animations:/app/packages/animations
+      - library-app-node_modules:/app/apps/library/client/node_modules
+      - library-ui-node_modules:/app/packages/ui/node_modules
+      - library-animations-node_modules:/app/packages/animations/node_modules
+    networks:
+      - library-dev
+    command: sh -c "cd /app && pnpm install && cd apps/library/client && pnpm run dev"
+
+networks:
+  library-dev:
+    driver: bridge
+
+volumes:
+  library_postgres_dev_data:
+    driver: local
+  library-api-node_modules:
+    driver: local
+  library-database-node_modules:
+    driver: local
+  library-app-node_modules:
+    driver: local
+  library-ui-node_modules:
+    driver: local
+  library-animations-node_modules:
+    driver: local

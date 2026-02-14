@@ -39,7 +39,7 @@ pnpm install
 ### 2. Start with Docker (dev)
 
 ```bash
-cd infra/dev
+cd infra/arabia-hub/dev
 docker compose up -d
 ```
 

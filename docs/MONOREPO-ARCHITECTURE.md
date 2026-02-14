@@ -149,20 +149,20 @@ pnpm db:migrate:secondary
    - Add entry to `PROJECT_DB_MAP`
    - Create `data-source.<project>.ts`
    - Add `migrate:<project>` script in `packages/database/package.json`
-   - Add DB creation in `infra/dev/init-databases.sh` and `infra/prod/init-databases.sh`
+   - Add DB creation in `infra/arabia-hub/dev/init-databases.sql` and `infra/arabia-hub/prod/init-databases.sql`
 
 2. **API**
    - Copy `apps/huffaz/api` to `apps/<project>/api`
    - Update `typeorm-config.ts` to use `createDataSourceOptions('<project>')`
    - Update `package.json` name
-   - Add API service in `infra/dev/docker-compose.yml` and `infra/prod/docker-compose.prod.yml`
+   - Add API service in `infra/arabia-hub/dev/docker-compose.yml` and `infra/arabia-hub/prod/docker-compose.prod.yml`
 
 3. **App (frontend)**
    - Copy `apps/huffaz/app` to `apps/<project>/app` (or create unified Next.js app with basePath)
    - Add `secondary-app` / `huffaz-app`-style service in Docker Compose and GitHub Actions
 
 4. **Caddy**
-   - Add API and app routes in `infra/prod/config/Caddyfile`
+   - Add API and app routes in `infra/arabia-hub/prod/config/Caddyfile`
 
 ---
 
@@ -171,7 +171,7 @@ pnpm db:migrate:secondary
 ### Start services
 
 ```bash
-cd infra/dev
+cd infra/arabia-hub/dev
 docker compose up -d
 ```
 

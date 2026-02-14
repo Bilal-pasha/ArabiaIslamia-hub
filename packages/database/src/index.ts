@@ -17,6 +17,9 @@ export { FeePayment, type FeePaymentStatus } from './entities/fee-payment.entity
 export { ScoutsUser } from './entities/scouts-user.entity';
 export { Madrasa } from './entities/madrasa.entity';
 export { ScoutsStudent } from './entities/scouts-student.entity';
+export { LibraryUser } from './entities/library-user.entity';
+export { Book } from './entities/book.entity';
+export { BookIssue } from './entities/book-issue.entity';
 export { CmsAdmin } from './entities/cms-admin.entity';
 export { HeroSlide } from './entities/hero-slide.entity';
 export { SiteSection, type SectionType } from './entities/site-section.entity';

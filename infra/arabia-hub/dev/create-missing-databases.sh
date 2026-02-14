@@ -1,6 +1,6 @@
 #!/bin/sh
 # Create any missing dev databases (run if postgres was initialized before init-databases.sql had all DBs)
-# Usage: from infra/dev/ run: ./create-missing-databases.sh
+# Usage: from infra/arabia-hub/dev/ run: ./create-missing-databases.sh
 # Or: docker exec arabiaaislamia-postgres-dev psql -U postgres -c "CREATE DATABASE scouts_portal_db_dev;"
 
 set -e

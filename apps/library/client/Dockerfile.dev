@@ -1,0 +1,17 @@
+FROM node:20-slim
+WORKDIR /app
+RUN corepack enable && corepack prepare pnpm@9.14.2 --activate
+
+COPY pnpm-workspace.yaml package.json pnpm-lock.yaml* ./
+COPY .npmrc* ./
+COPY packages/ui ./packages/ui
+COPY packages/animations ./packages/animations
+COPY apps/library/client/package.json ./apps/library/client/
+
+RUN pnpm config set network-timeout 120000 && pnpm install --frozen-lockfile || pnpm install
+
+COPY apps/library/client ./apps/library/client
+
+WORKDIR /app/apps/library/client
+EXPOSE 3013
+CMD ["pnpm", "run", "dev"]

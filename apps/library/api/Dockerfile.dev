@@ -1,0 +1,16 @@
+FROM node:20-alpine
+WORKDIR /app
+RUN corepack enable && corepack prepare pnpm@9.14.2 --activate
+
+COPY pnpm-workspace.yaml package.json pnpm-lock.yaml* ./
+COPY .npmrc* ./
+COPY packages/database/package.json ./packages/database/
+COPY apps/library/api/package.json ./apps/library/api/
+
+RUN pnpm install --frozen-lockfile || pnpm install
+
+COPY packages/database ./packages/database
+COPY apps/library/api ./apps/library/api
+
+WORKDIR /app/apps/library/api
+CMD ["pnpm", "run", "start:dev"]

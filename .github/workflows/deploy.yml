@@ -54,9 +54,9 @@ jobs:
           host: ${{ secrets.EC2_HOST }}
           username: ${{ secrets.EC2_USERNAME }}
           key: ${{ secrets.EC2_SSH_KEY }}
-          source: "infra/prod/docker-compose.prod.yml,infra/prod/init-databases.sql,infra/prod/.env,infra/prod/config/Caddyfile"
+          source: "infra/arabia-hub/prod/docker-compose.prod.yml,infra/arabia-hub/prod/init-databases.sql,infra/arabia-hub/prod/.env,infra/arabia-hub/prod/config/Caddyfile"
           target: "/home/${{ secrets.EC2_USERNAME }}/${{ env.DEPLOY_DIR }}"
-          strip_components: 2
+          strip_components: 3
 
       # ─────────────────────────────────────────────
       # Deploy application on EC2

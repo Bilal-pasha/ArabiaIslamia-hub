@@ -4,7 +4,7 @@ NestJS API for the Scouts Portal. Uses PostgreSQL (TypeORM) and R2 for file stor
 
 ## Environment
 
-Required env vars (use `infra/dev/.env` or `infra/prod/.env` as reference):
+Required env vars (use `infra/arabia-hub/dev/.env` or `infra/arabia-hub/prod/.env` as reference):
 
 - **Database:** `DB_HOST`, `DB_PORT`, `POSTGRES_USER`, `POSTGRES_PASSWORD`, `SCOUTS_PORTAL_DB_NAME`
 - **Auth:** `JWT_SECRET`, `JWT_EXPIRES_IN`, `JWT_REFRESH_SECRET`, `JWT_REFRESH_EXPIRES_IN`

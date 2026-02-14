@@ -1,0 +1,88 @@
+# Library server: library.jamiaarabiaislamia.com (different server)
+# Run on the host that will serve the library subdomain.
+# Requires .env with REGISTRY, IMAGE_NAME_LOWER, POSTGRES_*, JWT_*, CORS_ORIGIN, COOKIE_DOMAIN, etc.
+
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: library-postgres
+    restart: unless-stopped
+    env_file:
+      - ./.env
+    ports:
+      - "127.0.0.1:5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./init-databases.sql:/docker-entrypoint-initdb.d/init-databases.sql
+    networks:
+      - app-network
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U postgres" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  library-api:
+    image: ${REGISTRY}/${IMAGE_NAME_LOWER}-library-api:latest
+    container_name: library-api
+    restart: unless-stopped
+    env_file:
+      - ./.env
+    environment:
+      NODE_ENV: production
+      SERVER_PORT: 8004
+      DB_HOST: postgres
+      LIBRARY_DB_NAME: library_db
+      CORS_ORIGIN: https://library.jamiaarabiaislamia.com
+      COOKIE_DOMAIN: .jamiaarabiaislamia.com
+    networks:
+      - app-network
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+  library-app:
+    image: ${REGISTRY}/${IMAGE_NAME_LOWER}-library-app:latest
+    container_name: library-app
+    restart: unless-stopped
+    env_file:
+      - ./.env
+    environment:
+      NODE_ENV: production
+      PORT: 3013
+    networks:
+      - app-network
+
+  caddy:
+    image: caddy:2-alpine
+    container_name: library-caddy
+    restart: unless-stopped
+    env_file:
+      - ./.env
+    ports:
+      - "${HTTP_PORT:-80}:80"
+      - "${HTTPS_PORT:-443}:443"
+    volumes:
+      - ./config/Caddyfile:/etc/caddy/Caddyfile
+      - caddy_data:/data
+      - caddy_config:/config
+      - caddy_logs:/var/log/caddy
+    networks:
+      - app-network
+    depends_on:
+      - library-api
+      - library-app
+
+networks:
+  app-network:
+    driver: bridge
+
+volumes:
+  postgres_data:
+    driver: local
+  caddy_data:
+    driver: local
+  caddy_config:
+    driver: local
+  caddy_logs:
+    driver: local

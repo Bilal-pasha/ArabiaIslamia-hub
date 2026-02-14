@@ -1,0 +1,61 @@
+{
+  "app": {
+    "title": "المكتبة",
+    "library": "المكتبة"
+  },
+  "auth": {
+    "login": "تسجيل الدخول",
+    "signup": "إنشاء حساب",
+    "username": "اسم المستخدم",
+    "password": "كلمة المرور",
+    "logout": "تسجيل الخروج",
+    "loginSuccess": "تم تسجيل الدخول بنجاح",
+    "invalidCredentials": "اسم مستخدم أو كلمة مرور غير صحيحة"
+  },
+  "books": {
+    "title": "الكتب",
+    "pageDesc": "أضف كتباً جديدة هنا واعرض قائمة الكتب.",
+    "addBook": "إضافة كتاب",
+    "bookTitle": "عنوان الكتاب",
+    "author": "المؤلف",
+    "category": "الفئة",
+    "totalCopies": "عدد النسخ",
+    "save": "حفظ",
+    "edit": "تعديل",
+    "delete": "حذف",
+    "empty": "لا توجد كتب بعد"
+  },
+  "issues": {
+    "title": "الإعارات",
+    "pageDesc": "أعِر كتاباً أو استرجعه هنا.",
+    "issueBook": "إعارة كتاب",
+    "issuedTo": "مُعار إلى (الاسم)",
+    "dueAt": "تاريخ الاسترجاع",
+    "return": "إرجاع",
+    "status": "الحالة",
+    "filterAll": "الكل",
+    "selectBook": "اختر كتاباً",
+    "empty": "لا توجد إعارات بعد",
+    "issued": "معار",
+    "returned": "مرجع"
+  },
+  "nav": {
+    "dashboard": "لوحة التحكم",
+    "books": "الكتب",
+    "issues": "الإعارات"
+  },
+  "dashboard": {
+    "welcome": "مرحباً بك في المكتبة",
+    "subtitle": "اختر من الأسفل للكتب والإعارات.",
+    "addBooksTitle": "إضافة كتب",
+    "addBooksDesc": "أضف كتباً جديدة، اعرض القائمة وحدّثها.",
+    "addBooksAction": "انتقل إلى صفحة الكتب",
+    "issueBookTitle": "إعارة كتاب",
+    "issueBookDesc": "أعِر كتاباً أو استرجعه.",
+    "issueBookAction": "انتقل إلى صفحة الإعارات"
+  },
+  "common": {
+    "loading": "جاري التحميل...",
+    "error": "خطأ"
+  }
+}

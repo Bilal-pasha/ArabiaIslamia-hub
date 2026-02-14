@@ -1,0 +1,36 @@
+{
+    email admin@jamiaarabiaislamia.com
+}
+
+# Library API: https://api.library.jamiaarabiaislamia.com
+api.library.jamiaarabiaislamia.com {
+    reverse_proxy library-api:8004 {
+        health_uri /health
+        health_interval 30s
+    }
+    encode gzip zstd
+    header {
+        X-Frame-Options "DENY"
+        X-Content-Type-Options "nosniff"
+        -Server
+    }
+    log {
+        output file /var/log/caddy/api-library.log
+        format json
+    }
+}
+
+# Library UI: https://library.jamiaarabiaislamia.com
+library.jamiaarabiaislamia.com {
+    reverse_proxy library-app:3013
+    encode gzip zstd
+    header {
+        X-Frame-Options "DENY"
+        X-Content-Type-Options "nosniff"
+        -Server
+    }
+    log {
+        output file /var/log/caddy/library.log
+        format json
+    }
+}
