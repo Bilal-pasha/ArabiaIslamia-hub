@@ -28,7 +28,6 @@ ENV NEXT_PUBLIC_HUFFAZ_APP_URL=${NEXT_PUBLIC_HUFFAZ_APP_URL}
 ENV NEXT_PUBLIC_SCOUTS_APP_URL=${NEXT_PUBLIC_SCOUTS_APP_URL}
 ENV NEXT_PUBLIC_MAIN_WEBSITE_API_URL=${NEXT_PUBLIC_MAIN_WEBSITE_API_URL}
 
-ENV NODE_ENV=production
 RUN pnpm --filter main-website build
 
 # Runtime: standalone output only (no pnpm, minimal image)

@@ -22,7 +22,6 @@ COPY apps/secondary/client ./apps/secondary/client
 ARG NEXT_PUBLIC_SECONDARY_API_URL
 ENV NEXT_PUBLIC_SECONDARY_API_URL=${NEXT_PUBLIC_SECONDARY_API_URL}
 
-ENV NODE_ENV=production
 RUN pnpm --filter secondary-app build
 
 # Runtime: standalone output only (no pnpm, minimal image)
