@@ -69,6 +69,7 @@ function AdminSigninContent() {
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   className="h-10 bg-white/5 border-white/20 text-white placeholder:text-slate-500"
+                  toggleClassName="text-slate-400 hover:text-white hover:bg-white/10 focus-visible:ring-white/30"
                   required
                 />
               </div>
