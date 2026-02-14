@@ -3,7 +3,8 @@
 import { useEffect, useState } from 'react';
 import { useParams } from 'next/navigation';
 import Link from 'next/link';
-import { Button, SecondaryLogo, toast } from '@arabiaaislamia/ui';
+import { SecondaryLogo } from '@/components/logo';
+import { Button, toast } from '@arabiaaislamia/ui';
 import { AdmitCardSkeleton } from '@/components/AdmitCardSkeleton';
 import { findByApplicationNumber } from '@/services/admission/admission.service';
 import { publicRoutes } from '@/constants/route';

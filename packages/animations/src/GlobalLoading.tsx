@@ -35,8 +35,8 @@ const defaultWrapperStyle: React.CSSProperties = {
  */
 export function GlobalLoading({
   className = '',
-  width = 200,
-  height = 200,
+  width = 500,
+  height = 500,
 }: GlobalLoadingProps) {
   return (
     <div

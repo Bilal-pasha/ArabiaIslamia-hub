@@ -2,8 +2,8 @@
 
 import Link from 'next/link';
 import { motion } from 'framer-motion';
-import { SecondaryLogo } from '@arabiaaislamia/ui';
-import { fadeInUp, staggerContainer, defaultTransition } from '@arabiaaislamia/animations';
+import { SecondaryLogo } from '@/components/logo';
+import { fadeInUp, staggerContainer, defaultTransition, GlobalLoading } from '@arabiaaislamia/animations';
 import { externalUrls } from '@/constants/route';
 
 export default function SecondaryHubPage() {

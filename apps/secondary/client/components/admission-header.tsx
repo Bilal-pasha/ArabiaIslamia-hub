@@ -2,7 +2,8 @@
 
 import Link from 'next/link';
 import { ClipboardList, Building2, Home } from 'lucide-react';
-import { SecondaryLogo, Button } from '@arabiaaislamia/ui';
+import { SecondaryLogo } from '@/components/logo';
+import { Button } from '@arabiaaislamia/ui';
 import { publicRoutes, privateRoutes } from '@/constants/route';
 
 export function AdmissionHeader() {

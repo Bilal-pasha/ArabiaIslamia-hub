@@ -3,7 +3,7 @@
 import Link from 'next/link';
 import { Card, CardContent, CardHeader, CardTitle } from '@arabiaaislamia/ui';
 import { Button, Badge } from '@arabiaaislamia/ui';
-import { SecondaryLogo } from '@arabiaaislamia/ui';
+import { SecondaryLogo } from '@/components/logo';
 import { publicRoutes } from '@/constants/route';
 import type { AdmissionApplication } from '@/services/admission/admission.service';
 import { ApplicationStepTimeline, getLastStatusLabel } from './application-step-timeline';

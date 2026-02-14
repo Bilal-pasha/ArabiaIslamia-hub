@@ -1,7 +1,7 @@
 'use client';
 
 import Image from 'next/image';
-
+import Link from 'next/link';
 import logo from './assets/arabia-secondary-logo.jpeg';
 
 export interface SecondaryLogoProps {
@@ -17,14 +17,17 @@ export function SecondaryLogo({
   className = '',
   priority = false,
 }: SecondaryLogoProps) {
+  const secondaryAppUrl = process.env.NEXT_PUBLIC_SECONDARY_APP_URL;
   return (
-    <Image
-      src={logo}
-      alt="Arabia Islamia Secondary Education"
-      width={width}
-      height={height}
-      className={className}
-      priority={priority}
-    />
+    <Link href={secondaryAppUrl ?? ''} title="Arabia Islamia Secondary Education Logo" aria-label="Arabia Islamia Secondary Education Logo" className='cursor-pointer'>
+      <Image
+        src={logo}
+        alt="Arabia Islamia Secondary Education Logo"
+        width={width}
+        height={height}
+        className={className}
+        priority={priority}
+      />
+    </Link>
   );
 }

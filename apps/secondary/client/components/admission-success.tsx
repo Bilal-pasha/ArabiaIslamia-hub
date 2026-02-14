@@ -2,7 +2,8 @@
 
 import Link from 'next/link';
 import { motion } from 'framer-motion';
-import { SecondaryLogo, Card, CardContent, Button } from '@arabiaaislamia/ui';
+import { SecondaryLogo } from '@/components/logo';
+import { Card, CardContent, Button } from '@arabiaaislamia/ui';
 import { scaleIn, defaultTransition } from '@arabiaaislamia/animations';
 import { publicRoutes } from '@/constants/route';
 

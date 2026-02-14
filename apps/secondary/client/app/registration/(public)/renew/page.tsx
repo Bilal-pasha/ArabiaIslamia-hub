@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { motion, AnimatePresence } from 'framer-motion';
+import { SecondaryLogo } from '@/components/logo';
 import {
   Button,
   Card,
@@ -15,7 +16,6 @@ import {
   SelectItem,
   SelectTrigger,
   SelectValue,
-  SecondaryLogo,
   toast,
 } from '@arabiaaislamia/ui';
 import { fadeInUp, defaultTransition } from '@arabiaaislamia/animations';

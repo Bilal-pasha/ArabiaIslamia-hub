@@ -3,7 +3,8 @@
 import { useEffect, useState, Suspense } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import Link from 'next/link';
-import { Button, SecondaryLogo } from '@arabiaaislamia/ui';
+import { SecondaryLogo } from '@/components/logo';
+import { Button } from '@arabiaaislamia/ui';
 import { apiClient } from '@/utils/axios-instance';
 import { admissionEndpoints } from '@/constants/api-endpoints';
 import { publicRoutes } from '@/constants/route';

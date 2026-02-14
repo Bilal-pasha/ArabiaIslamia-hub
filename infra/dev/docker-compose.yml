@@ -143,7 +143,11 @@ services:
     restart: unless-stopped
     volumes:
       - ../../apps/secondary/client:/app/apps/secondary/client
+      - ../../packages/ui:/app/packages/ui
+      - ../../packages/animations:/app/packages/animations
       - secondary-app-node_modules:/app/apps/secondary/client/node_modules
+      - secondary-ui-node_modules:/app/packages/ui/node_modules
+      - secondary-animations-node_modules:/app/packages/animations/node_modules
     networks:
       - app-network-dev
     command: sh -c "cd /app && pnpm install && cd apps/secondary/client && pnpm run dev"
@@ -209,6 +213,10 @@ volumes:
   secondary-api-node_modules:
     driver: local
   secondary-app-node_modules:
+    driver: local
+  secondary-ui-node_modules:
+    driver: local
+  secondary-animations-node_modules:
     driver: local
   secondary-database-node_modules:
     driver: local

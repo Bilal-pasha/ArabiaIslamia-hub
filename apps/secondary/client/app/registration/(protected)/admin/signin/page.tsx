@@ -5,7 +5,7 @@ import { useRouter, useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import { Card, CardContent, CardTitle, Skeleton, toast } from '@arabiaaislamia/ui';
 import { Button, Input, Label } from '@arabiaaislamia/ui';
-import { SecondaryLogo } from '@arabiaaislamia/ui';
+import { SecondaryLogo } from '@/components/logo';
 import { publicRoutes, privateRoutes } from '@/constants/route';
 import { apiClient } from '@/utils/axios-instance';
 
@@ -42,7 +42,9 @@ function AdminSigninContent() {
         <Card className="secondary-card backdrop-blur-xl border border-white/10 w-full">
           <CardContent className="pt-6 sm:pt-8 pb-6 sm:pb-8 px-4 sm:px-6">
             <div className="flex justify-center mb-6">
-              <SecondaryLogo width={80} height={80} />
+              <div className="rounded-xl bg-white/10 border border-white/20 p-3">
+                <SecondaryLogo width={72} height={72} className="rounded-lg" />
+              </div>
             </div>
             <CardTitle className="text-xl sm:text-2xl mb-2 text-center text-white">Admin Sign In</CardTitle>
             <p className="text-slate-300 text-sm mb-6 text-center">

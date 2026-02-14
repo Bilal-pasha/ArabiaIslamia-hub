@@ -14,9 +14,10 @@ import {
   RefreshCw,
   Mail,
 } from 'lucide-react';
-import { Button, SecondaryLogo, toast } from '@arabiaaislamia/ui';
+import { SecondaryLogo } from '@/components/logo';
+import { toast } from '@arabiaaislamia/ui';
 import { apiClient } from '@/utils/axios-instance';
-import { publicRoutes, privateRoutes } from '@/constants/route';
+import { privateRoutes } from '@/constants/route';
 
 interface AuthUser {
   id: string;
