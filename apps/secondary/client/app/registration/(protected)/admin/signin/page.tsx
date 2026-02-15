@@ -48,7 +48,7 @@ function AdminSigninContent() {
             </div>
             <CardTitle className="text-xl sm:text-2xl mb-2 text-center text-white">Admin Sign In</CardTitle>
             <p className="text-slate-300 text-sm mb-6 text-center">
-              Secondary — Admission Admin
+              Secondary Admission (Admin Portal)
             </p>
             <form onSubmit={handleSubmit} className="space-y-4">
               <div>
