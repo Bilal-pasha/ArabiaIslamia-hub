@@ -21,7 +21,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <meta name="googlebot" content="index, follow" />
         <meta name="google" content="notranslate" />
       </head>
-      <body className="min-h-screen antialiased">
+      <body className="min-h-screen antialiased" data-theme="library">
         <Providers>
           <ClientLocaleDir />
           {children}

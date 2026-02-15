@@ -86,3 +86,125 @@ html[lang='ar'] {
 .arabictext {
   font-family: 'Noto Naskh Arabic', serif;
 }
+
+/* Library app theme: data tables – white card, black text (override UI package / parent) */
+/* Higher specificity so we win over Tailwind utility and .bg-card from Card component */
+[data-theme="library"] .library-data-card,
+[data-theme="library"] div.library-data-card,
+.library-data-card {
+  background-color: #fff !important;
+  color: #000 !important;
+  overflow: visible !important;
+}
+
+[data-theme="library"] .library-data-card>div,
+.library-data-card>div {
+  min-height: 120px;
+  overflow: visible !important;
+}
+
+/* Table wrapper (from UI Table component): ensure visible and scrollable */
+[data-theme="library"] .library-data-card .relative.w-full.overflow-auto,
+[data-theme="library"] .library-data-card [class*="overflow-auto"],
+.library-data-card .relative.w-full.overflow-auto,
+.library-data-card [class*="overflow-auto"] {
+  min-height: 120px !important;
+  overflow: auto !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+}
+
+[data-theme="library"] .library-data-card table,
+.library-data-card table {
+  border-collapse: collapse;
+  display: table !important;
+  width: 100%;
+  min-width: 640px;
+  table-layout: auto;
+  font-size: 0.875rem;
+  visibility: visible !important;
+  opacity: 1 !important;
+}
+
+[data-theme="library"] .library-data-card thead,
+.library-data-card thead {
+  display: table-header-group !important;
+}
+
+[data-theme="library"] .library-data-card tbody,
+.library-data-card tbody {
+  display: table-row-group !important;
+}
+
+[data-theme="library"] .library-data-card thead tr,
+.library-data-card thead tr {
+  border-bottom: 1px solid #e5e7eb !important;
+}
+
+[data-theme="library"] .library-data-card tbody tr,
+.library-data-card tbody tr {
+  border-bottom: 1px solid #e5e7eb !important;
+}
+
+[data-theme="library"] .library-data-card tbody tr:last-child,
+.library-data-card tbody tr:last-child {
+  border-bottom-width: 0 !important;
+}
+
+[data-theme="library"] .library-data-card th,
+[data-theme="library"] .library-data-card td,
+.library-data-card th,
+.library-data-card td {
+  padding: 0.5rem 0.75rem;
+  text-align: start;
+  vertical-align: middle;
+  color: #000 !important;
+  background-color: #fff !important;
+}
+
+[data-theme="library"] .library-data-card th,
+.library-data-card th {
+  font-weight: 600;
+  color: #374151 !important;
+  height: 2.5rem;
+}
+
+[data-theme="library"] .library-data-card tbody tr:hover,
+.library-data-card tbody tr:hover {
+  background-color: #f9fafb !important;
+}
+
+[data-theme="library"] .library-data-card tbody tr:hover td,
+.library-data-card tbody tr:hover td {
+  background-color: #f9fafb !important;
+}
+
+[data-theme="library"] .library-data-card .text-muted-foreground,
+[data-theme="library"] .library-data-card [class*="text-muted"],
+.library-data-card .text-muted-foreground,
+.library-data-card [class*="text-muted"] {
+  color: #374151 !important;
+}
+
+[data-theme="library"] .library-data-card th,
+[data-theme="library"] .library-data-card td,
+[data-theme="library"] .library-data-card tr,
+.library-data-card th,
+.library-data-card td,
+.library-data-card tr {
+  visibility: visible !important;
+  opacity: 1 !important;
+}
+
+/* Library app: keep header and table section + buttons visible (override any animation/parent) */
+[data-theme="library"] main,
+[data-theme="library"] main>div {
+  visibility: visible !important;
+  opacity: 1 !important;
+}
+
+[data-theme="library"] main button,
+[data-theme="library"] main [role="button"] {
+  visibility: visible !important;
+  opacity: 1 !important;
+}

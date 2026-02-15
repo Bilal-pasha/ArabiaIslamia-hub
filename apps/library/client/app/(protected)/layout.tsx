@@ -8,6 +8,7 @@ import { Button, Spinner } from '@arabiaaislamia/ui';
 import { api } from '@/lib/api';
 import { useLocale } from '@/lib/locale';
 import { LanguageSwitcher } from '@/components/language-switcher';
+import { MainLogo } from '@/components/main-logo';
 import { BookOpen, LayoutDashboard, BookMarked, ClipboardList, LogOut } from 'lucide-react';
 
 const navItems = [
@@ -45,10 +46,10 @@ export default function ProtectedLayout({ children }: { children: React.ReactNod
   }
 
   return (
-    <div className="min-h-screen flex flex-row">
+    <div className="min-h-screen flex flex-row bg-gradient-to-b from-background to-muted/30">
       {/* RTL: sidebar on the right */}
       <motion.aside
-        className="w-56 shrink-0 flex flex-col border-s border-border bg-card/95 backdrop-blur shadow-sm"
+        className="w-60 shrink-0 flex flex-col border-s border-border bg-card/98 shadow-lg shadow-black/5 backdrop-blur"
         initial={{ x: 24, opacity: 0 }}
         animate={{ x: 0, opacity: 1 }}
         transition={{ duration: 0.25 }}
@@ -56,10 +57,15 @@ export default function ProtectedLayout({ children }: { children: React.ReactNod
         <div className="p-4 border-b border-border">
           <Link
             href="/"
-            className="flex items-center gap-2 text-foreground hover:text-primary transition-colors"
+            className="flex items-center gap-3 rounded-lg p-2 -m-2 text-foreground hover:bg-accent hover:text-primary transition-colors"
           >
-            <BookOpen className="h-7 w-7 text-primary" aria-hidden />
-            <span className="font-semibold text-base">{t('app.library')}</span>
+            <div className="flex h-10 w-10 shrink-0 items-center justify-center overflow-hidden rounded-lg bg-primary/10 ring-1 ring-primary/20">
+              <MainLogo width={32} height={32} className="rounded-md object-contain" />
+            </div>
+            <div className="flex min-w-0 flex-col">
+              <span className="font-semibold text-base leading-tight">{t('app.library')}</span>
+              <span className="text-xs text-muted-foreground">Jamia Arabia Islamia</span>
+            </div>
           </Link>
         </div>
         <nav className="flex-1 p-3 flex flex-col gap-1">
@@ -69,24 +75,26 @@ export default function ProtectedLayout({ children }: { children: React.ReactNod
               <Link
                 key={href}
                 href={href}
-                className={`flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors ${active
-                    ? 'bg-primary text-primary-foreground shadow-sm'
-                    : 'text-muted-foreground hover:bg-accent hover:text-accent-foreground'
+                className={`flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all ${active
+                  ? 'bg-primary text-primary-foreground shadow-md shadow-primary/20'
+                  : 'text-muted-foreground hover:bg-accent hover:text-accent-foreground'
                   }`}
               >
-                <Icon className="h-5 w-5 shrink-0" aria-hidden />
+                <span className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-lg ${active ? 'bg-white/20' : 'bg-muted/80'}`}>
+                  <Icon className="h-5 w-5" aria-hidden />
+                </span>
                 <span>{t(labelKey)}</span>
               </Link>
             );
           })}
         </nav>
-        <div className="p-3 border-t border-border space-y-2">
+        <div className="space-y-2 border-t border-border p-3">
           <LanguageSwitcher />
           <Button
             type="button"
             variant="outline"
             size="sm"
-            className="w-full justify-start gap-2"
+            className="w-full justify-start gap-2 rounded-xl border-border hover:bg-destructive/10 hover:border-destructive/30 hover:text-destructive"
             onClick={handleLogout}
           >
             <LogOut className="h-4 w-4" aria-hidden />
@@ -94,7 +102,7 @@ export default function ProtectedLayout({ children }: { children: React.ReactNod
           </Button>
         </div>
       </motion.aside>
-      <main className="flex-1 min-w-0 p-4 md:p-6 overflow-auto">{children}</main>
+      <main className="min-w-0 flex-1 overflow-auto p-4 md:p-6 lg:p-8">{children}</main>
     </div>
   );
 }
