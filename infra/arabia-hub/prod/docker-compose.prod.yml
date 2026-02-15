@@ -78,6 +78,9 @@ services:
       - ./.env
     environment:
       COOKIE_DOMAIN: .secondary.jamiaarabiaislamia.com
+      TWILIO_ACCOUNT_SID: ${TWILIO_ACCOUNT_SID}
+      TWILIO_AUTH_TOKEN: ${TWILIO_AUTH_TOKEN}
+      TWILIO_WHATSAPP_FROM: ${TWILIO_WHATSAPP_FROM}
     networks:
       - app-network
     depends_on:

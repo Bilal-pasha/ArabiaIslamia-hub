@@ -183,6 +183,10 @@ jobs:
           cache-to: type=gha,mode=max
           # linux/arm64 removed: bcrypt native addon causes SIGILL under QEMU emulation on x86 runners
           platforms: linux/amd64
+          build-args: |
+            TWILIO_ACCOUNT_SID=${{ secrets.TWILIO_ACCOUNT_SID }}
+            TWILIO_AUTH_TOKEN=${{ secrets.TWILIO_AUTH_TOKEN }}
+            TWILIO_WHATSAPP_FROM=${{ secrets.TWILIO_WHATSAPP_FROM }}
 
   build-secondary-app:
     name: Build Secondary App

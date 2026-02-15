@@ -145,6 +145,16 @@ Add the following secrets:
 | `GCE_SSH_USER` | SSH username for GCE | `ubuntu` or `your-username` |
 | `GCE_INSTANCE_URL` | (Optional) Public URL of your instance | `https://your-domain.com` |
 
+For **EC2 / arabia-hub** deploy (see `.github/workflows/deploy.yml`), also add:
+
+| Secret Name | Description |
+|------------|-------------|
+| `TWILIO_ACCOUNT_SID` | Twilio Account SID (WhatsApp/SMS) |
+| `TWILIO_AUTH_TOKEN` | Twilio Auth Token |
+| `TWILIO_WHATSAPP_FROM` | WhatsApp sender, e.g. `whatsapp:+14155238886` |
+
+These are written to the server `.env` at deploy time and passed into the secondary-api container.
+
 **Note**: `GITHUB_TOKEN` is automatically provided by GitHub Actions - no need to set it manually.
 
 **To get GCP_SA_KEY:**
