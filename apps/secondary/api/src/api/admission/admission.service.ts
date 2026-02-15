@@ -1,4 +1,4 @@
-import { Injectable, BadRequestException, NotFoundException } from '@nestjs/common';
+import { Injectable, BadRequestException, NotFoundException, Logger } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository, DeepPartial } from 'typeorm';
 import { ConfigService } from '@nestjs/config';
@@ -86,6 +86,8 @@ function dedupeEmails(emails: (string | null | undefined)[]): string[] {
 
 @Injectable()
 export class AdmissionService {
+  private readonly logger = new Logger(AdmissionService.name);
+
   constructor(
     @InjectRepository(AdmissionApplication)
     private readonly repo: Repository<AdmissionApplication>,
@@ -186,11 +188,13 @@ export class AdmissionService {
           applicantName: dto.name,
           brandName: BRAND_NAME,
         });
-        if (!result.sent && result.error) {
-          console.error('WhatsApp registration message not sent:', result.error);
+        if (result.sent) {
+          this.logger.log(`WhatsApp registration sent to ${phoneToUse} (application ${applicationNumber})`);
+        } else {
+          this.logger.warn(`WhatsApp registration not sent: ${result.error ?? 'unknown'}`);
         }
       } catch (err) {
-        console.error('Error sending admission WhatsApp', err);
+        this.logger.warn(`WhatsApp registration error: ${err instanceof Error ? err.message : String(err)}`);
       }
     }
 
