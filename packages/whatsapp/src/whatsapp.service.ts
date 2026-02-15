@@ -44,6 +44,16 @@ export class WhatsAppService {
     );
   }
 
+  /** Returns which env vars are missing (for logging only; no secret values). */
+  getConfigHint(): string {
+    const missing: string[] = [];
+    if (!this.config.accountSid?.trim()) missing.push('TWILIO_ACCOUNT_SID');
+    if (!this.config.authToken?.trim()) missing.push('TWILIO_AUTH_TOKEN');
+    if (!this.config.whatsappFrom?.trim()) missing.push('TWILIO_WHATSAPP_FROM');
+    else if (!this.config.whatsappFrom.startsWith('whatsapp:')) missing.push('TWILIO_WHATSAPP_FROM (must start with whatsapp:)');
+    return missing.length ? `Missing or invalid: ${missing.join(', ')}. Set in GitHub Secrets and deploy so server .env has them.` : '';
+  }
+
   /**
    * Normalize phone to E.164 and WhatsApp format (whatsapp:+...).
    * Returns null if invalid or too short.
@@ -59,7 +69,8 @@ export class WhatsAppService {
    */
   async sendText(options: SendTextOptions): Promise<{ sent: boolean; sid?: string; error?: string }> {
     if (!this.isConfigured()) {
-      return { sent: false, error: 'WhatsApp service not configured' };
+      const hint = this.getConfigHint();
+      return { sent: false, error: `WhatsApp service not configured. ${hint}`.trim() };
     }
 
     const to = this.normalizeToWhatsApp(options.to);
