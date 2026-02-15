@@ -13,6 +13,7 @@ COPY .npmrc* ./
 COPY packages/database ./packages/database
 COPY packages/storage ./packages/storage
 COPY packages/email ./packages/email
+COPY packages/whatsapp ./packages/whatsapp
 
 # Copy app package.json
 COPY apps/secondary/api/package.json ./apps/secondary/api/
@@ -27,6 +28,7 @@ COPY apps/secondary/api ./apps/secondary/api
 RUN pnpm --filter @arabiaaislamia/database run build
 RUN pnpm --filter @arabiaaislamia/storage run build
 RUN pnpm --filter @arabiaaislamia/email run build
+RUN pnpm --filter @arabiaaislamia/whatsapp run build
 
 # Build app
 RUN pnpm --filter secondary-api run build
@@ -47,10 +49,7 @@ WORKDIR /app
 COPY --from=builder /app/deploy .
 
 ENV NODE_ENV=production
-ENV TWILIO_ACCOUNT_SID=${TWILIO_ACCOUNT_SID}
-ENV TWILIO_AUTH_TOKEN=${TWILIO_AUTH_TOKEN}
-ENV TWILIO_WHATSAPP_FROM=${TWILIO_WHATSAPP_FROM}
-
+# Twilio (WhatsApp/SMS): pass at runtime via env_file or environment, e.g. from GitHub Secrets
 EXPOSE 8002
 
 CMD ["./entrypoint.sh"]
