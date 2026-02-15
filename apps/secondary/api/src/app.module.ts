@@ -9,6 +9,7 @@ import { AuthModule } from './api/auth/auth.module';
 import { AdmissionModule } from './api/admission/admission.module';
 import { UploadModule } from './api/upload/upload.module';
 import { EmailLogsModule } from './api/email-logs/email-logs.module';
+import { WhatsAppModule } from './common/whatsapp.module';
 
 @Module({
   imports: [
@@ -26,6 +27,7 @@ import { EmailLogsModule } from './api/email-logs/email-logs.module';
     AdmissionModule,
     UploadModule,
     EmailLogsModule,
+    WhatsAppModule,
   ],
   controllers: [AppController],
   providers: [AppService],

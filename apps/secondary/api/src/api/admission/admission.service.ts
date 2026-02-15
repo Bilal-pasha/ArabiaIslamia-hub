@@ -21,6 +21,7 @@ import { SubmitAdmissionDto } from './dto/submit-admission.dto';
 import { SubmitRenewalDto } from './dto/submit-renewal.dto';
 import { UploadService } from '../upload/upload.service';
 import { EmailLogService } from '../email-logs/email-log.service';
+import { WhatsAppService } from '@arabiaaislamia/whatsapp';
 
 export interface StudentByRollDto {
   id: string;
@@ -103,6 +104,7 @@ export class AdmissionService {
     private readonly uploadService: UploadService,
     private readonly emailLogService: EmailLogService,
     private readonly configService: ConfigService,
+    private readonly whatsAppService: WhatsAppService,
   ) { }
 
   async submit(dto: SubmitAdmissionDto) {
@@ -174,6 +176,24 @@ export class AdmissionService {
         console.error('Error sending admission submitted email', err);
       }
     }
+
+    // WhatsApp: send registration complete to guardian (or student) phone
+    const phoneToUse = dto.guardianPhone?.trim() || dto.phone?.trim();
+    if (phoneToUse) {
+      try {
+        const result = await this.whatsAppService.sendRegistrationComplete(phoneToUse, {
+          applicationNumber,
+          applicantName: dto.name,
+          brandName: BRAND_NAME,
+        });
+        if (!result.sent && result.error) {
+          console.error('WhatsApp registration message not sent:', result.error);
+        }
+      } catch (err) {
+        console.error('Error sending admission WhatsApp', err);
+      }
+    }
+
     return { applicationNumber, id: application.id };
   }
 
