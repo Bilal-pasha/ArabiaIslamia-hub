@@ -26,7 +26,7 @@ export class AuthController {
   constructor(
     private readonly authService: AuthService,
     private readonly config: ConfigService,
-  ) {}
+  ) { }
 
   private cookieConfig() {
     const isProd = this.config.get('NODE_ENV') === 'production';
@@ -80,6 +80,7 @@ export class AuthController {
   @Get('me')
   @UseGuards(JwtAuthGuard)
   async me(@CurrentUser() user: LibraryUser) {
+    const isSuperAdmin = user.username === 'admin';
     return {
       success: true,
       message: 'User retrieved',
@@ -87,6 +88,7 @@ export class AuthController {
         user: {
           id: user.id,
           username: user.username,
+          isSuperAdmin,
           createdAt: user.createdAt.toISOString(),
           updatedAt: user.updatedAt.toISOString(),
         },

@@ -4,13 +4,15 @@ import {
   LibraryUser,
   Book,
   BookIssue,
+  BookAuthor,
+  BookCategory,
 } from '@arabiaaislamia/database';
 
 export function getTypeOrmOptions(): TypeOrmModuleOptions {
   const options = createDataSourceOptions('library');
   return {
     ...options,
-    entities: [LibraryUser, Book, BookIssue],
+    entities: [LibraryUser, Book, BookIssue, BookAuthor, BookCategory],
     migrations: [],
     synchronize: process.env.NODE_ENV !== 'production',
   };

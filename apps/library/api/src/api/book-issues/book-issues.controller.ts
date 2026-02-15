@@ -2,6 +2,7 @@ import {
   Controller,
   Get,
   Post,
+  Delete,
   Body,
   Param,
   Query,
@@ -16,16 +17,24 @@ import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 @Controller('api/book-issues')
 @UseGuards(JwtAuthGuard)
 export class BookIssuesController {
-  constructor(private readonly bookIssuesService: BookIssuesService) {}
+  constructor(private readonly bookIssuesService: BookIssuesService) { }
 
   @Get()
   async findAll(
+    @Query('page') page?: string,
+    @Query('limit') limit?: string,
     @Query('bookId') bookId?: string,
     @Query('status') status?: string,
+    @Query('issuedTo') issuedTo?: string,
   ) {
-    return this.bookIssuesService.findAll(
-      bookId || status ? { bookId, status } : undefined,
-    );
+    const pageNum = Math.max(1, parseInt(page || '1', 10) || 1);
+    const limitNum = Math.min(100, Math.max(1, parseInt(limit || '10', 10) || 10));
+    const filters = {
+      bookId: bookId?.trim(),
+      status: status?.trim(),
+      issuedTo: issuedTo?.trim(),
+    };
+    return this.bookIssuesService.findAllPaginated(pageNum, limitNum, filters);
   }
 
   @Get(':id')
@@ -44,5 +53,11 @@ export class BookIssuesController {
   @HttpCode(HttpStatus.OK)
   async returnBook(@Param('id') id: string) {
     return this.bookIssuesService.returnBook(id);
+  }
+
+  @Delete(':id')
+  @HttpCode(HttpStatus.OK)
+  async remove(@Param('id') id: string) {
+    return this.bookIssuesService.remove(id);
   }
 }

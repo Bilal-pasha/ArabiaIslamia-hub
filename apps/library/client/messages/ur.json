@@ -16,14 +16,25 @@
     "title": "کتابیں",
     "pageDesc": "یہاں نئی کتابیں شامل کریں اور تمام کتابوں کی فہرست دیکھیں۔",
     "addBook": "کتاب شامل کریں",
-    "bookTitle": "کتاب کا عنوان",
+    "bookTitle": "کتاب کا نام",
     "author": "مصنف",
     "category": "زمرہ",
     "totalCopies": "کل نسخے",
     "save": "محفوظ کریں",
     "edit": "ترمیم",
     "delete": "حذف کریں",
-    "empty": "ابھی کوئی کتاب نہیں"
+    "empty": "ابھی کوئی کتاب نہیں",
+    "jillNumber": "جلد نمبر",
+    "kitaabNumber": "کتاب نمبر",
+    "muarafName": "معرف نام (مشہور نام)",
+    "naashirName": "ناشر نام",
+    "madahUnvaan": "مادہ عنوان",
+    "shelfNumber": "شیلف نمبر",
+    "createdDate": "تاریخ تخلیق",
+    "keefiyat": "کیفیت",
+    "milkiyat": "ملکیت",
+    "deleteConfirm": "کیا آپ واقعی اس کتاب کو حذف کرنا چاہتے ہیں؟",
+    "viewDetails": "تفصیلات دیکھیں"
   },
   "issues": {
     "title": "جاری شدہ کتابیں",
@@ -37,12 +48,15 @@
     "selectBook": "کتاب منتخب کریں",
     "empty": "ابھی کوئی جاریات نہیں",
     "issued": "جاری",
-    "returned": "واپس"
+    "returned": "واپس",
+    "deleteConfirm": "کیا آپ واقعی اس جاری شدہ ریکارڈ کو حذف کرنا چاہتے ہیں؟",
+    "viewDetails": "تفصیلات دیکھیں"
   },
   "nav": {
     "dashboard": "ڈیش بورڈ",
     "books": "کتابیں",
-    "issues": "جاری شدہ"
+    "issues": "جاری شدہ",
+    "settings": "ترتیبات"
   },
   "dashboard": {
     "welcome": "کتب خانہ میں خوش آمدید",
@@ -56,6 +70,27 @@
   },
   "common": {
     "loading": "لوڈ ہو رہا ہے...",
-    "error": "خرابی"
+    "error": "خرابی",
+    "search": "تلاش کریں",
+    "filter": "فلٹر",
+    "view": "دیکھیں",
+    "previous": "پچھلا",
+    "next": "اگلا",
+    "page": "صفحہ",
+    "of": "کا",
+    "cancel": "منسوخ",
+    "confirm": "تصدیق کریں",
+    "add": "شامل کریں"
+  },
+  "settings": {
+    "title": "ترتیبات",
+    "authors": "مصنفین",
+    "categories": "زمرے",
+    "addAuthor": "مصنف شامل کریں",
+    "addCategory": "زمرہ شامل کریں",
+    "authorName": "مصنف کا نام",
+    "categoryName": "زمرے کا نام",
+    "emptyAuthors": "ابھی کوئی مصنف نہیں",
+    "emptyCategories": "ابھی کوئی زمرہ نہیں"
   }
 }

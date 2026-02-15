@@ -20,6 +20,8 @@ export { ScoutsStudent } from './entities/scouts-student.entity';
 export { LibraryUser } from './entities/library-user.entity';
 export { Book } from './entities/book.entity';
 export { BookIssue } from './entities/book-issue.entity';
+export { BookAuthor } from './entities/book-author.entity';
+export { BookCategory } from './entities/book-category.entity';
 export { CmsAdmin } from './entities/cms-admin.entity';
 export { HeroSlide } from './entities/hero-slide.entity';
 export { SiteSection, type SectionType } from './entities/site-section.entity';

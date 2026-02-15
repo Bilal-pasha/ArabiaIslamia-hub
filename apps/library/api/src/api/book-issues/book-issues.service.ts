@@ -4,6 +4,12 @@ import { Repository } from 'typeorm';
 import { Book, BookIssue } from '@arabiaaislamia/database';
 import { CreateBookIssueDto } from './dto/create-book-issue.dto';
 
+export interface IssueFilters {
+  bookId?: string;
+  status?: string;
+  issuedTo?: string;
+}
+
 @Injectable()
 export class BookIssuesService {
   constructor(
@@ -11,17 +17,39 @@ export class BookIssuesService {
     private readonly issueRepository: Repository<BookIssue>,
     @InjectRepository(Book)
     private readonly bookRepository: Repository<Book>,
-  ) {}
+  ) { }
 
-  async findAll(filters?: { bookId?: string; status?: string }) {
+  async findAll(filters?: IssueFilters) {
     const qb = this.issueRepository
       .createQueryBuilder('issue')
       .leftJoinAndSelect('issue.book', 'book')
-      .orderBy('issue.issuedAt', 'DESC');
-    if (filters?.bookId) qb.andWhere('issue.bookId = :bookId', { bookId: filters.bookId });
+      .orderBy('issue.issued_at', 'DESC');
+    if (filters?.bookId) qb.andWhere('issue.book_id = :bookId', { bookId: filters.bookId });
     if (filters?.status) qb.andWhere('issue.status = :status', { status: filters.status });
+    if (filters?.issuedTo) qb.andWhere('issue.issued_to ILIKE :issuedTo', { issuedTo: `%${filters.issuedTo}%` });
     const data = await qb.getMany();
     return { success: true, data };
+  }
+
+  async findAllPaginated(
+    page: number,
+    limit: number,
+    filters: IssueFilters,
+  ): Promise<{ success: boolean; data: BookIssue[]; total: number; page: number; limit: number; totalPages: number }> {
+    const qb = this.issueRepository
+      .createQueryBuilder('issue')
+      .leftJoinAndSelect('issue.book', 'book')
+      .orderBy('issue.issued_at', 'DESC')
+      .skip((page - 1) * limit)
+      .take(limit);
+
+    if (filters.bookId) qb.andWhere('issue.book_id = :bookId', { bookId: filters.bookId });
+    if (filters.status) qb.andWhere('issue.status = :status', { status: filters.status });
+    if (filters.issuedTo) qb.andWhere('issue.issued_to ILIKE :issuedTo', { issuedTo: `%${filters.issuedTo}%` });
+
+    const [data, total] = await qb.getManyAndCount();
+    const totalPages = Math.ceil(total / limit);
+    return { success: true, data, total, page, limit, totalPages };
   }
 
   async findOne(id: string) {
@@ -63,5 +91,11 @@ export class BookIssuesService {
     issue.status = 'returned';
     const saved = await this.issueRepository.save(issue);
     return { success: true, message: 'Book returned', data: await this.findOne(saved.id) };
+  }
+
+  async remove(id: string) {
+    const result = await this.issueRepository.delete({ id });
+    if (result.affected === 0) throw new NotFoundException('Book issue not found');
+    return { success: true, message: 'Book issue deleted' };
   }
 }

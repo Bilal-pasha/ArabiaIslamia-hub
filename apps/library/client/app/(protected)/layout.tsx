@@ -9,23 +9,29 @@ import { api } from '@/lib/api';
 import { useLocale } from '@/lib/locale';
 import { LanguageSwitcher } from '@/components/language-switcher';
 import { MainLogo } from '@/components/main-logo';
-import { BookOpen, LayoutDashboard, BookMarked, ClipboardList, LogOut } from 'lucide-react';
+import { LayoutDashboard, BookMarked, ClipboardList, LogOut, Settings } from 'lucide-react';
 
-const navItems = [
+const baseNavItems = [
   { href: '/', labelKey: 'nav.dashboard', icon: LayoutDashboard },
   { href: '/books', labelKey: 'nav.books', icon: BookMarked },
   { href: '/issues', labelKey: 'nav.issues', icon: ClipboardList },
 ] as const;
 
+const settingsNavItem = { href: '/settings', labelKey: 'nav.settings', icon: Settings } as const;
+
 export default function ProtectedLayout({ children }: { children: React.ReactNode }) {
   const { t } = useLocale();
   const pathname = usePathname();
   const [ready, setReady] = useState(false);
+  const [isSuperAdmin, setIsSuperAdmin] = useState(false);
 
   useEffect(() => {
     api
-      .get('/api/auth/me')
-      .then(() => setReady(true))
+      .get<{ data: { user: { isSuperAdmin?: boolean } } }>('/api/auth/me')
+      .then((res) => {
+        setReady(true);
+        setIsSuperAdmin(res.data?.data?.user?.isSuperAdmin ?? false);
+      })
       .catch(() => {
         window.location.href = '/login';
       });
@@ -69,7 +75,7 @@ export default function ProtectedLayout({ children }: { children: React.ReactNod
           </Link>
         </div>
         <nav className="flex-1 p-3 flex flex-col gap-1">
-          {navItems.map(({ href, labelKey, icon: Icon }) => {
+          {[...baseNavItems, ...(isSuperAdmin ? [settingsNavItem] : [])].map(({ href, labelKey, icon: Icon }) => {
             const active = pathname === href;
             return (
               <Link

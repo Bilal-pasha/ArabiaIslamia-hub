@@ -8,6 +8,8 @@ import { AppService } from './app.service';
 import { AuthModule } from './api/auth/auth.module';
 import { BooksModule } from './api/books/books.module';
 import { BookIssuesModule } from './api/book-issues/book-issues.module';
+import { BookAuthorsModule } from './api/book-authors/book-authors.module';
+import { BookCategoriesModule } from './api/book-categories/book-categories.module';
 
 @Module({
   imports: [
@@ -24,8 +26,10 @@ import { BookIssuesModule } from './api/book-issues/book-issues.module';
     AuthModule,
     BooksModule,
     BookIssuesModule,
+    BookAuthorsModule,
+    BookCategoriesModule,
   ],
   controllers: [AppController],
   providers: [AppService],
 })
-export class AppModule {}
+export class AppModule { }

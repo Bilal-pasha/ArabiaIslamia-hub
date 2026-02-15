@@ -19,7 +19,7 @@ export class AuthService {
     private readonly userRepository: Repository<LibraryUser>,
     private readonly jwtService: JwtService,
     private readonly configService: ConfigService,
-  ) {}
+  ) { }
 
   async register(registerDto: RegisterDto) {
     const existing = await this.userRepository.findOne({
@@ -79,6 +79,7 @@ export class AuthService {
     return {
       id: user.id,
       username: user.username,
+      isSuperAdmin: user.username === 'admin',
       createdAt: user.createdAt.toISOString(),
       updatedAt: user.updatedAt.toISOString(),
     };

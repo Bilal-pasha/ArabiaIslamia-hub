@@ -16,14 +16,25 @@
     "title": "الكتب",
     "pageDesc": "أضف كتباً جديدة هنا واعرض قائمة الكتب.",
     "addBook": "إضافة كتاب",
-    "bookTitle": "عنوان الكتاب",
+    "bookTitle": "اسم الكتاب",
     "author": "المؤلف",
     "category": "الفئة",
     "totalCopies": "عدد النسخ",
     "save": "حفظ",
     "edit": "تعديل",
     "delete": "حذف",
-    "empty": "لا توجد كتب بعد"
+    "empty": "لا توجد كتب بعد",
+    "jillNumber": "رقم الجزء",
+    "kitaabNumber": "رقم الكتاب",
+    "muarafName": "اسم المعرّف (المشهور)",
+    "naashirName": "اسم الناشر",
+    "madahUnvaan": "مادة العنوان",
+    "shelfNumber": "رقم الرف",
+    "createdDate": "تاريخ الإنشاء",
+    "keefiyat": "الجودة",
+    "milkiyat": "الملكية",
+    "deleteConfirm": "هل أنت متأكد من حذف هذا الكتاب؟",
+    "viewDetails": "عرض التفاصيل"
   },
   "issues": {
     "title": "الإعارات",
@@ -37,12 +48,15 @@
     "selectBook": "اختر كتاباً",
     "empty": "لا توجد إعارات بعد",
     "issued": "معار",
-    "returned": "مرجع"
+    "returned": "مرجع",
+    "deleteConfirm": "هل أنت متأكد من حذف سجل الإعارة هذا؟",
+    "viewDetails": "عرض التفاصيل"
   },
   "nav": {
     "dashboard": "لوحة التحكم",
     "books": "الكتب",
-    "issues": "الإعارات"
+    "issues": "الإعارات",
+    "settings": "الإعدادات"
   },
   "dashboard": {
     "welcome": "مرحباً بك في المكتبة",
@@ -56,6 +70,27 @@
   },
   "common": {
     "loading": "جاري التحميل...",
-    "error": "خطأ"
+    "error": "خطأ",
+    "search": "بحث",
+    "filter": "تصفية",
+    "view": "عرض",
+    "previous": "السابق",
+    "next": "التالي",
+    "page": "صفحة",
+    "of": "من",
+    "cancel": "إلغاء",
+    "confirm": "تأكيد",
+    "add": "إضافة"
+  },
+  "settings": {
+    "title": "الإعدادات",
+    "authors": "المؤلفون",
+    "categories": "الفئات",
+    "addAuthor": "إضافة مؤلف",
+    "addCategory": "إضافة فئة",
+    "authorName": "اسم المؤلف",
+    "categoryName": "اسم الفئة",
+    "emptyAuthors": "لا يوجد مؤلفون",
+    "emptyCategories": "لا توجد فئات"
   }
 }
