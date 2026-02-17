@@ -25,9 +25,12 @@ import {
   DialogHeader,
   DialogTitle,
 } from '@arabiaaislamia/ui';
+import { fadeInUp, staggerContainer, defaultTransition } from '@arabiaaislamia/animations';
 import { useLocale } from '@/lib/locale';
 import { api } from '@/lib/api';
-import { Plus, MoreVertical, Eye, Trash2 } from 'lucide-react';
+import { Plus, MoreVertical, Eye, Trash2, ChevronLeft, ChevronRight } from 'lucide-react';
+
+const PAGE_SIZE = 10;
 
 type Author = { id: string; name: string };
 type Category = { id: string; name: string };
@@ -42,6 +45,8 @@ export default function SettingsPage() {
   const [newAuthor, setNewAuthor] = useState('');
   const [newCategory, setNewCategory] = useState('');
   const [viewItem, setViewItem] = useState<{ type: 'author' | 'category'; name: string; id: string } | null>(null);
+  const [authorPage, setAuthorPage] = useState(1);
+  const [categoryPage, setCategoryPage] = useState(1);
 
   function fetchAuthors() {
     api.get('/api/book-authors').then((r) => setAuthors(r.data.data || []));
@@ -59,6 +64,15 @@ export default function SettingsPage() {
     fetchAuthors();
     fetchCategories();
   }, []);
+
+  const authorTotalPages = Math.max(1, Math.ceil(authors.length / PAGE_SIZE));
+  const categoryTotalPages = Math.max(1, Math.ceil(categories.length / PAGE_SIZE));
+  useEffect(() => {
+    if (authorPage > authorTotalPages) setAuthorPage(authorTotalPages);
+  }, [authorPage, authorTotalPages]);
+  useEffect(() => {
+    if (categoryPage > categoryTotalPages) setCategoryPage(categoryTotalPages);
+  }, [categoryPage, categoryTotalPages]);
 
   function addAuthor(e: React.FormEvent) {
     e.preventDefault();
@@ -107,12 +121,18 @@ export default function SettingsPage() {
   }
 
   return (
-    <div className="space-y-8">
-      <div className="flex flex-col">
+    <motion.div
+      className="space-y-8"
+      variants={staggerContainer}
+      initial="hidden"
+      animate="visible"
+      transition={defaultTransition}
+    >
+      <motion.div variants={fadeInUp} className="flex flex-col">
         <h1 className="text-2xl font-bold text-foreground">{t('settings.title')}</h1>
-      </div>
+      </motion.div>
 
-      <div className="flex gap-1 border-b border-border">
+      <motion.div variants={fadeInUp} className="flex gap-1 border-b border-border">
         <button
           type="button"
           className={`px-4 py-3 text-sm font-medium border-b-2 transition-colors -mb-px ${activeTab === 'authors' ? 'border-primary text-primary' : 'border-transparent text-muted-foreground hover:text-foreground'}`}
@@ -127,10 +147,10 @@ export default function SettingsPage() {
         >
           {t('settings.categories')}
         </button>
-      </div>
+      </motion.div>
 
       {activeTab === 'authors' && (
-        <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.2 }}>
+        <motion.div variants={fadeInUp}>
           <Card>
             <CardContent className="p-6 space-y-6">
               <form onSubmit={addAuthor} className="flex flex-col sm:flex-row gap-4">
@@ -157,15 +177,16 @@ export default function SettingsPage() {
                 {authors.length === 0 ? (
                   <p className="text-muted-foreground text-sm py-8 px-4 text-center">{t('settings.emptyAuthors')}</p>
                 ) : (
-                  <Table>
-                    <TableHeader>
-                      <TableRow className="hover:bg-transparent">
-                        <TableHead className="h-12 px-4 sm:px-6 font-medium bg-muted/50">{t('settings.authorName')}</TableHead>
-                        <TableHead className="w-[60px] sm:w-[72px] bg-muted/50" />
-                      </TableRow>
-                    </TableHeader>
-                    <TableBody>
-                      {authors.map((a) => (
+                  <>
+                    <Table>
+                      <TableHeader>
+                        <TableRow className="hover:bg-transparent border-b border-border">
+                          <TableHead className="h-12 px-4 sm:px-6 font-medium">{t('settings.authorName')}</TableHead>
+                          <TableHead className="w-[60px] sm:w-[72px]" />
+                        </TableRow>
+                      </TableHeader>
+                      <TableBody>
+                        {authors.slice((authorPage - 1) * PAGE_SIZE, authorPage * PAGE_SIZE).map((a) => (
                         <TableRow key={a.id} className="group">
                           <TableCell dir="auto" className="py-4 px-4 sm:px-6 align-middle">
                             {a.name}
@@ -193,9 +214,23 @@ export default function SettingsPage() {
                             </DropdownMenu>
                           </TableCell>
                         </TableRow>
-                      ))}
-                    </TableBody>
-                  </Table>
+                        ))}
+                      </TableBody>
+                    </Table>
+                    {authors.length > PAGE_SIZE && (
+                      <div className="flex items-center justify-between border-t border-border px-4 sm:px-6 py-3 text-sm bg-muted/30">
+                        <span className="text-muted-foreground">{t('common.page')} {authorPage} {t('common.of')} {authorTotalPages} ({authors.length})</span>
+                        <div className="flex gap-2">
+                          <Button size="sm" variant="outline" disabled={authorPage <= 1} onClick={() => setAuthorPage((p) => Math.max(1, p - 1))}>
+                            <ChevronLeft className="h-4 w-4" aria-hidden />
+                          </Button>
+                          <Button size="sm" variant="outline" disabled={authorPage >= authorTotalPages} onClick={() => setAuthorPage((p) => p + 1)}>
+                            <ChevronRight className="h-4 w-4" aria-hidden />
+                          </Button>
+                        </div>
+                      </div>
+                    )}
+                  </>
                 )}
               </div>
             </CardContent>
@@ -204,7 +239,7 @@ export default function SettingsPage() {
       )}
 
       {activeTab === 'categories' && (
-        <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.2 }}>
+        <motion.div variants={fadeInUp}>
           <Card>
             <CardContent className="p-6 space-y-6">
               <form onSubmit={addCategory} className="flex flex-col sm:flex-row gap-4">
@@ -231,15 +266,16 @@ export default function SettingsPage() {
                 {categories.length === 0 ? (
                   <p className="text-muted-foreground text-sm py-8 px-4 text-center">{t('settings.emptyCategories')}</p>
                 ) : (
-                  <Table>
-                    <TableHeader>
-                      <TableRow className="hover:bg-transparent">
-                        <TableHead className="h-12 px-4 sm:px-6 font-medium bg-muted/50">{t('settings.categoryName')}</TableHead>
-                        <TableHead className="w-[60px] sm:w-[72px] bg-muted/50" />
-                      </TableRow>
-                    </TableHeader>
-                    <TableBody>
-                      {categories.map((c) => (
+                  <>
+                    <Table>
+                      <TableHeader>
+                        <TableRow className="hover:bg-transparent border-b border-border">
+                          <TableHead className="h-12 px-4 sm:px-6 font-medium">{t('settings.categoryName')}</TableHead>
+                          <TableHead className="w-[60px] sm:w-[72px]" />
+                        </TableRow>
+                      </TableHeader>
+                      <TableBody>
+                        {categories.slice((categoryPage - 1) * PAGE_SIZE, categoryPage * PAGE_SIZE).map((c) => (
                         <TableRow key={c.id} className="group">
                           <TableCell dir="auto" className="py-4 px-4 sm:px-6 align-middle">
                             {c.name}
@@ -267,9 +303,23 @@ export default function SettingsPage() {
                             </DropdownMenu>
                           </TableCell>
                         </TableRow>
-                      ))}
-                    </TableBody>
-                  </Table>
+                        ))}
+                      </TableBody>
+                    </Table>
+                    {categories.length > PAGE_SIZE && (
+                      <div className="flex items-center justify-between border-t border-border px-4 sm:px-6 py-3 text-sm bg-muted/30">
+                        <span className="text-muted-foreground">{t('common.page')} {categoryPage} {t('common.of')} {categoryTotalPages} ({categories.length})</span>
+                        <div className="flex gap-2">
+                          <Button size="sm" variant="outline" disabled={categoryPage <= 1} onClick={() => setCategoryPage((p) => Math.max(1, p - 1))}>
+                            <ChevronLeft className="h-4 w-4" aria-hidden />
+                          </Button>
+                          <Button size="sm" variant="outline" disabled={categoryPage >= categoryTotalPages} onClick={() => setCategoryPage((p) => p + 1)}>
+                            <ChevronRight className="h-4 w-4" aria-hidden />
+                          </Button>
+                        </div>
+                      </div>
+                    )}
+                  </>
                 )}
               </div>
             </CardContent>
@@ -292,6 +342,6 @@ export default function SettingsPage() {
           )}
         </DialogContent>
       </Dialog>
-    </div>
+    </motion.div>
   );
 }

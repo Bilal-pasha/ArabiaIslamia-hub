@@ -16,11 +16,7 @@ import {
   DialogTitle,
   Input,
   Label,
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
+  SearchSelect,
   Badge,
   TableSkeleton,
   useModal,
@@ -29,7 +25,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from '@arabiaaislamia/ui';
-import { defaultTransition } from '@arabiaaislamia/animations';
+import { defaultTransition, fadeInUp, staggerContainer } from '@arabiaaislamia/animations';
 import { useLocale } from '@/lib/locale';
 import { api } from '@/lib/api';
 import { Plus, Eye, Trash2, ChevronLeft, ChevronRight, MoreVertical, RotateCcw } from 'lucide-react';
@@ -71,18 +67,12 @@ function IssueBookFormContent({
       <form onSubmit={handleIssue} className="flex flex-col gap-4">
         <div className="flex flex-col gap-4">
           <Label>{t('books.title')}</Label>
-          <Select value={form.bookId} onValueChange={(v) => setForm((f) => ({ ...f, bookId: v }))} required>
-            <SelectTrigger>
-              <SelectValue placeholder="کتاب منتخب کریں" />
-            </SelectTrigger>
-            <SelectContent>
-              {books.map((b) => (
-                <SelectItem key={b.id} value={b.id}>
-                  <span dir="auto">{b.title}</span>
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
+          <SearchSelect
+            value={form.bookId}
+            onValueChange={(v) => setForm((f) => ({ ...f, bookId: v }))}
+            options={books.map((b) => ({ value: b.id, label: b.title }))}
+            placeholder={t('issues.selectBook')}
+          />
         </div>
         <div className="flex flex-col gap-4">
           <Label>{t('issues.issuedTo')}</Label>
@@ -213,28 +203,44 @@ export default function IssuesPage() {
 
   if (loading && issues.length === 0) {
     return (
-      <motion.div className="space-y-8" initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={defaultTransition}>
-        <div className="flex justify-between items-center flex-wrap gap-4">
+      <motion.div
+        className="space-y-8"
+        variants={staggerContainer}
+        initial="hidden"
+        animate="visible"
+        transition={defaultTransition}
+      >
+        <motion.div variants={fadeInUp} className="flex justify-between items-center flex-wrap gap-4">
           <div className="h-8 w-48 rounded bg-muted animate-pulse" />
           <div className="h-10 w-36 rounded bg-muted animate-pulse" />
-        </div>
-        <Card>
-          <CardContent className="p-6">
-            <div className="h-20 rounded bg-muted/50 animate-pulse" />
-          </CardContent>
-        </Card>
-        <Card>
-          <CardContent className="p-0">
-            <TableSkeleton numberOfRows={6} className="p-4" />
-          </CardContent>
-        </Card>
+        </motion.div>
+        <motion.div variants={fadeInUp}>
+          <Card>
+            <CardContent className="p-6">
+              <div className="h-20 rounded bg-muted/50 animate-pulse" />
+            </CardContent>
+          </Card>
+        </motion.div>
+        <motion.div variants={fadeInUp}>
+          <Card>
+            <CardContent className="p-0">
+              <TableSkeleton numberOfRows={6} className="p-4" />
+            </CardContent>
+          </Card>
+        </motion.div>
       </motion.div>
     );
   }
 
   return (
-    <div className="space-y-8">
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+    <motion.div
+      className="space-y-8"
+      variants={staggerContainer}
+      initial="hidden"
+      animate="visible"
+      transition={defaultTransition}
+    >
+      <motion.div variants={fadeInUp} className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div className="flex flex-col gap-2">
           <h1 className="text-2xl font-bold text-foreground">{t('issues.title')}</h1>
         </div>
@@ -242,24 +248,26 @@ export default function IssuesPage() {
           <Plus className="h-4 w-4" aria-hidden />
           {t('issues.issueBook')}
         </Button>
-      </div>
+      </motion.div>
 
+      <motion.div variants={fadeInUp}>
       <Card>
         <CardContent className="p-6 space-y-4">
           <div className="text-sm font-medium text-muted-foreground">{t('common.filter')}</div>
           <div className="flex flex-wrap gap-4 items-end">
             <div className="flex flex-col gap-1.5">
               <Label className="text-xs mb-3 block text-sm font-medium text-card-foreground/90">{t('issues.status')}</Label>
-              <Select value={filters.status} onValueChange={(v) => setFilters((f) => ({ ...f, status: v }))}>
-                <SelectTrigger className="w-36 h-9">
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="all">{t('issues.filterAll')}</SelectItem>
-                  <SelectItem value="issued">{t('issues.issued')}</SelectItem>
-                  <SelectItem value="returned">{t('issues.returned')}</SelectItem>
-                </SelectContent>
-              </Select>
+              <SearchSelect
+                value={filters.status}
+                onValueChange={(v) => setFilters((f) => ({ ...f, status: v }))}
+                options={[
+                  { value: 'all', label: t('issues.filterAll') },
+                  { value: 'issued', label: t('issues.issued') },
+                  { value: 'returned', label: t('issues.returned') },
+                ]}
+                placeholder={t('issues.status')}
+                triggerClassName="w-36 h-9"
+              />
             </div>
             <div className="flex flex-col gap-1.5">
               <Label className="text-xs mb-3 block text-sm font-medium text-card-foreground/90">{t('issues.issuedTo')}</Label>
@@ -273,35 +281,31 @@ export default function IssuesPage() {
             </div>
             <div className="flex flex-col gap-1.5">
               <Label className="text-xs mb-3 block text-sm font-medium text-card-foreground/90">{t('issues.selectBook')}</Label>
-              <Select value={filters.bookId || 'all'} onValueChange={(v) => setFilters((f) => ({ ...f, bookId: v }))}>
-                <SelectTrigger className="w-48 h-9">
-                  <SelectValue placeholder={t('issues.filterAll')} />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="all">{t('issues.filterAll')}</SelectItem>
-                  {books.map((b) => (
-                    <SelectItem key={b.id} value={b.id}>
-                      <span dir="auto">{b.title}</span>
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
+              <SearchSelect
+                value={filters.bookId || 'all'}
+                onValueChange={(v) => setFilters((f) => ({ ...f, bookId: v }))}
+                options={[{ value: 'all', label: t('issues.filterAll') }, ...books.map((b) => ({ value: b.id, label: b.title }))]}
+                placeholder={t('issues.selectBook')}
+                triggerClassName="w-48 h-9"
+              />
             </div>
             <Button size="lg" variant="default" onClick={applyFilters} className="px-4 py-2 text-lg font-medium">{t('common.filter')}</Button>
           </div>
         </CardContent>
       </Card>
+      </motion.div>
 
+      <motion.div variants={fadeInUp}>
       <Card className="overflow-hidden">
         <div className="rounded-lg border border-border overflow-hidden">
           <Table className="min-w-[640px]">
             <TableHeader>
               <TableRow className="hover:bg-transparent border-b border-border">
-                <TableHead className="h-12 px-4 sm:px-6 font-medium bg-muted/50 text-foreground">{t('books.title')}</TableHead>
-                <TableHead className="h-12 px-4 sm:px-6 font-medium bg-muted/50 text-foreground">{t('issues.issuedTo')}</TableHead>
-                <TableHead className="h-12 px-4 sm:px-6 font-medium bg-muted/50 text-foreground">{t('issues.dueAt')}</TableHead>
-                <TableHead className="h-12 px-4 sm:px-6 font-medium bg-muted/50 text-foreground">{t('issues.status')}</TableHead>
-                <TableHead className="w-[60px] sm:w-[72px] bg-muted/50" />
+                <TableHead className="h-12 px-4 sm:px-6 font-medium">{t('books.title')}</TableHead>
+                <TableHead className="h-12 px-4 sm:px-6 font-medium">{t('issues.issuedTo')}</TableHead>
+                <TableHead className="h-12 px-4 sm:px-6 font-medium">{t('issues.dueAt')}</TableHead>
+                <TableHead className="h-12 px-4 sm:px-6 font-medium">{t('issues.status')}</TableHead>
+                <TableHead className="w-[60px] sm:w-[72px]" />
               </TableRow>
             </TableHeader>
             <TableBody>
@@ -370,6 +374,7 @@ export default function IssuesPage() {
           </div>
         )}
       </Card>
-    </div>
+      </motion.div>
+    </motion.div>
   );
 }

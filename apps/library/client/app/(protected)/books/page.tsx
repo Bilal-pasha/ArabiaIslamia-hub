@@ -18,17 +18,13 @@ import {
   Label,
   TableSkeleton,
   useModal,
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
+  SearchSelect,
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from '@arabiaaislamia/ui';
-import { defaultTransition } from '@arabiaaislamia/animations';
+import { defaultTransition, fadeInUp, staggerContainer } from '@arabiaaislamia/animations';
 import { useLocale } from '@/lib/locale';
 import { api } from '@/lib/api';
 import { Plus, Eye, Trash2, ChevronLeft, ChevronRight, MoreVertical } from 'lucide-react';
@@ -123,33 +119,23 @@ function AddBookFormContent({
           </div>
           <div className={fieldClass}>
             <Label className="text-sm font-medium text-foreground">{t('books.author')}</Label>
-            <Select value={form.author || undefined} onValueChange={(v) => setForm((f) => ({ ...f, author: v || '' }))}>
-              <SelectTrigger className="h-9">
-                <SelectValue placeholder={t('common.search')} />
-              </SelectTrigger>
-              <SelectContent>
-                {authors.map((a) => (
-                  <SelectItem key={a.id} value={a.name}>
-                    <span dir="auto">{a.name}</span>
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
+            <SearchSelect
+              value={form.author || ''}
+              onValueChange={(v) => setForm((f) => ({ ...f, author: v }))}
+              options={authors.map((a) => ({ value: a.name, label: a.name }))}
+              placeholder={t('common.search')}
+              className="h-9"
+            />
           </div>
           <div className={fieldClass}>
             <Label className="text-sm font-medium text-foreground">{t('books.category')}</Label>
-            <Select value={form.category || undefined} onValueChange={(v) => setForm((f) => ({ ...f, category: v || '' }))}>
-              <SelectTrigger className="h-9">
-                <SelectValue placeholder={t('common.search')} />
-              </SelectTrigger>
-              <SelectContent>
-                {categories.map((c) => (
-                  <SelectItem key={c.id} value={c.name}>
-                    <span dir="auto">{c.name}</span>
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
+            <SearchSelect
+              value={form.category || ''}
+              onValueChange={(v) => setForm((f) => ({ ...f, category: v }))}
+              options={categories.map((c) => ({ value: c.name, label: c.name }))}
+              placeholder={t('common.search')}
+              className="h-9"
+            />
           </div>
           <div className={fieldClass}>
             <Label className="text-sm font-medium text-foreground">{t('books.muarafName')}</Label>
@@ -307,32 +293,48 @@ export default function BooksPage() {
 
   if (loading && books.length === 0) {
     return (
-      <motion.div className="space-y-8" initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={defaultTransition}>
-        <div className="flex justify-between items-center flex-wrap gap-4">
+      <motion.div
+        className="space-y-8"
+        variants={staggerContainer}
+        initial="hidden"
+        animate="visible"
+        transition={defaultTransition}
+      >
+        <motion.div variants={fadeInUp} className="flex justify-between items-center flex-wrap gap-4">
           <div className="h-8 w-48 rounded bg-muted animate-pulse" />
           <div className="h-10 w-36 rounded bg-muted animate-pulse" />
-        </div>
-        <Card>
-          <CardContent className="p-6">
-            <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-              {[1, 2, 3, 4].map((i) => (
-                <div key={i} className="h-9 rounded bg-muted/50 animate-pulse" />
-              ))}
-            </div>
-          </CardContent>
-        </Card>
-        <Card>
-          <CardContent className="p-0">
-            <TableSkeleton numberOfRows={8} className="p-4" />
-          </CardContent>
-        </Card>
+        </motion.div>
+        <motion.div variants={fadeInUp}>
+          <Card>
+            <CardContent className="p-6">
+              <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+                {[1, 2, 3, 4].map((i) => (
+                  <div key={i} className="h-9 rounded bg-muted/50 animate-pulse" />
+                ))}
+              </div>
+            </CardContent>
+          </Card>
+        </motion.div>
+        <motion.div variants={fadeInUp}>
+          <Card>
+            <CardContent className="p-0">
+              <TableSkeleton numberOfRows={8} className="p-4" />
+            </CardContent>
+          </Card>
+        </motion.div>
       </motion.div>
     );
   }
 
   return (
-    <div className="space-y-8">
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+    <motion.div
+      className="space-y-8"
+      variants={staggerContainer}
+      initial="hidden"
+      animate="visible"
+      transition={defaultTransition}
+    >
+      <motion.div variants={fadeInUp} className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div className="flex flex-col gap-2">
           <h1 className="text-2xl font-bold text-foreground">{t('books.title')}</h1>
         </div>
@@ -340,8 +342,9 @@ export default function BooksPage() {
           <Plus className="h-4 w-4" aria-hidden />
           {t('books.addBook')}
         </Button>
-      </div>
+      </motion.div>
 
+      <motion.div variants={fadeInUp}>
       <Card>
         <CardContent className="p-6 space-y-4">
           <div className="text-sm font-medium text-muted-foreground">{t('common.filter')}</div>
@@ -360,21 +363,23 @@ export default function BooksPage() {
           <Button size="lg" variant="default" onClick={applyFilters} className="px-4 py-2 text-lg font-medium">{t('common.filter')}</Button>
         </CardContent>
       </Card>
+      </motion.div>
 
+      <motion.div variants={fadeInUp}>
       <Card className="overflow-hidden">
         <div className="overflow-x-auto rounded-lg border border-border">
           <Table className="min-w-[900px]">
             <TableHeader>
               <TableRow className="hover:bg-transparent border-b border-border">
-                <TableHead className="h-12 px-4 sm:px-6 font-medium bg-muted/50 text-foreground">{t('books.bookTitle')}</TableHead>
-                <TableHead className="h-12 px-4 sm:px-6 font-medium bg-muted/50 text-foreground">{t('books.jillNumber')}</TableHead>
-                <TableHead className="h-12 px-4 sm:px-6 font-medium bg-muted/50 text-foreground">{t('books.kitaabNumber')}</TableHead>
-                <TableHead className="h-12 px-4 sm:px-6 font-medium bg-muted/50 text-foreground">{t('books.author')}</TableHead>
-                <TableHead className="h-12 px-4 sm:px-6 font-medium bg-muted/50 text-foreground">{t('books.naashirName')}</TableHead>
-                <TableHead className="h-12 px-4 sm:px-6 font-medium bg-muted/50 text-foreground">{t('books.shelfNumber')}</TableHead>
-                <TableHead className="h-12 px-4 sm:px-6 font-medium bg-muted/50 text-foreground">{t('books.keefiyat')}</TableHead>
-                <TableHead className="h-12 px-4 sm:px-6 font-medium bg-muted/50 text-foreground">{t('books.totalCopies')}</TableHead>
-                <TableHead className="w-[60px] sm:w-[72px] bg-muted/50" />
+                <TableHead className="h-12 px-4 sm:px-6 font-medium">{t('books.bookTitle')}</TableHead>
+                <TableHead className="h-12 px-4 sm:px-6 font-medium">{t('books.jillNumber')}</TableHead>
+                <TableHead className="h-12 px-4 sm:px-6 font-medium">{t('books.kitaabNumber')}</TableHead>
+                <TableHead className="h-12 px-4 sm:px-6 font-medium">{t('books.author')}</TableHead>
+                <TableHead className="h-12 px-4 sm:px-6 font-medium">{t('books.naashirName')}</TableHead>
+                <TableHead className="h-12 px-4 sm:px-6 font-medium">{t('books.shelfNumber')}</TableHead>
+                <TableHead className="h-12 px-4 sm:px-6 font-medium">{t('books.keefiyat')}</TableHead>
+                <TableHead className="h-12 px-4 sm:px-6 font-medium">{t('books.totalCopies')}</TableHead>
+                <TableHead className="w-[60px] sm:w-[72px]" />
               </TableRow>
             </TableHeader>
             <TableBody>
@@ -437,6 +442,7 @@ export default function BooksPage() {
           </div>
         )}
       </Card>
-    </div>
+      </motion.div>
+    </motion.div>
   );
 }

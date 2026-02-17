@@ -16,6 +16,8 @@ export {
   SelectItem,
   SelectSeparator,
 } from './components/select';
+export { SearchSelect } from './components/search-select';
+export type { SearchSelectOption, SearchSelectProps } from './components/search-select';
 export { Alert, AlertTitle, AlertDescription } from './components/alert';
 export {
   Table,
