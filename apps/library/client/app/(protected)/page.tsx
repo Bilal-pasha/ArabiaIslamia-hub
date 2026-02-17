@@ -41,7 +41,6 @@ export default function DashboardPage() {
             </div>
             <div className='flex flex-col gap-4'>
               <h1 className="text-2xl font-bold text-foreground">{welcome}</h1>
-              <p className="text-muted-foreground text-sm">{t('dashboard.subtitle')}</p>
             </div>
           </div>
         </div>

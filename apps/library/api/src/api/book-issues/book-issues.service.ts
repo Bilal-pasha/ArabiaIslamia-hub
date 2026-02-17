@@ -23,7 +23,7 @@ export class BookIssuesService {
     const qb = this.issueRepository
       .createQueryBuilder('issue')
       .leftJoinAndSelect('issue.book', 'book')
-      .orderBy('issue.issued_at', 'DESC');
+      .orderBy('issue.issuedAt', 'DESC');
     if (filters?.bookId) qb.andWhere('issue.book_id = :bookId', { bookId: filters.bookId });
     if (filters?.status) qb.andWhere('issue.status = :status', { status: filters.status });
     if (filters?.issuedTo) qb.andWhere('issue.issued_to ILIKE :issuedTo', { issuedTo: `%${filters.issuedTo}%` });
@@ -39,7 +39,7 @@ export class BookIssuesService {
     const qb = this.issueRepository
       .createQueryBuilder('issue')
       .leftJoinAndSelect('issue.book', 'book')
-      .orderBy('issue.issued_at', 'DESC')
+      .orderBy('issue.issuedAt', 'DESC')
       .skip((page - 1) * limit)
       .take(limit);
 

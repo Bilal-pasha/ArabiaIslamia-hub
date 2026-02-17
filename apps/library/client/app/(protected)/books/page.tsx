@@ -23,11 +23,15 @@ import {
   SelectItem,
   SelectTrigger,
   SelectValue,
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
 } from '@arabiaaislamia/ui';
 import { defaultTransition } from '@arabiaaislamia/animations';
 import { useLocale } from '@/lib/locale';
 import { api } from '@/lib/api';
-import { Plus, Eye, Trash2, ChevronLeft, ChevronRight } from 'lucide-react';
+import { Plus, Eye, Trash2, ChevronLeft, ChevronRight, MoreVertical } from 'lucide-react';
 
 type Book = {
   id: string;
@@ -303,11 +307,20 @@ export default function BooksPage() {
 
   if (loading && books.length === 0) {
     return (
-      <motion.div className="space-y-4" initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={defaultTransition}>
-        <div className="flex justify-between items-center">
+      <motion.div className="space-y-8" initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={defaultTransition}>
+        <div className="flex justify-between items-center flex-wrap gap-4">
           <div className="h-8 w-48 rounded bg-muted animate-pulse" />
-          <div className="h-9 w-28 rounded bg-muted animate-pulse" />
+          <div className="h-10 w-36 rounded bg-muted animate-pulse" />
         </div>
+        <Card>
+          <CardContent className="p-6">
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+              {[1, 2, 3, 4].map((i) => (
+                <div key={i} className="h-9 rounded bg-muted/50 animate-pulse" />
+              ))}
+            </div>
+          </CardContent>
+        </Card>
         <Card>
           <CardContent className="p-0">
             <TableSkeleton numberOfRows={8} className="p-4" />
@@ -318,24 +331,21 @@ export default function BooksPage() {
   }
 
   return (
-    <div className="space-y-6">
-      <div className="space-y-2">
-        <div className="flex flex-wrap justify-between items-start gap-4">
-          <div className="flex flex-col gap-4">
-            <h1 className="text-2xl font-bold text-foreground">{t('books.title')}</h1>
-            <p className="text-muted-foreground mt-1 text-sm max-w-xl">{t('books.pageDesc')}</p>
-          </div>
-          <Button onClick={openAddBookModal} className="gap-2 shrink-0 shadow-sm bg-primary text-primary-foreground hover:opacity-90 opacity-100">
-            <Plus className="h-4 w-4" aria-hidden />
-            {t('books.addBook')}
-          </Button>
+    <div className="space-y-8">
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+        <div className="flex flex-col gap-2">
+          <h1 className="text-2xl font-bold text-foreground">{t('books.title')}</h1>
         </div>
+        <Button onClick={openAddBookModal} className="gap-2 shrink-0 shadow-sm bg-primary text-primary-foreground hover:opacity-90 opacity-100">
+          <Plus className="h-4 w-4" aria-hidden />
+          {t('books.addBook')}
+        </Button>
       </div>
 
       <Card>
-        <CardContent className="p-4 space-y-4">
+        <CardContent className="p-6 space-y-4">
           <div className="text-sm font-medium text-muted-foreground">{t('common.filter')}</div>
-          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-2">
+          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4">
             {FILTER_KEYS.map((k) => (
               <Input
                 key={k}
@@ -347,72 +357,86 @@ export default function BooksPage() {
               />
             ))}
           </div>
-          <Button size="sm" variant="outline" onClick={applyFilters}>{t('common.filter')}</Button>
+          <Button size="lg" variant="default" onClick={applyFilters} className="px-4 py-2 text-lg font-medium">{t('common.filter')}</Button>
         </CardContent>
       </Card>
 
-      <div>
-        <Card className="library-data-card bg-white text-black shadow-sm border border-border">
-          <CardContent className="p-0 overflow-x-auto">
-            <Table className="min-w-[900px]">
-              <TableHeader>
+      <Card className="overflow-hidden">
+        <div className="overflow-x-auto rounded-lg border border-border">
+          <Table className="min-w-[900px]">
+            <TableHeader>
+              <TableRow className="hover:bg-transparent border-b border-border">
+                <TableHead className="h-12 px-4 sm:px-6 font-medium bg-muted/50 text-foreground">{t('books.bookTitle')}</TableHead>
+                <TableHead className="h-12 px-4 sm:px-6 font-medium bg-muted/50 text-foreground">{t('books.jillNumber')}</TableHead>
+                <TableHead className="h-12 px-4 sm:px-6 font-medium bg-muted/50 text-foreground">{t('books.kitaabNumber')}</TableHead>
+                <TableHead className="h-12 px-4 sm:px-6 font-medium bg-muted/50 text-foreground">{t('books.author')}</TableHead>
+                <TableHead className="h-12 px-4 sm:px-6 font-medium bg-muted/50 text-foreground">{t('books.naashirName')}</TableHead>
+                <TableHead className="h-12 px-4 sm:px-6 font-medium bg-muted/50 text-foreground">{t('books.shelfNumber')}</TableHead>
+                <TableHead className="h-12 px-4 sm:px-6 font-medium bg-muted/50 text-foreground">{t('books.keefiyat')}</TableHead>
+                <TableHead className="h-12 px-4 sm:px-6 font-medium bg-muted/50 text-foreground">{t('books.totalCopies')}</TableHead>
+                <TableHead className="w-[60px] sm:w-[72px] bg-muted/50" />
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {books.length === 0 ? (
                 <TableRow>
-                  <TableHead className="text-foreground">{t('books.bookTitle')}</TableHead>
-                  <TableHead className="text-foreground">{t('books.jillNumber')}</TableHead>
-                  <TableHead className="text-foreground">{t('books.kitaabNumber')}</TableHead>
-                  <TableHead className="text-foreground">{t('books.author')}</TableHead>
-                  <TableHead className="text-foreground">{t('books.naashirName')}</TableHead>
-                  <TableHead className="text-foreground">{t('books.shelfNumber')}</TableHead>
-                  <TableHead className="text-foreground">{t('books.keefiyat')}</TableHead>
-                  <TableHead className="text-foreground">{t('books.totalCopies')}</TableHead>
-                  <TableHead className="w-[120px]" />
+                  <TableCell colSpan={9} className="text-center text-muted-foreground py-12 px-4">{t('books.empty')}</TableCell>
                 </TableRow>
-              </TableHeader>
-              <TableBody>
-                {books.length === 0 ? (
-                  <TableRow>
-                    <TableCell colSpan={9} className="text-center text-muted-foreground py-12">{t('books.empty')}</TableCell>
+              ) : (
+                books.map((b) => (
+                  <TableRow key={b.id} className="group">
+                    <TableCell dir="auto" className="py-4 px-4 sm:px-6 font-medium text-foreground align-middle">
+                      {b.title}
+                    </TableCell>
+                    <TableCell dir="auto" className="py-4 px-4 sm:px-6 text-foreground align-middle">{b.jillNumber ?? '–'}</TableCell>
+                    <TableCell dir="auto" className="py-4 px-4 sm:px-6 text-foreground align-middle">{b.kitaabNumber ?? '–'}</TableCell>
+                    <TableCell dir="auto" className="py-4 px-4 sm:px-6 text-foreground align-middle">{b.author ?? '–'}</TableCell>
+                    <TableCell dir="auto" className="py-4 px-4 sm:px-6 text-foreground align-middle">{b.naashirName ?? '–'}</TableCell>
+                    <TableCell dir="auto" className="py-4 px-4 sm:px-6 text-foreground align-middle">{b.shelfNumber ?? '–'}</TableCell>
+                    <TableCell dir="auto" className="py-4 px-4 sm:px-6 text-foreground align-middle">{b.keefiyat ?? '–'}</TableCell>
+                    <TableCell className="py-4 px-4 sm:px-6 text-foreground align-middle">{b.totalCopies}</TableCell>
+                    <TableCell className="py-2 px-4 sm:px-6">
+                      <DropdownMenu>
+                        <DropdownMenuTrigger asChild>
+                          <Button size="icon" variant="ghost" className="h-9 w-9 p-0" aria-label={t('common.view')}>
+                            <MoreVertical className="h-4 w-4" aria-hidden />
+                          </Button>
+                        </DropdownMenuTrigger>
+                        <DropdownMenuContent align="start" className="min-w-[140px] bg-white border-border">
+                          <DropdownMenuItem onClick={() => openViewModal(b)} className="gap-2">
+                            <Eye className="h-4 w-4" aria-hidden />
+                            {t('books.viewDetails')}
+                          </DropdownMenuItem>
+                          <DropdownMenuItem
+                            onClick={() => openDeleteConfirm(b)}
+                            className="gap-2 text-destructive focus:text-destructive focus:bg-destructive/10"
+                          >
+                            <Trash2 className="h-4 w-4" aria-hidden />
+                            {t('books.delete')}
+                          </DropdownMenuItem>
+                        </DropdownMenuContent>
+                      </DropdownMenu>
+                    </TableCell>
                   </TableRow>
-                ) : (
-                  books.map((b) => (
-                    <TableRow key={b.id}>
-                      <TableCell dir="auto" className="font-medium text-foreground">{b.title}</TableCell>
-                      <TableCell dir="auto" className="text-foreground">{b.jillNumber ?? '–'}</TableCell>
-                      <TableCell dir="auto" className="text-foreground">{b.kitaabNumber ?? '–'}</TableCell>
-                      <TableCell dir="auto" className="text-foreground">{b.author ?? '–'}</TableCell>
-                      <TableCell dir="auto" className="text-foreground">{b.naashirName ?? '–'}</TableCell>
-                      <TableCell dir="auto" className="text-foreground">{b.shelfNumber ?? '–'}</TableCell>
-                      <TableCell dir="auto" className="text-foreground">{b.keefiyat ?? '–'}</TableCell>
-                      <TableCell className="text-foreground">{b.totalCopies}</TableCell>
-                      <TableCell className="flex gap-1">
-                        <Button size="sm" variant="ghost" onClick={() => openViewModal(b)}>
-                          <Eye className="h-4 w-4" aria-hidden />
-                        </Button>
-                        <Button size="sm" variant="ghost" className="text-destructive hover:text-destructive" onClick={() => openDeleteConfirm(b)}>
-                          <Trash2 className="h-4 w-4" aria-hidden />
-                        </Button>
-                      </TableCell>
-                    </TableRow>
-                  ))
-                )}
-              </TableBody>
-            </Table>
-          </CardContent>
-          {totalPages > 1 && (
-            <div className="flex items-center justify-between border-t px-4 py-2 text-sm">
-              <span className="text-muted-foreground">{t('common.page')} {page} {t('common.of')} {totalPages} ({total})</span>
-              <div className="flex gap-2">
-                <Button size="sm" variant="outline" disabled={page <= 1} onClick={() => setPage((p) => Math.max(1, p - 1))}>
-                  <ChevronLeft className="h-4 w-4" aria-hidden />
-                </Button>
-                <Button size="sm" variant="outline" disabled={page >= totalPages} onClick={() => setPage((p) => Math.min(totalPages, p + 1))}>
-                  <ChevronRight className="h-4 w-4" aria-hidden />
-                </Button>
-              </div>
+                ))
+              )}
+            </TableBody>
+          </Table>
+        </div>
+        {totalPages > 1 && (
+          <div className="flex items-center justify-between border-t border-border px-4 sm:px-6 py-3 text-sm bg-muted/30">
+            <span className="text-muted-foreground">{t('common.page')} {page} {t('common.of')} {totalPages} ({total})</span>
+            <div className="flex gap-2">
+              <Button size="sm" variant="outline" disabled={page <= 1} onClick={() => setPage((p) => Math.max(1, p - 1))}>
+                <ChevronLeft className="h-4 w-4" aria-hidden />
+              </Button>
+              <Button size="sm" variant="outline" disabled={page >= totalPages} onClick={() => setPage((p) => Math.min(totalPages, p + 1))}>
+                <ChevronRight className="h-4 w-4" aria-hidden />
+              </Button>
             </div>
-          )}
-        </Card>
-      </div>
+          </div>
+        )}
+      </Card>
     </div>
   );
 }
