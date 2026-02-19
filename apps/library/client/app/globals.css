@@ -208,3 +208,9 @@ html[lang='ar'] {
   visibility: visible !important;
   opacity: 1 !important;
 }
+
+/* Library RTL: table headers and cells aligned same as RTL start (right) */
+[data-theme="library"] main table th,
+[data-theme="library"] main table td {
+  text-align: right;
+}

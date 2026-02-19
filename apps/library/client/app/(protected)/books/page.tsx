@@ -12,6 +12,8 @@ import {
   TableRow,
   TableHead,
   TableCell,
+  Dialog,
+  DialogContent,
   DialogHeader,
   DialogTitle,
   Input,
@@ -27,10 +29,13 @@ import {
 import { defaultTransition, fadeInUp, staggerContainer } from '@arabiaaislamia/animations';
 import { useLocale } from '@/lib/locale';
 import { api } from '@/lib/api';
-import { Plus, Eye, Trash2, ChevronLeft, ChevronRight, MoreVertical } from 'lucide-react';
+import { Plus, Eye, Trash2, ChevronLeft, ChevronRight, MoreVertical, Printer } from 'lucide-react';
+
+const LANGUAGE_OPTIONS = ['urdu', 'english', 'arabic', 'faarsi', 'other'] as const;
 
 type Book = {
   id: string;
+  bookNumber: string;
   title: string;
   author: string | null;
   category: string | null;
@@ -39,7 +44,7 @@ type Book = {
   kitaabNumber: string | null;
   muarafName: string | null;
   naashirName: string | null;
-  madahUnvaan: string | null;
+  language: string | null;
   shelfNumber: string | null;
   keefiyat: string | null;
   milkiyat: string | null;
@@ -54,47 +59,97 @@ const initialForm = {
   kitaabNumber: '',
   muarafName: '',
   naashirName: '',
-  madahUnvaan: '',
+  language: '',
   shelfNumber: '',
   keefiyat: '',
   milkiyat: '',
   totalCopies: 1,
 };
 
-const FILTER_KEYS = ['title', 'author', 'category', 'jillNumber', 'kitaabNumber', 'muarafName', 'naashirName', 'madahUnvaan', 'shelfNumber', 'keefiyat', 'milkiyat'] as const;
+const FILTER_KEYS = ['bookNumber', 'title', 'author', 'category', 'jillNumber', 'kitaabNumber', 'muarafName', 'naashirName', 'language', 'shelfNumber', 'keefiyat', 'milkiyat'] as const;
 
 function AddBookFormContent({
   t,
   authors,
   categories,
+  nashirs,
+  onRefreshAuthors,
+  onRefreshCategories,
+  onRefreshNashirs,
   onSuccess,
 }: {
   t: (k: string) => string;
   authors: { id: string; name: string }[];
   categories: { id: string; name: string }[];
-  onSuccess: () => void | Promise<void>;
+  nashirs: { id: string; name: string }[];
+  onRefreshAuthors: () => void;
+  onRefreshCategories: () => void;
+  onRefreshNashirs: () => void;
+  onSuccess: (bookId?: string) => void | Promise<void>;
 }) {
   const [form, setForm] = useState(initialForm);
+  const [addMoreOpen, setAddMoreOpen] = useState(false);
+  const [addMoreType, setAddMoreType] = useState<'author' | 'category' | 'nashir'>('author');
+  const [addMoreValue, setAddMoreValue] = useState('');
+
+  function openAddMore(type: 'author' | 'category' | 'nashir') {
+    setAddMoreType(type);
+    setAddMoreValue('');
+    setAddMoreOpen(true);
+  }
+
+  async function handleAddMore(e: React.FormEvent) {
+    e.preventDefault();
+    const name = addMoreValue.trim();
+    if (!name) return;
+    try {
+      if (addMoreType === 'author') {
+        await api.post('/api/book-authors', { name });
+        onRefreshAuthors();
+        setForm((f) => ({ ...f, author: name }));
+      } else if (addMoreType === 'category') {
+        await api.post('/api/book-categories', { name });
+        onRefreshCategories();
+        setForm((f) => ({ ...f, category: name }));
+      } else {
+        await api.post('/api/book-nashirs', { name });
+        onRefreshNashirs();
+        setForm((f) => ({ ...f, naashirName: name }));
+      }
+      setAddMoreOpen(false);
+    } catch {
+      // Error handled by API
+    }
+  }
+
+  const addMoreLabel =
+    addMoreType === 'author'
+      ? t('settings.authorName')
+      : addMoreType === 'category'
+        ? t('settings.categoryName')
+        : t('settings.nashirName');
 
   async function handleAdd(e: React.FormEvent) {
     e.preventDefault();
     const authorVal = form.author || undefined;
     const categoryVal = form.category || undefined;
-    await api.post('/api/books', {
+    const naashirVal = form.naashirName || undefined;
+    const res = await api.post<{ data: { id: string } }>('/api/books', {
       title: form.title,
       author: authorVal || undefined,
       category: categoryVal || undefined,
       jillNumber: form.jillNumber || undefined,
       kitaabNumber: form.kitaabNumber || undefined,
       muarafName: form.muarafName || undefined,
-      naashirName: form.naashirName || undefined,
-      madahUnvaan: form.madahUnvaan || undefined,
+      naashirName: naashirVal || undefined,
+      language: form.language || undefined,
       shelfNumber: form.shelfNumber || undefined,
       keefiyat: form.keefiyat || undefined,
       milkiyat: form.milkiyat || undefined,
       totalCopies: form.totalCopies,
     });
-    await onSuccess();
+    const bookId = res.data?.data?.id;
+    await onSuccess(bookId);
   }
 
   const fieldClass = 'flex flex-col gap-1.5';
@@ -118,22 +173,45 @@ function AddBookFormContent({
             <Input value={form.kitaabNumber} onChange={(e) => setForm((f) => ({ ...f, kitaabNumber: e.target.value }))} dir="auto" className="h-9" />
           </div>
           <div className={fieldClass}>
-            <Label className="text-sm font-medium text-foreground">{t('books.author')}</Label>
+            <div className="flex items-center justify-between gap-2">
+              <Label className="text-sm font-medium text-foreground">{t('books.author')}</Label>
+              <Button type="button" variant="ghost" size="sm" className="h-7 text-xs shrink-0 text-primary hover:text-primary/90 hover:bg-primary/5" onClick={() => openAddMore('author')}>
+                + {t('books.addMore')}
+              </Button>
+            </div>
             <SearchSelect
               value={form.author || ''}
               onValueChange={(v) => setForm((f) => ({ ...f, author: v }))}
               options={authors.map((a) => ({ value: a.name, label: a.name }))}
               placeholder={t('common.search')}
+              emptyMessage={t('common.noResults')}
               className="h-9"
             />
           </div>
           <div className={fieldClass}>
-            <Label className="text-sm font-medium text-foreground">{t('books.category')}</Label>
+            <div className="flex items-center justify-between gap-2">
+              <Label className="text-sm font-medium text-foreground">{t('books.mazmoon')}</Label>
+              <Button type="button" variant="ghost" size="sm" className="h-7 text-xs shrink-0 text-primary hover:text-primary/90 hover:bg-primary/5" onClick={() => openAddMore('category')}>
+                + {t('books.addMore')}
+              </Button>
+            </div>
             <SearchSelect
               value={form.category || ''}
               onValueChange={(v) => setForm((f) => ({ ...f, category: v }))}
               options={categories.map((c) => ({ value: c.name, label: c.name }))}
               placeholder={t('common.search')}
+              emptyMessage={t('common.noResults')}
+              className="h-9"
+            />
+          </div>
+          <div className={fieldClass}>
+            <Label className="text-sm font-medium text-foreground">{t('books.language')}</Label>
+            <SearchSelect
+              value={form.language || ''}
+              onValueChange={(v) => setForm((f) => ({ ...f, language: v }))}
+              options={LANGUAGE_OPTIONS.map((l) => ({ value: l, label: t(`books.languageOptions.${l}`) }))}
+              placeholder={t('books.selectLanguage')}
+              emptyMessage={t('common.noResults')}
               className="h-9"
             />
           </div>
@@ -142,12 +220,20 @@ function AddBookFormContent({
             <Input value={form.muarafName} onChange={(e) => setForm((f) => ({ ...f, muarafName: e.target.value }))} dir="auto" className="h-9" />
           </div>
           <div className={fieldClass}>
-            <Label className="text-sm font-medium text-foreground">{t('books.naashirName')}</Label>
-            <Input value={form.naashirName} onChange={(e) => setForm((f) => ({ ...f, naashirName: e.target.value }))} dir="auto" className="h-9" />
-          </div>
-          <div className={fieldClass}>
-            <Label className="text-sm font-medium text-foreground">{t('books.madahUnvaan')}</Label>
-            <Input value={form.madahUnvaan} onChange={(e) => setForm((f) => ({ ...f, madahUnvaan: e.target.value }))} dir="auto" className="h-9" />
+            <div className="flex items-center justify-between gap-2">
+              <Label className="text-sm font-medium text-foreground">{t('books.naashirName')}</Label>
+              <Button type="button" variant="ghost" size="sm" className="h-7 text-xs shrink-0 text-primary hover:text-primary/90 hover:bg-primary/5" onClick={() => openAddMore('nashir')}>
+                + {t('books.addMore')}
+              </Button>
+            </div>
+            <SearchSelect
+              value={form.naashirName || ''}
+              onValueChange={(v) => setForm((f) => ({ ...f, naashirName: v }))}
+              options={nashirs.map((n) => ({ value: n.name, label: n.name }))}
+              placeholder={t('common.search')}
+              emptyMessage={t('common.noResults')}
+              className="h-9"
+            />
           </div>
           <div className={fieldClass}>
             <Label className="text-sm font-medium text-foreground">{t('books.shelfNumber')}</Label>
@@ -170,23 +256,48 @@ function AddBookFormContent({
           <Button type="submit" className="w-full py-5 font-medium">{t('books.save')}</Button>
         </div>
       </form>
+
+      <Dialog open={addMoreOpen} onOpenChange={setAddMoreOpen}>
+        <DialogContent className="sm:max-w-md">
+          <DialogHeader>
+            <DialogTitle>{addMoreLabel}</DialogTitle>
+          </DialogHeader>
+          <form onSubmit={handleAddMore} className="flex flex-col gap-4 pt-2">
+            <Input
+              value={addMoreValue}
+              onChange={(e) => setAddMoreValue(e.target.value)}
+              dir="auto"
+              placeholder={addMoreLabel}
+              className="h-9"
+              autoFocus
+            />
+            <div className="flex justify-end gap-2">
+              <Button type="button" variant="outline" onClick={() => setAddMoreOpen(false)}>
+                {t('common.cancel')}
+              </Button>
+              <Button type="submit">{t('common.add')}</Button>
+            </div>
+          </form>
+        </DialogContent>
+      </Dialog>
     </>
   );
 }
 
 function BookDetailContent({ book, t }: { book: Book; t: (k: string) => string }) {
   const rows: { label: string; value: string | number }[] = [
+    { label: t('books.bookNumber'), value: book.bookNumber },
     { label: t('books.bookTitle'), value: book.title },
     { label: t('books.jillNumber'), value: book.jillNumber ?? '–' },
     { label: t('books.kitaabNumber'), value: book.kitaabNumber ?? '–' },
     { label: t('books.author'), value: book.author ?? '–' },
     { label: t('books.muarafName'), value: book.muarafName ?? '–' },
     { label: t('books.naashirName'), value: book.naashirName ?? '–' },
-    { label: t('books.madahUnvaan'), value: book.madahUnvaan ?? '–' },
+    { label: t('books.language'), value: book.language ? (LANGUAGE_OPTIONS.includes(book.language as (typeof LANGUAGE_OPTIONS)[number]) ? t(`books.languageOptions.${book.language}`) : book.language) : '–' },
     { label: t('books.shelfNumber'), value: book.shelfNumber ?? '–' },
     { label: t('books.keefiyat'), value: book.keefiyat ?? '–' },
     { label: t('books.milkiyat'), value: book.milkiyat ?? '–' },
-    { label: t('books.category'), value: book.category ?? '–' },
+    { label: t('books.mazmoon'), value: book.category ?? '–' },
     { label: t('books.totalCopies'), value: book.totalCopies },
     { label: t('books.createdDate'), value: book.createdAt ? new Date(book.createdAt).toLocaleDateString() : '–' },
   ];
@@ -214,6 +325,7 @@ export default function BooksPage() {
   const [loading, setLoading] = useState(true);
   const [authors, setAuthors] = useState<{ id: string; name: string }[]>([]);
   const [categories, setCategories] = useState<{ id: string; name: string }[]>([]);
+  const [nashirs, setNashirs] = useState<{ id: string; name: string }[]>([]);
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const [total, setTotal] = useState(0);
@@ -245,6 +357,7 @@ export default function BooksPage() {
   useEffect(() => {
     api.get('/api/book-authors').then((r) => setAuthors(r.data.data || []));
     api.get('/api/book-categories').then((r) => setCategories(r.data.data || []));
+    api.get('/api/book-nashirs').then((r) => setNashirs(r.data.data || []));
   }, []);
 
   function openAddBookModal() {
@@ -254,9 +367,16 @@ export default function BooksPage() {
           t={t}
           authors={authors}
           categories={categories}
-          onSuccess={async () => {
+          nashirs={nashirs}
+          onRefreshAuthors={() => api.get('/api/book-authors').then((r) => setAuthors(r.data.data || []))}
+          onRefreshCategories={() => api.get('/api/book-categories').then((r) => setCategories(r.data.data || []))}
+          onRefreshNashirs={() => api.get('/api/book-nashirs').then((r) => setNashirs(r.data.data || []))}
+          onSuccess={async (bookId) => {
             fetchBooks();
             modal.close();
+            if (bookId) {
+              window.open(`/books/print-chit?bookId=${bookId}`, '_blank', 'width=500,height=400');
+            }
           }}
         />
       ),
@@ -345,10 +465,13 @@ export default function BooksPage() {
       </motion.div>
 
       <motion.div variants={fadeInUp}>
-      <Card>
+      <Card className="border-border/80">
         <CardContent className="p-6 space-y-4">
-          <div className="text-sm font-medium text-muted-foreground">{t('common.filter')}</div>
-          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4">
+          <div className="flex flex-wrap items-center justify-between gap-4">
+            <span className="text-sm font-medium text-muted-foreground">{t('common.filter')}</span>
+            <Button variant="default" onClick={applyFilters} className="shrink-0">{t('common.filter')}</Button>
+          </div>
+          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-3">
             {FILTER_KEYS.map((k) => (
               <Input
                 key={k}
@@ -356,11 +479,10 @@ export default function BooksPage() {
                 value={filters[k] ?? ''}
                 onChange={(e) => setFilters((f) => ({ ...f, [k]: e.target.value }))}
                 dir="auto"
-                className="h-9"
+                className="h-9 bg-white/80 border-border focus:bg-white"
               />
             ))}
           </div>
-          <Button size="lg" variant="default" onClick={applyFilters} className="px-4 py-2 text-lg font-medium">{t('common.filter')}</Button>
         </CardContent>
       </Card>
       </motion.div>
@@ -371,6 +493,7 @@ export default function BooksPage() {
           <Table className="min-w-[900px]">
             <TableHeader>
               <TableRow className="hover:bg-transparent border-b border-border">
+                <TableHead className="h-12 px-4 sm:px-6 font-medium">{t('books.bookNumber')}</TableHead>
                 <TableHead className="h-12 px-4 sm:px-6 font-medium">{t('books.bookTitle')}</TableHead>
                 <TableHead className="h-12 px-4 sm:px-6 font-medium">{t('books.jillNumber')}</TableHead>
                 <TableHead className="h-12 px-4 sm:px-6 font-medium">{t('books.kitaabNumber')}</TableHead>
@@ -385,11 +508,14 @@ export default function BooksPage() {
             <TableBody>
               {books.length === 0 ? (
                 <TableRow>
-                  <TableCell colSpan={9} className="text-center text-muted-foreground py-12 px-4">{t('books.empty')}</TableCell>
+                  <TableCell colSpan={10} className="text-center text-muted-foreground py-12 px-4">{t('books.empty')}</TableCell>
                 </TableRow>
               ) : (
                 books.map((b) => (
                   <TableRow key={b.id} className="group">
+                    <TableCell className="py-4 px-4 sm:px-6 font-mono text-sm text-foreground align-middle">
+                      {b.bookNumber}
+                    </TableCell>
                     <TableCell dir="auto" className="py-4 px-4 sm:px-6 font-medium text-foreground align-middle">
                       {b.title}
                     </TableCell>
@@ -407,10 +533,17 @@ export default function BooksPage() {
                             <MoreVertical className="h-4 w-4" aria-hidden />
                           </Button>
                         </DropdownMenuTrigger>
-                        <DropdownMenuContent align="start" className="min-w-[140px] bg-white border-border">
+                        <DropdownMenuContent align="start" className="min-w-[140px]">
                           <DropdownMenuItem onClick={() => openViewModal(b)} className="gap-2">
                             <Eye className="h-4 w-4" aria-hidden />
                             {t('books.viewDetails')}
+                          </DropdownMenuItem>
+                          <DropdownMenuItem
+                            onClick={() => window.open(`/books/print-chit?bookId=${b.id}`, '_blank', 'width=500,height=400')}
+                            className="gap-2"
+                          >
+                            <Printer className="h-4 w-4" aria-hidden />
+                            {t('books.printChit')}
                           </DropdownMenuItem>
                           <DropdownMenuItem
                             onClick={() => openDeleteConfirm(b)}

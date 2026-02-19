@@ -54,8 +54,8 @@ export class UpdateBookDto {
   @ApiPropertyOptional()
   @IsOptional()
   @IsString()
-  @MaxLength(500)
-  madahUnvaan?: string;
+  @MaxLength(50)
+  language?: string;
 
   @ApiPropertyOptional()
   @IsOptional()

@@ -91,7 +91,7 @@ export function SearchSelect({
         <div
           id="search-select-listbox"
           role="listbox"
-          className="absolute top-full left-0 right-0 z-50 mt-1 max-h-64 w-full min-w-[8rem] overflow-hidden rounded-md border border-border bg-popover text-popover-foreground shadow-md"
+          className="absolute top-full left-0 right-0 z-50 mt-1 max-h-64 w-full min-w-[8rem] overflow-hidden rounded-md border border-border bg-white text-popover-foreground shadow-lg"
         >
           <div className="border-b border-border p-1.5">
             <Input

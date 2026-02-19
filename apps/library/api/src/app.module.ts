@@ -10,6 +10,7 @@ import { BooksModule } from './api/books/books.module';
 import { BookIssuesModule } from './api/book-issues/book-issues.module';
 import { BookAuthorsModule } from './api/book-authors/book-authors.module';
 import { BookCategoriesModule } from './api/book-categories/book-categories.module';
+import { BookNashirsModule } from './api/book-nashirs/book-nashirs.module';
 
 @Module({
   imports: [
@@ -28,6 +29,7 @@ import { BookCategoriesModule } from './api/book-categories/book-categories.modu
     BookIssuesModule,
     BookAuthorsModule,
     BookCategoriesModule,
+    BookNashirsModule,
   ],
   controllers: [AppController],
   providers: [AppService],

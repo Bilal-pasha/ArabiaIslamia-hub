@@ -16,9 +16,11 @@
     "title": "کتابیں",
     "pageDesc": "یہاں نئی کتابیں شامل کریں اور تمام کتابوں کی فہرست دیکھیں۔",
     "addBook": "کتاب شامل کریں",
+    "bookNumber": "اندراج نمبر",
     "bookTitle": "کتاب کا نام",
     "author": "مصنف",
-    "category": "زمرہ",
+    "category": "مضمون",
+    "mazmoon": "مضمون",
     "totalCopies": "کل نسخے",
     "save": "محفوظ کریں",
     "edit": "ترمیم",
@@ -28,13 +30,23 @@
     "kitaabNumber": "کتاب نمبر",
     "muarafName": "معرف نام (مشہور نام)",
     "naashirName": "ناشر نام",
-    "madahUnvaan": "مادہ عنوان",
+    "language": "زبان",
+    "selectLanguage": "زبان منتخب کریں",
+    "languageOptions": {
+      "urdu": "اردو",
+      "english": "انگریزی",
+      "arabic": "عربی",
+      "faarsi": "فارسی",
+      "other": "دیگر"
+    },
     "shelfNumber": "شیلف نمبر",
     "createdDate": "تاریخ تخلیق",
     "keefiyat": "کیفیت",
     "milkiyat": "ملکیت",
     "deleteConfirm": "کیا آپ واقعی اس کتاب کو حذف کرنا چاہتے ہیں؟",
-    "viewDetails": "تفصیلات دیکھیں"
+    "viewDetails": "تفصیلات دیکھیں",
+    "printChit": "چٹ پرنٹ کریں",
+    "addMore": "مزید شامل کریں"
   },
   "issues": {
     "title": "جاری شدہ کتابیں",
@@ -80,17 +92,22 @@
     "of": "کا",
     "cancel": "منسوخ",
     "confirm": "تصدیق کریں",
-    "add": "شامل کریں"
+    "add": "شامل کریں",
+    "noResults": "کوئی نتیجہ نہیں"
   },
   "settings": {
     "title": "ترتیبات",
     "authors": "مصنفین",
-    "categories": "زمرے",
+    "categories": "مضامین",
     "addAuthor": "مصنف شامل کریں",
-    "addCategory": "زمرہ شامل کریں",
+    "addCategory": "مضمون شامل کریں",
     "authorName": "مصنف کا نام",
-    "categoryName": "زمرے کا نام",
+    "categoryName": "مضمون کا نام",
     "emptyAuthors": "ابھی کوئی مصنف نہیں",
-    "emptyCategories": "ابھی کوئی زمرہ نہیں"
+    "emptyCategories": "ابھی کوئی مضمون نہیں",
+    "nashirs": "ناشرین",
+    "addNashir": "ناشر شامل کریں",
+    "nashirName": "ناشر کا نام",
+    "emptyNashirs": "ابھی کوئی ناشر نہیں"
   }
 }

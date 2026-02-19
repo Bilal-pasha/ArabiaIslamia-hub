@@ -26,7 +26,6 @@ export class BookCategoriesController {
   }
 
   @Post()
-  @UseGuards(IsSuperAdminGuard)
   @HttpCode(HttpStatus.CREATED)
   async create(@Body() dto: CreateBookCategoryDto) {
     return this.bookCategoriesService.create(dto);

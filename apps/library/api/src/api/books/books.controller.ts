@@ -25,6 +25,7 @@ export class BooksController {
   async findAll(
     @Query('page') page?: string,
     @Query('limit') limit?: string,
+    @Query('bookNumber') bookNumber?: string,
     @Query('title') title?: string,
     @Query('author') author?: string,
     @Query('category') category?: string,
@@ -32,7 +33,7 @@ export class BooksController {
     @Query('kitaabNumber') kitaabNumber?: string,
     @Query('muarafName') muarafName?: string,
     @Query('naashirName') naashirName?: string,
-    @Query('madahUnvaan') madahUnvaan?: string,
+    @Query('language') language?: string,
     @Query('shelfNumber') shelfNumber?: string,
     @Query('keefiyat') keefiyat?: string,
     @Query('milkiyat') milkiyat?: string,
@@ -40,6 +41,7 @@ export class BooksController {
     const pageNum = Math.max(1, parseInt(page || '1', 10) || 1);
     const limitNum = Math.min(100, Math.max(1, parseInt(limit || '10', 10) || 10));
     const filters = {
+      bookNumber: bookNumber?.trim(),
       title: title?.trim(),
       author: author?.trim(),
       category: category?.trim(),
@@ -47,7 +49,7 @@ export class BooksController {
       kitaabNumber: kitaabNumber?.trim(),
       muarafName: muarafName?.trim(),
       naashirName: naashirName?.trim(),
-      madahUnvaan: madahUnvaan?.trim(),
+      language: language?.trim(),
       shelfNumber: shelfNumber?.trim(),
       keefiyat: keefiyat?.trim(),
       milkiyat: milkiyat?.trim(),

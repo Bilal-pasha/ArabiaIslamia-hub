@@ -9,32 +9,32 @@ import {
   HttpCode,
   HttpStatus,
 } from '@nestjs/common';
-import { BookAuthorsService } from './book-authors.service';
+import { BookNashirsService } from './book-nashirs.service';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { IsSuperAdminGuard } from '../auth/guards/is-super-admin.guard';
-import { CreateBookAuthorDto } from './dto/create-book-author.dto';
+import { CreateBookNashirDto } from './dto/create-book-nashir.dto';
 
-@Controller('api/book-authors')
+@Controller('api/book-nashirs')
 @UseGuards(JwtAuthGuard)
-export class BookAuthorsController {
-  constructor(private readonly bookAuthorsService: BookAuthorsService) { }
+export class BookNashirsController {
+  constructor(private readonly bookNashirsService: BookNashirsService) { }
 
   @Get()
   async findAll() {
-    const data = await this.bookAuthorsService.findAll();
+    const data = await this.bookNashirsService.findAll();
     return { success: true, data };
   }
 
   @Post()
   @HttpCode(HttpStatus.CREATED)
-  async create(@Body() dto: CreateBookAuthorDto) {
-    return this.bookAuthorsService.create(dto);
+  async create(@Body() dto: CreateBookNashirDto) {
+    return this.bookNashirsService.create(dto);
   }
 
   @Delete(':id')
   @UseGuards(IsSuperAdminGuard)
   @HttpCode(HttpStatus.OK)
   async remove(@Param('id') id: string) {
-    return this.bookAuthorsService.remove(id);
+    return this.bookNashirsService.remove(id);
   }
 }

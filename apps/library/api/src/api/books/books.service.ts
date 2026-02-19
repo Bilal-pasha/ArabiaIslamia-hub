@@ -6,6 +6,7 @@ import { CreateBookDto } from './dto/create-book.dto';
 import { UpdateBookDto } from './dto/update-book.dto';
 
 export interface BookFilters {
+  bookNumber?: string;
   title?: string;
   author?: string;
   category?: string;
@@ -13,7 +14,7 @@ export interface BookFilters {
   kitaabNumber?: string;
   muarafName?: string;
   naashirName?: string;
-  madahUnvaan?: string;
+  language?: string;
   shelfNumber?: string;
   keefiyat?: string;
   milkiyat?: string;
@@ -43,11 +44,19 @@ export class BooksService {
       .skip((page - 1) * limit)
       .take(limit);
 
+    const colMap: Partial<Record<keyof BookFilters, string>> = {
+      bookNumber: 'book_number',
+      jillNumber: 'jill_number',
+      kitaabNumber: 'kitaab_number',
+      muarafName: 'muaraf_name',
+      naashirName: 'naashir_name',
+      shelfNumber: 'shelf_number',
+    };
     const filterKeys = Object.keys(filters) as (keyof BookFilters)[];
     for (const key of filterKeys) {
       const val = filters[key];
       if (val) {
-        const col = key === 'title' ? 'title' : key;
+        const col = colMap[key] ?? key;
         qb.andWhere(`book.${col} ILIKE :${key}`, { [key]: `%${val}%` });
       }
     }
@@ -64,7 +73,9 @@ export class BooksService {
   }
 
   async create(dto: CreateBookDto) {
+    const bookNumber = await this.generateNextBookNumber();
     const book = this.bookRepository.create({
+      bookNumber,
       title: dto.title,
       author: dto.author ?? null,
       isbn: dto.isbn ?? null,
@@ -73,7 +84,7 @@ export class BooksService {
       kitaabNumber: dto.kitaabNumber ?? null,
       muarafName: dto.muarafName ?? null,
       naashirName: dto.naashirName ?? null,
-      madahUnvaan: dto.madahUnvaan ?? null,
+      language: dto.language ?? null,
       shelfNumber: dto.shelfNumber ?? null,
       keefiyat: dto.keefiyat ?? null,
       milkiyat: dto.milkiyat ?? null,
@@ -81,6 +92,13 @@ export class BooksService {
     });
     const saved = await this.bookRepository.save(book);
     return { success: true, message: 'Book created', data: saved };
+  }
+
+  private async generateNextBookNumber(): Promise<string> {
+    const result = await this.bookRepository.query(
+      `SELECT 'BKN-' || LPAD(nextval('book_number_seq')::text, 6, '0') as num`,
+    );
+    return result?.[0]?.num ?? `BKN-${String(Date.now()).slice(-6)}`;
   }
 
   async update(id: string, dto: UpdateBookDto) {
@@ -94,7 +112,7 @@ export class BooksService {
       ...(dto.kitaabNumber !== undefined && { kitaabNumber: dto.kitaabNumber }),
       ...(dto.muarafName !== undefined && { muarafName: dto.muarafName }),
       ...(dto.naashirName !== undefined && { naashirName: dto.naashirName }),
-      ...(dto.madahUnvaan !== undefined && { madahUnvaan: dto.madahUnvaan }),
+      ...(dto.language !== undefined && { language: dto.language }),
       ...(dto.shelfNumber !== undefined && { shelfNumber: dto.shelfNumber }),
       ...(dto.keefiyat !== undefined && { keefiyat: dto.keefiyat }),
       ...(dto.milkiyat !== undefined && { milkiyat: dto.milkiyat }),

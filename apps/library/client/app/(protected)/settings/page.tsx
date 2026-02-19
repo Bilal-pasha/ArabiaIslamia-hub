@@ -34,6 +34,7 @@ const PAGE_SIZE = 10;
 
 type Author = { id: string; name: string };
 type Category = { id: string; name: string };
+type Nashir = { id: string; name: string };
 
 export default function SettingsPage() {
   const { t } = useLocale();
@@ -41,18 +42,24 @@ export default function SettingsPage() {
   const modal = useModal();
   const [authors, setAuthors] = useState<Author[]>([]);
   const [categories, setCategories] = useState<Category[]>([]);
-  const [activeTab, setActiveTab] = useState<'authors' | 'categories'>('authors');
+  const [nashirs, setNashirs] = useState<Nashir[]>([]);
+  const [activeTab, setActiveTab] = useState<'authors' | 'categories' | 'nashirs'>('authors');
   const [newAuthor, setNewAuthor] = useState('');
   const [newCategory, setNewCategory] = useState('');
-  const [viewItem, setViewItem] = useState<{ type: 'author' | 'category'; name: string; id: string } | null>(null);
+  const [newNashir, setNewNashir] = useState('');
+  const [viewItem, setViewItem] = useState<{ type: 'author' | 'category' | 'nashir'; name: string; id: string } | null>(null);
   const [authorPage, setAuthorPage] = useState(1);
   const [categoryPage, setCategoryPage] = useState(1);
+  const [nashirPage, setNashirPage] = useState(1);
 
   function fetchAuthors() {
     api.get('/api/book-authors').then((r) => setAuthors(r.data.data || []));
   }
   function fetchCategories() {
     api.get('/api/book-categories').then((r) => setCategories(r.data.data || []));
+  }
+  function fetchNashirs() {
+    api.get('/api/book-nashirs').then((r) => setNashirs(r.data.data || []));
   }
 
   useEffect(() => {
@@ -63,16 +70,21 @@ export default function SettingsPage() {
   useEffect(() => {
     fetchAuthors();
     fetchCategories();
+    fetchNashirs();
   }, []);
 
   const authorTotalPages = Math.max(1, Math.ceil(authors.length / PAGE_SIZE));
   const categoryTotalPages = Math.max(1, Math.ceil(categories.length / PAGE_SIZE));
+  const nashirTotalPages = Math.max(1, Math.ceil(nashirs.length / PAGE_SIZE));
   useEffect(() => {
     if (authorPage > authorTotalPages) setAuthorPage(authorTotalPages);
   }, [authorPage, authorTotalPages]);
   useEffect(() => {
     if (categoryPage > categoryTotalPages) setCategoryPage(categoryTotalPages);
   }, [categoryPage, categoryTotalPages]);
+  useEffect(() => {
+    if (nashirPage > nashirTotalPages) setNashirPage(nashirTotalPages);
+  }, [nashirPage, nashirTotalPages]);
 
   function addAuthor(e: React.FormEvent) {
     e.preventDefault();
@@ -89,6 +101,15 @@ export default function SettingsPage() {
     api.post('/api/book-categories', { name: newCategory.trim() }).then(() => {
       setNewCategory('');
       fetchCategories();
+    });
+  }
+
+  function addNashir(e: React.FormEvent) {
+    e.preventDefault();
+    if (!newNashir.trim()) return;
+    api.post('/api/book-nashirs', { name: newNashir.trim() }).then(() => {
+      setNewNashir('');
+      fetchNashirs();
     });
   }
 
@@ -120,6 +141,20 @@ export default function SettingsPage() {
     });
   }
 
+  function deleteNashir(nashir: Nashir) {
+    modal.confirmation({
+      title: t('books.delete'),
+      description: `${t('settings.nashirName')}: ${nashir.name}`,
+      confirmText: t('common.confirm'),
+      cancelText: t('common.cancel'),
+      variant: 'destructive',
+      onConfirm: async () => {
+        await api.delete(`/api/book-nashirs/${nashir.id}`);
+        fetchNashirs();
+      },
+    });
+  }
+
   return (
     <motion.div
       className="space-y-8"
@@ -146,6 +181,13 @@ export default function SettingsPage() {
           onClick={() => setActiveTab('categories')}
         >
           {t('settings.categories')}
+        </button>
+        <button
+          type="button"
+          className={`px-4 py-3 text-sm font-medium border-b-2 transition-colors -mb-px ${activeTab === 'nashirs' ? 'border-primary text-primary' : 'border-transparent text-muted-foreground hover:text-foreground'}`}
+          onClick={() => setActiveTab('nashirs')}
+        >
+          {t('settings.nashirs')}
         </button>
       </motion.div>
 
@@ -198,7 +240,7 @@ export default function SettingsPage() {
                                   <MoreVertical className="h-4 w-4" aria-hidden />
                                 </Button>
                               </DropdownMenuTrigger>
-                              <DropdownMenuContent align="end" className="min-w-[140px] bg-white border-border">
+                              <DropdownMenuContent align="end" className="min-w-[140px]">
                                 <DropdownMenuItem onClick={() => setViewItem({ type: 'author', name: a.name, id: a.id })} className="gap-2">
                                   <Eye className="h-4 w-4" aria-hidden />
                                   {t('common.view')}
@@ -225,6 +267,95 @@ export default function SettingsPage() {
                             <ChevronLeft className="h-4 w-4" aria-hidden />
                           </Button>
                           <Button size="sm" variant="outline" disabled={authorPage >= authorTotalPages} onClick={() => setAuthorPage((p) => p + 1)}>
+                            <ChevronRight className="h-4 w-4" aria-hidden />
+                          </Button>
+                        </div>
+                      </div>
+                    )}
+                  </>
+                )}
+              </div>
+            </CardContent>
+          </Card>
+        </motion.div>
+      )}
+
+      {activeTab === 'nashirs' && (
+        <motion.div variants={fadeInUp}>
+          <Card>
+            <CardContent className="p-6 space-y-6">
+              <form onSubmit={addNashir} className="flex flex-col sm:flex-row gap-4">
+                <div className="flex-1 min-w-0">
+                  <Label htmlFor="new-nashir" className="mb-2 block text-sm font-medium text-card-foreground/90">
+                    {t('settings.nashirName')}
+                  </Label>
+                  <Input
+                    id="new-nashir"
+                    value={newNashir}
+                    onChange={(e) => setNewNashir(e.target.value)}
+                    dir="auto"
+                    placeholder={t('settings.addNashir')}
+                  />
+                </div>
+                <div className="flex items-end">
+                  <Button type="submit" className="gap-2 w-full sm:w-auto">
+                    <Plus className="h-4 w-4 shrink-0" aria-hidden />
+                    {t('common.add')}
+                  </Button>
+                </div>
+              </form>
+              <div className="rounded-lg border border-border overflow-hidden">
+                {nashirs.length === 0 ? (
+                  <p className="text-muted-foreground text-sm py-8 px-4 text-center">{t('settings.emptyNashirs')}</p>
+                ) : (
+                  <>
+                    <Table>
+                      <TableHeader>
+                        <TableRow className="hover:bg-transparent border-b border-border">
+                          <TableHead className="h-12 px-4 sm:px-6 font-medium">{t('settings.nashirName')}</TableHead>
+                          <TableHead className="w-[60px] sm:w-[72px]" />
+                        </TableRow>
+                      </TableHeader>
+                      <TableBody>
+                        {nashirs.slice((nashirPage - 1) * PAGE_SIZE, nashirPage * PAGE_SIZE).map((n) => (
+                        <TableRow key={n.id} className="group">
+                          <TableCell dir="auto" className="py-4 px-4 sm:px-6 align-middle">
+                            {n.name}
+                          </TableCell>
+                          <TableCell className="py-2 px-4 sm:px-6">
+                            <DropdownMenu>
+                              <DropdownMenuTrigger asChild>
+                                <Button size="sm" variant="ghost" className="h-9 w-9 p-0" aria-label={t('common.view')}>
+                                  <MoreVertical className="h-4 w-4" aria-hidden />
+                                </Button>
+                              </DropdownMenuTrigger>
+                              <DropdownMenuContent align="start" className="min-w-[140px]">
+                                <DropdownMenuItem onClick={() => setViewItem({ type: 'nashir', name: n.name, id: n.id })} className="gap-2">
+                                  <Eye className="h-4 w-4" aria-hidden />
+                                  {t('common.view')}
+                                </DropdownMenuItem>
+                                <DropdownMenuItem
+                                  onClick={() => deleteNashir(n)}
+                                  className="gap-2 text-destructive focus:text-destructive focus:bg-destructive/10"
+                                >
+                                  <Trash2 className="h-4 w-4" aria-hidden />
+                                  {t('books.delete')}
+                                </DropdownMenuItem>
+                              </DropdownMenuContent>
+                            </DropdownMenu>
+                          </TableCell>
+                        </TableRow>
+                        ))}
+                      </TableBody>
+                    </Table>
+                    {nashirs.length > PAGE_SIZE && (
+                      <div className="flex items-center justify-between border-t border-border px-4 sm:px-6 py-3 text-sm bg-muted/30">
+                        <span className="text-muted-foreground">{t('common.page')} {nashirPage} {t('common.of')} {nashirTotalPages} ({nashirs.length})</span>
+                        <div className="flex gap-2">
+                          <Button size="sm" variant="outline" disabled={nashirPage <= 1} onClick={() => setNashirPage((p) => Math.max(1, p - 1))}>
+                            <ChevronLeft className="h-4 w-4" aria-hidden />
+                          </Button>
+                          <Button size="sm" variant="outline" disabled={nashirPage >= nashirTotalPages} onClick={() => setNashirPage((p) => p + 1)}>
                             <ChevronRight className="h-4 w-4" aria-hidden />
                           </Button>
                         </div>
@@ -287,7 +418,7 @@ export default function SettingsPage() {
                                   <MoreVertical className="h-4 w-4" aria-hidden />
                                 </Button>
                               </DropdownMenuTrigger>
-                              <DropdownMenuContent align="start" className="min-w-[140px] bg-white border-border">
+                              <DropdownMenuContent align="start" className="min-w-[140px]">
                                 <DropdownMenuItem onClick={() => setViewItem({ type: 'category', name: c.name, id: c.id })} className="gap-2">
                                   <Eye className="h-4 w-4" aria-hidden />
                                   {t('common.view')}
@@ -331,7 +462,7 @@ export default function SettingsPage() {
         <DialogContent className="sm:max-w-md">
           <DialogHeader>
             <DialogTitle>
-              {viewItem?.type === 'author' ? t('settings.authorName') : t('settings.categoryName')}
+              {viewItem?.type === 'author' ? t('settings.authorName') : viewItem?.type === 'category' ? t('settings.categoryName') : t('settings.nashirName')}
             </DialogTitle>
           </DialogHeader>
           {viewItem && (

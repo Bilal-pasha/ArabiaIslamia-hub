@@ -333,7 +333,7 @@ export default function IssuesPage() {
                             <MoreVertical className="h-4 w-4" aria-hidden />
                           </Button>
                         </DropdownMenuTrigger>
-                        <DropdownMenuContent align="start" className="min-w-[160px] bg-white border-border">
+                        <DropdownMenuContent align="start" className="min-w-[160px]">
                           <DropdownMenuItem onClick={() => openViewModal(i)} className="gap-2">
                             <Eye className="h-4 w-4" aria-hidden />
                             {t('issues.viewDetails')}

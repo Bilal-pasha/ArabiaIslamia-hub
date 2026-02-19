@@ -16,9 +16,11 @@
     "title": "الكتب",
     "pageDesc": "أضف كتباً جديدة هنا واعرض قائمة الكتب.",
     "addBook": "إضافة كتاب",
+    "bookNumber": "رقم التسجيل",
     "bookTitle": "اسم الكتاب",
     "author": "المؤلف",
-    "category": "الفئة",
+    "category": "الموضوع",
+    "mazmoon": "الموضوع",
     "totalCopies": "عدد النسخ",
     "save": "حفظ",
     "edit": "تعديل",
@@ -28,13 +30,23 @@
     "kitaabNumber": "رقم الكتاب",
     "muarafName": "اسم المعرّف (المشهور)",
     "naashirName": "اسم الناشر",
-    "madahUnvaan": "مادة العنوان",
+    "language": "اللغة",
+    "selectLanguage": "اختر اللغة",
+    "languageOptions": {
+      "urdu": "أردية",
+      "english": "إنجليزي",
+      "arabic": "عربي",
+      "faarsi": "فارسي",
+      "other": "أخرى"
+    },
     "shelfNumber": "رقم الرف",
     "createdDate": "تاريخ الإنشاء",
     "keefiyat": "الجودة",
     "milkiyat": "الملكية",
     "deleteConfirm": "هل أنت متأكد من حذف هذا الكتاب؟",
-    "viewDetails": "عرض التفاصيل"
+    "viewDetails": "عرض التفاصيل",
+    "printChit": "طباعة البطاقة",
+    "addMore": "إضافة المزيد"
   },
   "issues": {
     "title": "الإعارات",
@@ -80,17 +92,22 @@
     "of": "من",
     "cancel": "إلغاء",
     "confirm": "تأكيد",
-    "add": "إضافة"
+    "add": "إضافة",
+    "noResults": "لا توجد نتائج"
   },
   "settings": {
     "title": "الإعدادات",
     "authors": "المؤلفون",
-    "categories": "الفئات",
+    "categories": "المواضيع",
     "addAuthor": "إضافة مؤلف",
-    "addCategory": "إضافة فئة",
+    "addCategory": "إضافة موضوع",
     "authorName": "اسم المؤلف",
-    "categoryName": "اسم الفئة",
+    "categoryName": "اسم الموضوع",
     "emptyAuthors": "لا يوجد مؤلفون",
-    "emptyCategories": "لا توجد فئات"
+    "emptyCategories": "لا توجد مواضيع",
+    "nashirs": "الناشرون",
+    "addNashir": "إضافة ناشر",
+    "nashirName": "اسم الناشر",
+    "emptyNashirs": "لا يوجد ناشرون"
   }
 }

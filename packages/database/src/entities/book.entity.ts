@@ -11,6 +11,9 @@ export class Book {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
+  @Column({ type: 'varchar', length: 50, name: 'book_number', unique: true })
+  bookNumber: string;
+
   @Column({ type: 'varchar', length: 500 })
   title: string;
 
@@ -35,8 +38,8 @@ export class Book {
   @Column({ type: 'varchar', length: 255, name: 'naashir_name', nullable: true })
   naashirName: string | null;
 
-  @Column({ type: 'varchar', length: 500, name: 'madah_unvaan', nullable: true })
-  madahUnvaan: string | null;
+  @Column({ type: 'varchar', length: 50, nullable: true })
+  language: string | null;
 
   @Column({ type: 'varchar', length: 100, name: 'shelf_number', nullable: true })
   shelfNumber: string | null;
