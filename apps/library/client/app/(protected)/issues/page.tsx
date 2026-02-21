@@ -76,7 +76,7 @@ function IssueBookFormContent({
         </div>
         <div className="flex flex-col gap-4">
           <Label>{t('issues.issuedTo')}</Label>
-          <Input value={form.issuedTo} onChange={(e) => setForm((f) => ({ ...f, issuedTo: e.target.value }))} dir="auto" required />
+          <Input value={form.issuedTo} onChange={(e) => setForm((f) => ({ ...f, issuedTo: e.target.value }))} dir="rtl" required />
         </div>
         <div className="flex flex-col gap-4">
           <Label>{t('issues.dueAt')}</Label>
@@ -108,7 +108,7 @@ function IssueDetailContent({ issue, t }: { issue: BookIssue; t: (k: string) => 
         {rows.map((r) => (
           <div key={r.label} className="flex gap-2">
             <dt className="font-medium text-muted-foreground min-w-[120px]">{r.label}</dt>
-            <dd dir="auto" className="text-foreground">{r.value}</dd>
+            <dd dir="rtl" className="text-foreground">{r.value}</dd>
           </div>
         ))}
       </dl>
@@ -256,7 +256,7 @@ export default function IssuesPage() {
           <div className="text-sm font-medium text-muted-foreground">{t('common.filter')}</div>
           <div className="flex flex-wrap gap-4 items-end">
             <div className="flex flex-col gap-1.5">
-              <Label className="text-xs mb-3 block text-sm font-medium text-card-foreground/90">{t('issues.status')}</Label>
+              <Label className="text-xs mb-3 block font-medium text-card-foreground/90">{t('issues.status')}</Label>
               <SearchSelect
                 value={filters.status}
                 onValueChange={(v) => setFilters((f) => ({ ...f, status: v }))}
@@ -270,17 +270,17 @@ export default function IssuesPage() {
               />
             </div>
             <div className="flex flex-col gap-1.5">
-              <Label className="text-xs mb-3 block text-sm font-medium text-card-foreground/90">{t('issues.issuedTo')}</Label>
+              <Label className="text-xs mb-3 block font-medium text-card-foreground/90">{t('issues.issuedTo')}</Label>
               <Input
                 value={filters.issuedTo}
                 onChange={(e) => setFilters((f) => ({ ...f, issuedTo: e.target.value }))}
-                dir="auto"
+                dir="rtl"
                 placeholder={t('issues.issuedTo')}
                 className="w-40 h-9"
               />
             </div>
             <div className="flex flex-col gap-1.5">
-              <Label className="text-xs mb-3 block text-sm font-medium text-card-foreground/90">{t('issues.selectBook')}</Label>
+              <Label className="text-xs mb-3 block font-medium text-card-foreground/90">{t('issues.selectBook')}</Label>
               <SearchSelect
                 value={filters.bookId || 'all'}
                 onValueChange={(v) => setFilters((f) => ({ ...f, bookId: v }))}

@@ -197,14 +197,14 @@ export default function SettingsPage() {
             <CardContent className="p-6 space-y-6">
               <form onSubmit={addAuthor} className="flex flex-col sm:flex-row gap-4">
                 <div className="flex-1 min-w-0">
-                  <Label htmlFor="new-author" className="mb-2 block text-sm font-medium text-card-foreground/90">
+                  <Label htmlFor="new-author" className="mb-2 block font-medium text-card-foreground/90">
                     {t('settings.authorName')}
                   </Label>
                   <Input
                     id="new-author"
                     value={newAuthor}
                     onChange={(e) => setNewAuthor(e.target.value)}
-                    dir="auto"
+                    dir="rtl"
                     placeholder={t('settings.addAuthor')}
                   />
                 </div>
@@ -230,7 +230,7 @@ export default function SettingsPage() {
                       <TableBody>
                         {authors.slice((authorPage - 1) * PAGE_SIZE, authorPage * PAGE_SIZE).map((a) => (
                         <TableRow key={a.id} className="group">
-                          <TableCell dir="auto" className="py-4 px-4 sm:px-6 align-middle">
+                          <TableCell dir="rtl" className="py-4 px-4 sm:px-6 align-middle">
                             {a.name}
                           </TableCell>
                           <TableCell className="py-2 px-4 sm:px-6">
@@ -286,14 +286,14 @@ export default function SettingsPage() {
             <CardContent className="p-6 space-y-6">
               <form onSubmit={addNashir} className="flex flex-col sm:flex-row gap-4">
                 <div className="flex-1 min-w-0">
-                  <Label htmlFor="new-nashir" className="mb-2 block text-sm font-medium text-card-foreground/90">
+                  <Label htmlFor="new-nashir" className="mb-2 block font-medium text-card-foreground/90">
                     {t('settings.nashirName')}
                   </Label>
                   <Input
                     id="new-nashir"
                     value={newNashir}
                     onChange={(e) => setNewNashir(e.target.value)}
-                    dir="auto"
+                    dir="rtl"
                     placeholder={t('settings.addNashir')}
                   />
                 </div>
@@ -319,7 +319,7 @@ export default function SettingsPage() {
                       <TableBody>
                         {nashirs.slice((nashirPage - 1) * PAGE_SIZE, nashirPage * PAGE_SIZE).map((n) => (
                         <TableRow key={n.id} className="group">
-                          <TableCell dir="auto" className="py-4 px-4 sm:px-6 align-middle">
+                          <TableCell dir="rtl" className="py-4 px-4 sm:px-6 align-middle">
                             {n.name}
                           </TableCell>
                           <TableCell className="py-2 px-4 sm:px-6">
@@ -375,14 +375,14 @@ export default function SettingsPage() {
             <CardContent className="p-6 space-y-6">
               <form onSubmit={addCategory} className="flex flex-col sm:flex-row gap-4">
                 <div className="flex-1 min-w-0">
-                  <Label htmlFor="new-category" className="mb-2 block text-sm font-medium text-card-foreground/90">
+                  <Label htmlFor="new-category" className="mb-2 block font-medium text-card-foreground/90">
                     {t('settings.categoryName')}
                   </Label>
                   <Input
                     id="new-category"
                     value={newCategory}
                     onChange={(e) => setNewCategory(e.target.value)}
-                    dir="auto"
+                    dir="rtl"
                     placeholder={t('settings.addCategory')}
                   />
                 </div>
@@ -408,7 +408,7 @@ export default function SettingsPage() {
                       <TableBody>
                         {categories.slice((categoryPage - 1) * PAGE_SIZE, categoryPage * PAGE_SIZE).map((c) => (
                         <TableRow key={c.id} className="group">
-                          <TableCell dir="auto" className="py-4 px-4 sm:px-6 align-middle">
+                          <TableCell dir="rtl" className="py-4 px-4 sm:px-6 align-middle">
                             {c.name}
                           </TableCell>
                           <TableCell className="py-2 px-4 sm:px-6">
@@ -467,7 +467,7 @@ export default function SettingsPage() {
           </DialogHeader>
           {viewItem && (
             <div className="space-y-2 py-2">
-              <p className="text-foreground font-medium" dir="auto">{viewItem.name}</p>
+              <p className="text-foreground font-medium" dir="rtl">{viewItem.name}</p>
               <p className="text-muted-foreground text-xs font-mono">{viewItem.id}</p>
             </div>
           )}

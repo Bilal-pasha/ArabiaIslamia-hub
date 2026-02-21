@@ -76,13 +76,6 @@ export default function LoginPage() {
           <div className="inline-flex items-center justify-center rounded-2xl border border-primary/15 bg-card/80 p-4 shadow-xl shadow-primary/5 backdrop-blur-sm">
             <MainLogo width={80} height={80} className="rounded-xl" priority />
           </div>
-          <div className="flex items-center gap-2 text-foreground">
-            <BookOpen className="h-6 w-6 text-primary" aria-hidden />
-            <span className="text-xl font-semibold urdutext">{t('app.library')}</span>
-          </div>
-          <p className="max-w-xs text-sm text-muted-foreground">
-            Sign in to manage books and issues
-          </p>
         </motion.div>
 
         <motion.div variants={fadeInUp} className="w-full">
@@ -101,8 +94,9 @@ export default function LoginPage() {
                     type="text"
                     value={username}
                     onChange={(e) => setUsername(e.target.value)}
-                    dir="auto"
+                    dir="rtl"
                     required
+                    placeholder={t('auth.usernamePlaceholder')}
                     className="mt-1 transition-colors focus-visible:ring-2"
                     disabled={loading}
                   />
@@ -113,7 +107,9 @@ export default function LoginPage() {
                     id="password"
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
+                    dir="rtl"
                     required
+                    placeholder={t('auth.passwordPlaceholder')}
                     className="mt-1 transition-colors focus-visible:ring-2"
                     disabled={loading}
                   />

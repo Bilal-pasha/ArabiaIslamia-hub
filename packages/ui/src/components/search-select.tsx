@@ -102,8 +102,8 @@ export function SearchSelect({
                 if (e.key === 'Escape') setOpen(false);
               }}
               placeholder={placeholder}
-              className="h-8 text-sm"
-              dir="auto"
+              className="h-8 text-sm leading-loose"
+              dir="rtl"
             />
           </div>
           <div className="max-h-48 overflow-auto p-1">
@@ -120,7 +120,7 @@ export function SearchSelect({
                     'w-full cursor-pointer rounded-sm py-2 px-2 text-right text-sm outline-none hover:bg-accent hover:text-accent-foreground',
                     opt.value === value && 'bg-accent text-accent-foreground'
                   )}
-                  dir="auto"
+                  dir="rtl"
                   onClick={() => {
                     onValueChange(opt.value);
                     setOpen(false);

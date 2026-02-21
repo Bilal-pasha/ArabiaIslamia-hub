@@ -10,7 +10,9 @@
     "password": "پاس ورڈ",
     "logout": "لاگ آؤٹ",
     "loginSuccess": "لاگ ان کامیاب",
-    "invalidCredentials": "غلط صارف نام یا پاس ورڈ"
+    "invalidCredentials": "غلط صارف نام یا پاس ورڈ",
+    "usernamePlaceholder": "صارف نام درج کریں",
+    "passwordPlaceholder": "پاس ورڈ درج کریں"
   },
   "books": {
     "title": "کتابیں",

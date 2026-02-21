@@ -54,7 +54,6 @@ html {
 
 body {
   min-height: 100vh;
-  font-family: 'Poppins', 'Noto Naskh Arabic', 'Noto Nastaliq Urdu', ui-sans-serif, system-ui, sans-serif;
   background: linear-gradient(135deg,
       hsl(48 95% 94%) 0%,
       hsl(45 88% 92%) 20%,
@@ -67,24 +66,6 @@ body {
   color: hsl(var(--foreground));
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-}
-
-/* Locale-based fonts: Urdu only when lang=ur, Arabic only when lang=ar (no mixing) */
-html {
-  font-family: 'Noto Nastaliq Urdu', serif;
-}
-
-html[lang='ur'] {
-  font-family: 'Gulzar-Regular', serif;
-}
-
-/* Optional explicit overrides */
-.urdutext {
-  font-family: 'Gulzar-Regular', serif;
-}
-
-.arabictext {
-  font-family: 'Noto Naskh Arabic', serif;
 }
 
 /* Library app theme: data tables – white card, black text (override UI package / parent) */

@@ -1,26 +1,44 @@
-import './globals.css';
-import { Providers } from '@/components/providers';
-import { ClientLocaleDir } from '@/components/client-locale-dir';
-import { Toaster } from '@arabiaaislamia/ui';
-import { appRtlFont } from '@/lib/font';
+import './globals.css'
+import type { Metadata } from 'next'
+import { Providers } from '@/components/providers'
+import { ClientLocaleDir } from '@/components/client-locale-dir'
+import { Toaster } from '@arabiaaislamia/ui'
+import { Gulzar } from 'next/font/google'
 
-export const metadata = {
-  title: { default: 'کتب خانہ | جامعہ عربیہ اسلامیہ', template: '%s | کتب خانہ' },
+export const metadata: Metadata = {
+  title: {
+    default: 'کتب خانہ | جامعہ عربیہ اسلامیہ',
+    template: '%s | کتب خانہ',
+  },
   description: 'کتب اور جاریات کا نظم – جامعہ عربیہ اسلامیہ لائبریری',
-};
+  keywords: ['کتب', 'جاریات', 'جامعہ عربیہ اسلامیہ', 'لائبریری'],
+  authors: [{ name: 'جامعہ عربیہ اسلامیہ لائبریری' }],
+  robots: {
+    index: true,
+    follow: true,
+  },
+  other: {
+    google: 'notranslate',
+  },
+}
 
-export default function RootLayout({ children }: { children: React.ReactNode }) {
+const gulzar = Gulzar({
+  subsets: ['arabic'],
+  weight: '400',
+})
+
+export default function RootLayout({
+  children,
+}: {
+  children: React.ReactNode
+}) {
   return (
-    <html lang="ur" dir="rtl" suppressHydrationWarning className={appRtlFont.className}>
-      <head>
-        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <meta name="description" content="کتب اور جاریات کا نظم – جامعہ عربیہ اسلامیہ لائبریری" />
-        <meta name="keywords" content="کتب, جاریات, جامعہ عربیہ اسلامیہ, لائبریری" />
-        <meta name="author" content="جامعہ عربیہ اسلامیہ لائبریری" />
-        <meta name="robots" content="index, follow" />
-        <meta name="googlebot" content="index, follow" />
-        <meta name="google" content="notranslate" />
-      </head>
+    <html
+      lang="ur"
+      dir="rtl"
+      suppressHydrationWarning
+      className={gulzar.className}
+    >
       <body className="min-h-screen antialiased" data-theme="library">
         <Providers>
           <ClientLocaleDir />
@@ -29,5 +47,5 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         </Providers>
       </body>
     </html>
-  );
+  )
 }

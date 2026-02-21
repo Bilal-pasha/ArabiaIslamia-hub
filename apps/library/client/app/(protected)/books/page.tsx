@@ -168,15 +168,15 @@ function AddBookFormContent({
         <div className="grid grid-cols-2 gap-x-4 gap-y-5">
           <div className={`${fieldClass} col-span-2`}>
             <Label className="text-sm font-medium text-foreground">{t('books.bookTitle')}</Label>
-            <Input value={form.title} onChange={(e) => setForm((f) => ({ ...f, title: e.target.value }))} dir="auto" required className="h-9" />
+            <Input value={form.title} onChange={(e) => setForm((f) => ({ ...f, title: e.target.value }))} dir="rtl" required className="h-9" />
           </div>
           <div className={fieldClass}>
             <Label className="text-sm font-medium text-foreground">{t('books.jillNumber')}</Label>
-            <Input value={form.jillNumber} onChange={(e) => setForm((f) => ({ ...f, jillNumber: e.target.value }))} dir="auto" className="h-9" />
+            <Input value={form.jillNumber} onChange={(e) => setForm((f) => ({ ...f, jillNumber: e.target.value }))} dir="rtl" className="h-9" />
           </div>
           <div className={fieldClass}>
             <Label className="text-sm font-medium text-foreground">{t('books.kitaabNumber')}</Label>
-            <Input value={form.kitaabNumber} onChange={(e) => setForm((f) => ({ ...f, kitaabNumber: e.target.value }))} dir="auto" className="h-9" />
+            <Input value={form.kitaabNumber} onChange={(e) => setForm((f) => ({ ...f, kitaabNumber: e.target.value }))} dir="rtl" className="h-9" />
           </div>
           <div className={fieldClass}>
             <div className="flex items-center justify-between gap-2">
@@ -223,7 +223,7 @@ function AddBookFormContent({
           </div>
           <div className={fieldClass}>
             <Label className="text-sm font-medium text-foreground">{t('books.muarafName')}</Label>
-            <Input value={form.muarafName} onChange={(e) => setForm((f) => ({ ...f, muarafName: e.target.value }))} dir="auto" className="h-9" />
+            <Input value={form.muarafName} onChange={(e) => setForm((f) => ({ ...f, muarafName: e.target.value }))} dir="rtl" className="h-9" />
           </div>
           <div className={fieldClass}>
             <div className="flex items-center justify-between gap-2">
@@ -243,15 +243,15 @@ function AddBookFormContent({
           </div>
           <div className={fieldClass}>
             <Label className="text-sm font-medium text-foreground">{t('books.shelfNumber')}</Label>
-            <Input value={form.shelfNumber} onChange={(e) => setForm((f) => ({ ...f, shelfNumber: e.target.value }))} dir="auto" className="h-9" />
+            <Input value={form.shelfNumber} onChange={(e) => setForm((f) => ({ ...f, shelfNumber: e.target.value }))} dir="rtl" className="h-9" />
           </div>
           <div className={fieldClass}>
             <Label className="text-sm font-medium text-foreground">{t('books.keefiyat')}</Label>
-            <Input value={form.keefiyat} onChange={(e) => setForm((f) => ({ ...f, keefiyat: e.target.value }))} dir="auto" className="h-9" />
+            <Input value={form.keefiyat} onChange={(e) => setForm((f) => ({ ...f, keefiyat: e.target.value }))} dir="rtl" className="h-9" />
           </div>
           <div className={fieldClass}>
             <Label className="text-sm font-medium text-foreground">{t('books.milkiyat')}</Label>
-            <Input value={form.milkiyat} onChange={(e) => setForm((f) => ({ ...f, milkiyat: e.target.value }))} dir="auto" className="h-9" />
+            <Input value={form.milkiyat} onChange={(e) => setForm((f) => ({ ...f, milkiyat: e.target.value }))} dir="rtl" className="h-9" />
           </div>
           <div className={fieldClass}>
             <Label className="text-sm font-medium text-foreground">{t('books.totalCopies')}</Label>
@@ -272,7 +272,7 @@ function AddBookFormContent({
             <Input
               value={addMoreValue}
               onChange={(e) => setAddMoreValue(e.target.value)}
-              dir="auto"
+              dir="rtl"
               placeholder={addMoreLabel}
               className="h-9"
               autoFocus
@@ -522,10 +522,10 @@ export default function BooksPage() {
               <Input
                 key={k}
                 placeholder={t(`books.${k}`)}
+                dir="rtl"
                 value={filters[k] ?? ''}
                 onChange={(e) => setFilters((f) => ({ ...f, [k]: e.target.value }))}
-                dir="auto"
-                className="h-9 bg-white/80 border-border focus:bg-white"
+                className="h-9 leading-loose bg-white/80 border-border focus:bg-white"
               />
             ))}
           </div>
