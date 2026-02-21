@@ -68,9 +68,9 @@ export default function ProtectedLayout({ children }: { children: React.ReactNod
             <div className="flex h-10 w-10 shrink-0 items-center justify-center overflow-hidden rounded-lg bg-primary/10 ring-1 ring-primary/20">
               <MainLogo width={32} height={32} className="rounded-md object-contain" />
             </div>
-            <div className="flex min-w-0 flex-col">
-              <span className="font-semibold text-base leading-tight">{t('app.library')}</span>
-              <span className="text-xs text-muted-foreground">Jamia Arabia Islamia</span>
+            <div className="flex min-w-0 flex-col gap-0.5">
+              <span className="font-semibold text-lg leading-tight">{t('app.library')}</span>
+              <span className="text-xs text-muted-foreground">جامعہ عربیہ اسلامیہ</span>
             </div>
           </Link>
         </div>
