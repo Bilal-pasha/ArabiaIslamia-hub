@@ -46,7 +46,16 @@
     "deleteConfirm": "هل أنت متأكد من حذف هذا الكتاب؟",
     "viewDetails": "عرض التفاصيل",
     "printChit": "طباعة البطاقة",
-    "addMore": "إضافة المزيد"
+    "addMore": "إضافة المزيد",
+    "loadBooks": "تحميل الكتب",
+    "printFormat": "تنسيق الطباعة",
+    "printFormatA4_16": "A4 (16 بطاقة لكل صفحة)",
+    "enterShelfNumber": "أدخل رقم الرف",
+    "noBooksForShelf": "لا توجد كتب لهذا الرف",
+    "printAllChits": "طباعة جميع البطاقات",
+    "printCategory": "فئة الطباعة",
+    "selectPrintCategory": "اختر فئة الطباعة",
+    "printByShelf": "حسب رقم الرف"
   },
   "issues": {
     "title": "الإعارات",

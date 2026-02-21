@@ -12,4 +12,4 @@ export const appRtlFont = localFont({
     display: 'swap',
 });
 
-export const FontFamilies = ['Gulzar'];
+export const FontFamilies = ['Gulzar-Regular'];

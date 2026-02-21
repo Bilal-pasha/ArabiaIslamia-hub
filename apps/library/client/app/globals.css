@@ -74,13 +74,13 @@ html {
   font-family: 'Noto Nastaliq Urdu', serif;
 }
 
-html[lang='ar'] {
-  font-family: 'Noto Naskh Arabic', serif;
+html[lang='ur'] {
+  font-family: 'Gulzar-Regular', serif;
 }
 
 /* Optional explicit overrides */
 .urdutext {
-  font-family: 'Noto Nastaliq Urdu', serif;
+  font-family: 'Gulzar-Regular', serif;
 }
 
 .arabictext {

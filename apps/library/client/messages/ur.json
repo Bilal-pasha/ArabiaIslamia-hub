@@ -46,7 +46,16 @@
     "deleteConfirm": "کیا آپ واقعی اس کتاب کو حذف کرنا چاہتے ہیں؟",
     "viewDetails": "تفصیلات دیکھیں",
     "printChit": "چٹ پرنٹ کریں",
-    "addMore": "مزید شامل کریں"
+    "addMore": "مزید شامل کریں",
+    "loadBooks": "کتابیں لوڈ کریں",
+    "printFormat": "پرنٹ فارمیٹ",
+    "printFormatA4_16": "A4 (16 چٹیں فی صفحہ)",
+    "enterShelfNumber": "شیلف نمبر درج کریں",
+    "noBooksForShelf": "اس شیلف کے لیے کوئی کتاب نہیں ملی",
+    "printAllChits": "تمام چٹیں پرنٹ کریں",
+    "printCategory": "پرنٹ کی قسم",
+    "selectPrintCategory": "پرنٹ کی قسم منتخب کریں",
+    "printByShelf": "شیلف نمبر کے حساب سے"
   },
   "issues": {
     "title": "جاری شدہ کتابیں",

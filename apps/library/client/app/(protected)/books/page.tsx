@@ -25,6 +25,12 @@ import {
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+  Spinner,
 } from '@arabiaaislamia/ui';
 import { defaultTransition, fadeInUp, staggerContainer } from '@arabiaaislamia/animations';
 import { useLocale } from '@/lib/locale';
@@ -330,6 +336,10 @@ export default function BooksPage() {
   const [totalPages, setTotalPages] = useState(1);
   const [total, setTotal] = useState(0);
   const [filters, setFilters] = useState<Record<string, string>>({});
+  const [printAllModalOpen, setPrintAllModalOpen] = useState(false);
+  const [printCategory, setPrintCategory] = useState<'shelf' | ''>('');
+  const [printShelfNumber, setPrintShelfNumber] = useState('');
+  const [printLoading, setPrintLoading] = useState(false);
 
   const fetchBooks = useCallback(() => {
     const params = new URLSearchParams();
@@ -371,12 +381,9 @@ export default function BooksPage() {
           onRefreshAuthors={() => api.get('/api/book-authors').then((r) => setAuthors(r.data.data || []))}
           onRefreshCategories={() => api.get('/api/book-categories').then((r) => setCategories(r.data.data || []))}
           onRefreshNashirs={() => api.get('/api/book-nashirs').then((r) => setNashirs(r.data.data || []))}
-          onSuccess={async (bookId) => {
+          onSuccess={async () => {
             fetchBooks();
             modal.close();
-            if (bookId) {
-              window.open(`/books/print-chit?bookId=${bookId}`, '_blank', 'width=500,height=400');
-            }
           }}
         />
       ),
@@ -409,6 +416,39 @@ export default function BooksPage() {
 
   function applyFilters() {
     setPage(1);
+  }
+
+  function openPrintAllModal() {
+    setPrintCategory('');
+    setPrintShelfNumber('');
+    setPrintAllModalOpen(true);
+  }
+
+  async function handlePrintAllChits() {
+    if (printCategory !== 'shelf' || !printShelfNumber.trim()) return;
+    const shelf = printShelfNumber.trim();
+    
+    setPrintLoading(true);
+    try {
+      // Fetch books for the shelf
+      const res = await api.get<{ data: Book[] }>('/api/books', {
+        params: { shelfNumber: shelf, limit: 500, page: 1 },
+      });
+      const booksData = res.data.data ?? [];
+      
+      if (booksData.length === 0) {
+        alert(t('books.noBooksForShelf'));
+        setPrintLoading(false);
+        return;
+      }
+      
+      // Navigate to print page with shelf number (will auto-load and can be printed)
+      const shelfParam = encodeURIComponent(shelf);
+      window.location.href = `/books/print-chit?shelfNumber=${shelfParam}&autoPrint=true`;
+    } catch (error) {
+      alert(t('common.error'));
+      setPrintLoading(false);
+    }
   }
 
   if (loading && books.length === 0) {
@@ -469,7 +509,13 @@ export default function BooksPage() {
         <CardContent className="p-6 space-y-4">
           <div className="flex flex-wrap items-center justify-between gap-4">
             <span className="text-sm font-medium text-muted-foreground">{t('common.filter')}</span>
-            <Button variant="default" onClick={applyFilters} className="shrink-0">{t('common.filter')}</Button>
+            <div className="flex items-center gap-2">
+              <Button variant="outline" onClick={openPrintAllModal} className="gap-2 shrink-0">
+                <Printer className="h-4 w-4" aria-hidden />
+                {t('books.printAllChits')}
+              </Button>
+              <Button variant="default" onClick={applyFilters} className="shrink-0">{t('common.filter')}</Button>
+            </div>
           </div>
           <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-3">
             {FILTER_KEYS.map((k) => (
@@ -485,6 +531,57 @@ export default function BooksPage() {
           </div>
         </CardContent>
       </Card>
+
+      <Dialog open={printAllModalOpen} onOpenChange={setPrintAllModalOpen}>
+        <DialogContent className="sm:max-w-md">
+          <DialogHeader>
+            <DialogTitle>{t('books.printAllChits')}</DialogTitle>
+          </DialogHeader>
+          <div className="flex flex-col gap-4 pt-2">
+            <div className="flex flex-col gap-2">
+              <Label>{t('books.printCategory')}</Label>
+              <Select value={printCategory} onValueChange={(v) => setPrintCategory(v as 'shelf' | '')}>
+                <SelectTrigger className="h-9">
+                  <SelectValue placeholder={t('books.selectPrintCategory')} />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="shelf">{t('books.printByShelf')}</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+            {printCategory === 'shelf' && (
+              <div className="flex flex-col gap-2">
+                <Label htmlFor="print-shelf">{t('books.shelfNumber')}</Label>
+                <Input
+                  id="print-shelf"
+                  value={printShelfNumber}
+                  onChange={(e) => setPrintShelfNumber(e.target.value)}
+                  placeholder="e.g. A1, 12"
+                  dir="auto"
+                  className="h-9"
+                />
+              </div>
+            )}
+            <div className="flex justify-end gap-2 pt-2">
+              <Button variant="outline" onClick={() => setPrintAllModalOpen(false)}>
+                {t('common.cancel')}
+              </Button>
+              <Button
+                onClick={handlePrintAllChits}
+                disabled={printCategory !== 'shelf' || !printShelfNumber.trim() || printLoading}
+                className="gap-2"
+              >
+                {printLoading ? (
+                  <Spinner className="h-4 w-4" />
+                ) : (
+                  <Printer className="h-4 w-4" aria-hidden />
+                )}
+                {t('books.printChit')}
+              </Button>
+            </div>
+          </div>
+        </DialogContent>
+      </Dialog>
       </motion.div>
 
       <motion.div variants={fadeInUp}>
@@ -537,13 +634,6 @@ export default function BooksPage() {
                           <DropdownMenuItem onClick={() => openViewModal(b)} className="gap-2">
                             <Eye className="h-4 w-4" aria-hidden />
                             {t('books.viewDetails')}
-                          </DropdownMenuItem>
-                          <DropdownMenuItem
-                            onClick={() => window.open(`/books/print-chit?bookId=${b.id}`, '_blank', 'width=500,height=400')}
-                            className="gap-2"
-                          >
-                            <Printer className="h-4 w-4" aria-hidden />
-                            {t('books.printChit')}
                           </DropdownMenuItem>
                           <DropdownMenuItem
                             onClick={() => openDeleteConfirm(b)}
