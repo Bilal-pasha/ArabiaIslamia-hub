@@ -1,12 +1,11 @@
 'use client';
 
-import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { motion } from 'framer-motion';
 import { Button, Spinner } from '@arabiaaislamia/ui';
-import { api } from '@/lib/api';
 import { useLocale } from '@/lib/locale';
+import { useProtectedLayout } from '@/hooks/use-protected-layout';
 import { LanguageSwitcher } from '@/components/language-switcher';
 import { MainLogo } from '@/components/main-logo';
 import { LayoutDashboard, BookMarked, ClipboardList, LogOut, Settings } from 'lucide-react';
@@ -22,25 +21,7 @@ const settingsNavItem = { href: '/settings', labelKey: 'nav.settings', icon: Set
 export default function ProtectedLayout({ children }: { children: React.ReactNode }) {
   const { t } = useLocale();
   const pathname = usePathname();
-  const [ready, setReady] = useState(false);
-  const [isSuperAdmin, setIsSuperAdmin] = useState(false);
-
-  useEffect(() => {
-    api
-      .get<{ data: { user: { isSuperAdmin?: boolean } } }>('/api/auth/me')
-      .then((res) => {
-        setReady(true);
-        setIsSuperAdmin(res.data?.data?.user?.isSuperAdmin ?? false);
-      })
-      .catch(() => {
-        window.location.href = '/login';
-      });
-  }, []);
-
-  async function handleLogout() {
-    await api.post('/api/auth/logout');
-    window.location.href = '/login';
-  }
+  const { ready, isSuperAdmin, logout } = useProtectedLayout();
 
   if (!ready) {
     return (
@@ -101,7 +82,7 @@ export default function ProtectedLayout({ children }: { children: React.ReactNod
             variant="outline"
             size="sm"
             className="w-full justify-start gap-2 rounded-xl border-border hover:bg-destructive/10 hover:border-destructive/30 hover:text-destructive"
-            onClick={handleLogout}
+            onClick={logout}
           >
             <LogOut className="h-4 w-4" aria-hidden />
             {t('auth.logout')}
