@@ -50,7 +50,7 @@ function BookChit({ book, t }: { book: Book; t: (k: string) => string }) {
       dir="rtl"
     >
       {/* Header: brand gradient with logo + book number */}
-      <div className="flex items-center justify-between gap-2 px-3 py-2 bg-gradient-to-l from-emerald-600 to-emerald-700">
+      <div className="flex items-center justify-between gap-2 px-3 py-2 bg-linear-to-l from-emerald-600 to-emerald-700">
         <span className="text-sm font-bold tracking-widest text-white tabular-nums">
           {book.bookNumber}
         </span>
@@ -61,24 +61,24 @@ function BookChit({ book, t }: { book: Book; t: (k: string) => string }) {
         />
       </div>
       {/* Body */}
-      <div className="flex-1 p-3 space-y-1.5 bg-gradient-to-b from-white to-amber-50/30">
+      <div className="flex-1 p-3 space-y-1.5 bg-linear-to-b from-white to-amber-50/30">
         {/* Title */}
-        <div className="space-y-0.5 text-right ">
+        <div className="space-y-3 text-right ">
           <div className="text-[9px] font-bold text-emerald-700 uppercase tracking-wide">
             {t('books.bookTitle')}
           </div>
-          <div className="font-bold text-[13px] leading-tight text-slate-900 line-clamp-2">
+          <div className="font-bold text-[13px] leading-loose text-slate-900">
             {book.title}
           </div>
         </div>
         
         {/* Author */}
         {book.author && (
-          <div className="space-y-0.5 text-right ">
+          <div className="space-y-3 text-right ">
             <div className="text-[9px] font-bold text-emerald-700 uppercase tracking-wide">
               {t('books.author')}
             </div>
-            <div className="text-xs text-slate-700 line-clamp-1 font-semibold">{book.author}</div>
+            <div className="text-xs text-slate-700 font-semibold">{book.author}</div>
           </div>
         )}
         

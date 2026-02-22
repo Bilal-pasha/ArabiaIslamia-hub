@@ -76,27 +76,24 @@ const FILTER_KEYS = ['bookNumber', 'title', 'author', 'category', 'jillNumber', 
 
 function AddBookFormContent({
   t,
-  authors,
-  categories,
-  nashirs,
-  onRefreshAuthors,
-  onRefreshCategories,
-  onRefreshNashirs,
   onSuccess,
 }: {
   t: (k: string) => string;
-  authors: { id: string; name: string }[];
-  categories: { id: string; name: string }[];
-  nashirs: { id: string; name: string }[];
-  onRefreshAuthors: () => void;
-  onRefreshCategories: () => void;
-  onRefreshNashirs: () => void;
   onSuccess: (bookId?: string) => void | Promise<void>;
 }) {
   const [form, setForm] = useState(initialForm);
   const [addMoreOpen, setAddMoreOpen] = useState(false);
   const [addMoreType, setAddMoreType] = useState<'author' | 'category' | 'nashir'>('author');
   const [addMoreValue, setAddMoreValue] = useState('');
+  const [authors, setAuthors] = useState<{ id: string; name: string }[]>([]);
+  const [categories, setCategories] = useState<{ id: string; name: string }[]>([]);
+  const [nashirs, setNashirs] = useState<{ id: string; name: string }[]>([]);
+
+  useEffect(() => {
+    api.get('/api/book-authors').then((r) => setAuthors(r.data.data || []));
+    api.get('/api/book-categories').then((r) => setCategories(r.data.data || []));
+    api.get('/api/book-nashirs').then((r) => setNashirs(r.data.data || []));
+  }, []);
 
   function openAddMore(type: 'author' | 'category' | 'nashir') {
     setAddMoreType(type);
@@ -111,15 +108,18 @@ function AddBookFormContent({
     try {
       if (addMoreType === 'author') {
         await api.post('/api/book-authors', { name });
-        onRefreshAuthors();
+        const res = await api.get<{ data: { id: string; name: string }[] }>('/api/book-authors');
+        setAuthors(res.data.data || []);
         setForm((f) => ({ ...f, author: name }));
       } else if (addMoreType === 'category') {
         await api.post('/api/book-categories', { name });
-        onRefreshCategories();
+        const res = await api.get<{ data: { id: string; name: string }[] }>('/api/book-categories');
+        setCategories(res.data.data || []);
         setForm((f) => ({ ...f, category: name }));
       } else {
         await api.post('/api/book-nashirs', { name });
-        onRefreshNashirs();
+        const res = await api.get<{ data: { id: string; name: string }[] }>('/api/book-nashirs');
+        setNashirs(res.data.data || []);
         setForm((f) => ({ ...f, naashirName: name }));
       }
       setAddMoreOpen(false);
@@ -312,9 +312,9 @@ function BookDetailContent({ book, t }: { book: Book; t: (k: string) => string }
       <DialogHeader className="flex row-reverse">
         <DialogTitle>{t('books.viewDetails')}</DialogTitle>
       </DialogHeader>
-      <dl className="grid gap-3 text-sm">
-        {rows.map((r) => (
-          <div key={r.label} className="flex gap-2">
+      <dl className="grid gap-3 text-sm divide-y divide-border/80">
+        {rows.map((r, i) => (
+          <div key={r.label+ i} className="flex gap-2 py-3">
             <dt className="font-medium text-muted-foreground min-w-[140px]">{r.label}</dt>
             <dd dir="auto" className="text-foreground">{r.value}</dd>
           </div>
@@ -329,9 +329,6 @@ export default function BooksPage() {
   const modal = useModal();
   const [books, setBooks] = useState<Book[]>([]);
   const [loading, setLoading] = useState(true);
-  const [authors, setAuthors] = useState<{ id: string; name: string }[]>([]);
-  const [categories, setCategories] = useState<{ id: string; name: string }[]>([]);
-  const [nashirs, setNashirs] = useState<{ id: string; name: string }[]>([]);
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const [total, setTotal] = useState(0);
@@ -364,23 +361,11 @@ export default function BooksPage() {
     fetchBooks();
   }, [fetchBooks]);
 
-  useEffect(() => {
-    api.get('/api/book-authors').then((r) => setAuthors(r.data.data || []));
-    api.get('/api/book-categories').then((r) => setCategories(r.data.data || []));
-    api.get('/api/book-nashirs').then((r) => setNashirs(r.data.data || []));
-  }, []);
-
   function openAddBookModal() {
     modal.custom({
       content: (
         <AddBookFormContent
           t={t}
-          authors={authors}
-          categories={categories}
-          nashirs={nashirs}
-          onRefreshAuthors={() => api.get('/api/book-authors').then((r) => setAuthors(r.data.data || []))}
-          onRefreshCategories={() => api.get('/api/book-categories').then((r) => setCategories(r.data.data || []))}
-          onRefreshNashirs={() => api.get('/api/book-nashirs').then((r) => setNashirs(r.data.data || []))}
           onSuccess={async () => {
             fetchBooks();
             modal.close();
@@ -469,7 +454,7 @@ export default function BooksPage() {
             <CardContent className="p-6">
               <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
                 {[1, 2, 3, 4].map((i) => (
-                  <div key={i} className="h-9 rounded bg-muted/50 animate-pulse" />
+                  <div key={i} className="h-9 rounded bg-muted/80 animate-pulse" />
                 ))}
               </div>
             </CardContent>
@@ -518,9 +503,9 @@ export default function BooksPage() {
             </div>
           </div>
           <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-3">
-            {FILTER_KEYS.map((k) => (
+            {FILTER_KEYS.map((k, i) => (
               <Input
-                key={k}
+                key={k + i}
                 placeholder={t(`books.${k}`)}
                 dir="rtl"
                 value={filters[k] ?? ''}
@@ -541,10 +526,10 @@ export default function BooksPage() {
             <div className="flex flex-col gap-2">
               <Label>{t('books.printCategory')}</Label>
               <Select value={printCategory} onValueChange={(v) => setPrintCategory(v as 'shelf' | '')}>
-                <SelectTrigger className="h-9">
+                <SelectTrigger className="h-9 bg-white">
                   <SelectValue placeholder={t('books.selectPrintCategory')} />
                 </SelectTrigger>
-                <SelectContent>
+                <SelectContent className='bg-white'>
                   <SelectItem value="shelf">{t('books.printByShelf')}</SelectItem>
                 </SelectContent>
               </Select>
@@ -608,8 +593,8 @@ export default function BooksPage() {
                   <TableCell colSpan={10} className="text-center text-muted-foreground py-12 px-4">{t('books.empty')}</TableCell>
                 </TableRow>
               ) : (
-                books.map((b) => (
-                  <TableRow key={b.id} className="group">
+                books.map((b, i) => (
+                  <TableRow key={b.id + i} className="group">
                     <TableCell className="py-4 px-4 sm:px-6 font-mono text-sm text-foreground align-middle">
                       {b.bookNumber}
                     </TableCell>
