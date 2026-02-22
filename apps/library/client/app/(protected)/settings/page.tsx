@@ -5,7 +5,7 @@ import { fadeInUp, staggerContainer, defaultTransition } from '@arabiaaislamia/a
 import { useLocale } from '@/lib/locale';
 import { useSettingsPage } from '@/hooks/use-settings-page';
 import { PageHeader, PageSkeleton } from '@/components/common';
-import { SettingsTabs, SettingsEntityTab, ViewItemDialog } from '@/components/settings';
+import { SettingsTabs, SettingsEntityTab, ViewItemDialog, BackupButton } from '@/components/settings';
 
 export default function SettingsPage() {
   const { t } = useLocale();
@@ -46,7 +46,7 @@ export default function SettingsPage() {
   return (
     <motion.div className="space-y-8" variants={staggerContainer} initial="hidden" animate="visible" transition={defaultTransition}>
       <motion.div variants={fadeInUp}>
-        <PageHeader title={t('settings.title')} />
+        <PageHeader title={t('settings.title')} action={<BackupButton t={t} />} />
       </motion.div>
       <motion.div variants={fadeInUp}>
         <SettingsTabs activeTab={activeTab} onTabChange={setActiveTab} t={t} />

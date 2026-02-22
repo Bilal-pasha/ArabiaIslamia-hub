@@ -66,6 +66,24 @@ export function generateKey(prefix: string, field: string, filename: string): st
   return `${prefix}/${field}-${Date.now()}-${randomUUID().slice(0, 8)}.${ext}`;
 }
 
+export interface PutObjectParams {
+  key: string;
+  body: Buffer | Uint8Array | string;
+  contentType?: string;
+}
+
+export async function putObject(config: R2Config, params: PutObjectParams): Promise<void> {
+  const client = createR2Client(config);
+  await client.send(
+    new PutObjectCommand({
+      Bucket: config.bucket,
+      Key: params.key,
+      Body: params.body,
+      ContentType: params.contentType ?? 'application/octet-stream',
+    }),
+  );
+}
+
 export async function deleteObject(config: R2Config, key: string): Promise<void> {
   const client = createR2Client(config);
   await client.send(

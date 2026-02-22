@@ -36,4 +36,7 @@ export const privateEndpoints = {
     byId: (id: string) => `/api/book-issues/${id}`,
     return: (id: string) => `/api/book-issues/${id}/return`,
   },
+  backup: {
+    run: '/api/backup/run',
+  },
 } as const;

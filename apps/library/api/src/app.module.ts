@@ -1,6 +1,7 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigModule } from '@nestjs/config';
+import { ScheduleModule } from '@nestjs/schedule';
 import { LoggerModule } from 'nestjs-pino';
 import { getTypeOrmOptions } from './typeorm-config';
 import { AppController } from './app.controller';
@@ -11,10 +12,12 @@ import { BookIssuesModule } from './api/book-issues/book-issues.module';
 import { BookAuthorsModule } from './api/book-authors/book-authors.module';
 import { BookCategoriesModule } from './api/book-categories/book-categories.module';
 import { BookNashirsModule } from './api/book-nashirs/book-nashirs.module';
+import { BackupModule } from './api/backup/backup.module';
 
 @Module({
   imports: [
     ConfigModule.forRoot({ isGlobal: true, envFilePath: '.env' }),
+    ScheduleModule.forRoot(),
     LoggerModule.forRoot({
       pinoHttp: {
         transport:
@@ -30,6 +33,7 @@ import { BookNashirsModule } from './api/book-nashirs/book-nashirs.module';
     BookAuthorsModule,
     BookCategoriesModule,
     BookNashirsModule,
+    BackupModule,
   ],
   controllers: [AppController],
   providers: [AppService],

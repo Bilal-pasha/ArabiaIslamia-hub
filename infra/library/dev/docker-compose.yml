@@ -50,6 +50,7 @@ services:
       - "8004:8004"
     volumes:
       - ../../../packages/database:/app/packages/database
+      - ../../../packages/storage:/app/packages/storage
       - ../../../apps/library/api:/app/apps/library/api
       - library-api-node_modules:/app/apps/library/api/node_modules
       - library-database-node_modules:/app/packages/database/node_modules
@@ -58,7 +59,7 @@ services:
     depends_on:
       postgres:
         condition: service_healthy
-    command: sh -c "sleep 2 && cd /app && pnpm install && pnpm --filter @arabiaaislamia/database run build && pnpm db:migrate:library && cd apps/library/api && pnpm run start:dev"
+    command: sh -c "sleep 2 && cd /app && pnpm install && pnpm --filter @arabiaaislamia/database run build && pnpm --filter @arabiaaislamia/storage run build && pnpm db:migrate:library && cd apps/library/api && pnpm run start:dev"
 
   library-app:
     build:

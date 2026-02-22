@@ -119,6 +119,10 @@
     "nashirs": "ناشرین",
     "addNashir": "ناشر شامل کریں",
     "nashirName": "ناشر کا نام",
-    "emptyNashirs": "ابھی کوئی ناشر نہیں"
+    "emptyNashirs": "ابھی کوئی ناشر نہیں",
+    "backupNow": "بیک اپ کریں",
+    "backupRunning": "بیک اپ ہو رہا ہے...",
+    "backupSuccess": "R2 پر بیک اپ اپ لوڈ ہو گیا",
+    "backupError": "بیک اپ ناکام"
   }
 }
