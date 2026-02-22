@@ -93,9 +93,9 @@ function BookChit({ book, t }: { book: Book; t: (k: string) => string }) {
             </div>
           )}
           {book.category && (
-            <div className="flex items-center justify-between gap-2 py-1 border-b border-slate-200/50">
+            <div className="flex items-center justify-between gap-2 py-2 border-b border-slate-200/50">
               <span className="font-bold text-slate-600 shrink-0">{t('books.mazmoon')}</span>
-              <span className="text-slate-700 font-medium line-clamp-1">{book.category}</span>
+              <span className="text-slate-700 font-medium">{book.category}</span>
             </div>
           )}
           {langLabel && (
