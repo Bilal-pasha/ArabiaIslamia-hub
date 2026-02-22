@@ -61,7 +61,7 @@ function BookChit({ book, t }: { book: Book; t: (k: string) => string }) {
         />
       </div>
       {/* Body */}
-      <div className="flex-1 p-3 space-y-1.5 bg-linear-to-b from-white to-amber-50/30">
+      <div className="flex-1 pt-3 px-3 space-y-1.5 bg-linear-to-b from-white to-amber-50/30">
         {/* Title */}
         <div className="space-y-3 text-right ">
           <div className="text-[9px] font-bold text-emerald-700 uppercase tracking-wide">
