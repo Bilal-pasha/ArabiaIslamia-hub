@@ -299,7 +299,7 @@ export default function PrintChitPage() {
             }
             @page {
               size: A4;
-              margin: 10mm;
+              margin: 0;
             }
           `,
         }}
