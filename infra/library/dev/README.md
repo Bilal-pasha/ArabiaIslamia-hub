@@ -42,6 +42,18 @@ curl -X POST http://localhost:8004/api/auth/signup \
 
 Then open http://localhost:3013 and log in.
 
+## Restore backup
+
+From repo root, to restore a backup (performs clean restore: drops and recreates `library_db`):
+
+```bash
+# Pass the backup file path (supports .sql and .sql.gz)
+pnpm library:restore -- library_db_backup_library_db_2026-02-22_095905.sql
+
+# Or run the script directly
+./infra/library/restore-backup.sh path/to/backup.sql
+```
+
 ## Stop
 
 ```bash
