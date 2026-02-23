@@ -14,7 +14,7 @@ export function WhiteSection() {
         viewport={{ once: true }}
         transition={{ duration: 0.6 }}
       >
-        <h2 className="font-[Roboto] text-2xl font-semibold leading-tight sm:text-3xl lg:text-5xl">
+        <h2 className="text-2xl font-semibold leading-tight sm:text-3xl lg:text-5xl">
           Unlock the Gateway to Wisdom and Enlightenment at Jamia Arabia Islamia
         </h2>
         <blockquote className="text-base italic text-slate-700 sm:text-lg lg:text-2xl">

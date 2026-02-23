@@ -24,7 +24,7 @@ export function StatisticSection() {
           transition={{ duration: 0.6 }}
         >
           <div className="text-center">
-            <h2 className="font-[Roboto] text-3xl font-semibold text-foreground md:pb-4 md:text-5xl">
+            <h2 className=" text-3xl font-semibold text-foreground md:pb-4 md:text-5xl">
               Statistic Glance at{' '}
               <span className="mx-2 bg-amber-500 text-white">Jamia Arabia Islamia</span>
             </h2>

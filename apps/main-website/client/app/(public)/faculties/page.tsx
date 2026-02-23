@@ -55,7 +55,7 @@ export default function FacultiesPage() {
           animate={{ opacity: 1, x: 0 }}
           transition={{ duration: 0.6 }}
         >
-          <h1 className="font-[Roboto] text-2xl font-bold md:text-4xl lg:text-6xl">
+          <h1 className=" text-2xl font-bold md:text-4xl lg:text-6xl">
             Our Faculties
           </h1>
           <p className="text-base md:text-lg">
