@@ -31,6 +31,8 @@ export const metadata = {
   openGraph: {
     type: 'website',
     locale: SEO_DEFAULTS.locale,
+    url: SEO_DEFAULTS.url,          
+    title: `${SEO_DEFAULTS.siteName} | Scout Colony`,  
     siteName: SEO_DEFAULTS.siteName,
     description: SEO_DEFAULTS.description,
     images: [{ url: SEO_DEFAULTS.ogImage, alt: SEO_DEFAULTS.siteName }],
@@ -40,13 +42,22 @@ export const metadata = {
     title: `${SEO_DEFAULTS.siteName} | Scout Colony`,
     description: SEO_DEFAULTS.description,
     images: [SEO_DEFAULTS.ogImage],
+    creator: SEO_DEFAULTS.twitterHandle ?? undefined,  
   },
   icons: {
     icon: '/images/Logo.png',
+    apple: '/images/Logo.png',      
   },
   robots: {
     index: true,
     follow: true,
+    googleBot: {               
+      index: true,
+      follow: true,
+    },
+  },
+  alternates: {
+    canonical: SEO_DEFAULTS.url,  
   },
   ...(process.env.NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION && {
     verification: {
