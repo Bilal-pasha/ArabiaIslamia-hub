@@ -1,6 +1,7 @@
 export { BooksFilter } from './BooksFilter';
 export { BooksTable } from './BooksTable';
 export { AddBookModal } from './AddBookModal';
+export { EditBookModal } from './EditBookModal';
 export { BookDetailModal } from './BookDetailModal';
 export { PrintChitsModal } from './PrintChitsModal';
 export { PrintChitToolbar } from './PrintChitToolbar';

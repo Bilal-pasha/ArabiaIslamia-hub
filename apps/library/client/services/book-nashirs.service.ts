@@ -12,6 +12,10 @@ export class BookNashirsService {
     await api.post(privateEndpoints.bookNashirs.list, { name });
   }
 
+  async update(id: string, name: string) {
+    await api.patch(privateEndpoints.bookNashirs.byId(id), { name });
+  }
+
   async delete(id: string) {
     await api.delete(privateEndpoints.bookNashirs.byId(id));
   }

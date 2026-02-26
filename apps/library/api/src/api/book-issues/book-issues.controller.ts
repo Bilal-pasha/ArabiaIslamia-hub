@@ -2,6 +2,7 @@ import {
   Controller,
   Get,
   Post,
+  Patch,
   Delete,
   Body,
   Param,
@@ -12,6 +13,7 @@ import {
 } from '@nestjs/common';
 import { BookIssuesService } from './book-issues.service';
 import { CreateBookIssueDto } from './dto/create-book-issue.dto';
+import { UpdateBookIssueDto } from './dto/update-book-issue.dto';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 
 @Controller('api/book-issues')
@@ -47,6 +49,12 @@ export class BookIssuesController {
   @HttpCode(HttpStatus.CREATED)
   async create(@Body() dto: CreateBookIssueDto) {
     return this.bookIssuesService.create(dto);
+  }
+
+  @Patch(':id')
+  @HttpCode(HttpStatus.OK)
+  async update(@Param('id') id: string, @Body() dto: UpdateBookIssueDto) {
+    return this.bookIssuesService.update(id, dto);
   }
 
   @Post(':id/return')

@@ -3,6 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Book, BookIssue } from '@arabiaaislamia/database';
 import { CreateBookIssueDto } from './dto/create-book-issue.dto';
+import { UpdateBookIssueDto } from './dto/update-book-issue.dto';
 
 export interface IssueFilters {
   bookId?: string;
@@ -79,6 +80,23 @@ export class BookIssuesService {
     });
     const saved = await this.issueRepository.save(issue);
     return { success: true, message: 'Book issued', data: await this.findOne(saved.id) };
+  }
+
+  async update(id: string, dto: UpdateBookIssueDto) {
+    const issue = await this.issueRepository.findOne({ where: { id } });
+    if (!issue) throw new NotFoundException('Book issue not found');
+    if (issue.status === 'returned') {
+      throw new BadRequestException('Cannot update a returned issue');
+    }
+    if (dto.bookId !== undefined) {
+      const book = await this.bookRepository.findOne({ where: { id: dto.bookId } });
+      if (!book) throw new NotFoundException('Book not found');
+      issue.bookId = dto.bookId;
+    }
+    if (dto.issuedTo !== undefined) issue.issuedTo = dto.issuedTo;
+    if (dto.dueAt !== undefined) issue.dueAt = new Date(dto.dueAt);
+    const saved = await this.issueRepository.save(issue);
+    return { success: true, message: 'Issue updated', data: await this.findOne(saved.id) };
   }
 
   async returnBook(id: string) {

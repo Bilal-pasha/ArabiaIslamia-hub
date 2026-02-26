@@ -18,6 +18,14 @@ export function useBookAuthorsCreate() {
   });
 }
 
+export function useBookAuthorsUpdate() {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: ({ id, name }: { id: string; name: string }) => bookAuthorsService.update(id, name),
+    onSuccess: () => qc.invalidateQueries({ queryKey: bookAuthorsKeys.all }),
+  });
+}
+
 export function useBookAuthorsDelete() {
   const qc = useQueryClient();
   return useMutation({

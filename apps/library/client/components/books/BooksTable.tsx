@@ -11,17 +11,18 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from '@arabiaaislamia/ui';
-import { Eye, Trash2, MoreVertical } from 'lucide-react';
+import { Eye, Pencil, Trash2, MoreVertical } from 'lucide-react';
 import type { Book } from '@/types';
 
 type BooksTableProps = {
   books: Book[];
   onView: (book: Book) => void;
+  onEdit: (book: Book) => void;
   onDelete: (book: Book) => void;
   t: (k: string) => string;
 };
 
-export function BooksTable({ books, onView, onDelete, t }: BooksTableProps) {
+export function BooksTable({ books, onView, onEdit, onDelete, t }: BooksTableProps) {
   return (
     <div className="overflow-x-auto rounded-lg border border-border">
       <Table className="min-w-[900px]">
@@ -87,6 +88,10 @@ export function BooksTable({ books, onView, onDelete, t }: BooksTableProps) {
                       <DropdownMenuItem onClick={() => onView(b)} className="gap-2">
                         <Eye className="h-4 w-4" aria-hidden />
                         {t('books.viewDetails')}
+                      </DropdownMenuItem>
+                      <DropdownMenuItem onClick={() => onEdit(b)} className="gap-2">
+                        <Pencil className="h-4 w-4" aria-hidden />
+                        {t('books.edit')}
                       </DropdownMenuItem>
                       <DropdownMenuItem
                         onClick={() => onDelete(b)}

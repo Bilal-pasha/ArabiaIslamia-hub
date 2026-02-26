@@ -19,7 +19,7 @@ import {
   DropdownMenuTrigger,
 } from '@arabiaaislamia/ui';
 import type { UseMutationResult } from '@tanstack/react-query';
-import { ChevronLeft, ChevronRight, Eye, MoreVertical, Plus, Trash2 } from 'lucide-react';
+import { ChevronLeft, ChevronRight, Eye, MoreVertical, Pencil, Plus, Trash2 } from 'lucide-react';
 
 type Entity = { id: string; name: string };
 
@@ -31,6 +31,7 @@ type Props = {
   createMutation: UseMutationResult<void, Error, string>;
   onDelete: (item: Entity) => void;
   onView: (item: Entity) => void;
+  onEdit: (item: Entity) => void;
   labelKey: string;
   placeholderKey: string;
   emptyKey: string;
@@ -39,7 +40,7 @@ type Props = {
 };
 
 export function SettingsEntityTab(props: Props) {
-  const { items, page, totalPages, onPageChange, createMutation, onDelete, onView, labelKey, placeholderKey, emptyKey, pageSize, t } = props;
+  const { items, page, totalPages, onPageChange, createMutation, onDelete, onView, onEdit, labelKey, placeholderKey, emptyKey, pageSize, t } = props;
   const [value, setValue] = useState('');
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -96,6 +97,10 @@ export function SettingsEntityTab(props: Props) {
                             <DropdownMenuItem onClick={() => onView(item)} className="gap-2">
                               <Eye className="h-4 w-4" aria-hidden />
                               {t('common.view')}
+                            </DropdownMenuItem>
+                            <DropdownMenuItem onClick={() => onEdit(item)} className="gap-2">
+                              <Pencil className="h-4 w-4" aria-hidden />
+                              {t('books.edit')}
                             </DropdownMenuItem>
                             <DropdownMenuItem
                               onClick={() => onDelete(item)}

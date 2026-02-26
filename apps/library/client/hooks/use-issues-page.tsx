@@ -1,6 +1,6 @@
 import { useState, useCallback } from 'react';
 import { useModal } from '@arabiaaislamia/ui';
-import { useBookIssuesList, useBookIssuesCreate, useBookIssuesReturn, useBookIssuesDelete } from './use-book-issues';
+import { useBookIssuesList, useBookIssuesCreate, useBookIssuesUpdate, useBookIssuesReturn, useBookIssuesDelete } from './use-book-issues';
 import { useBooksListForSelect } from './use-books';
 import { IssueBookFormContent, IssueDetailContent } from '@/components/issues';
 import type { BookIssue } from '@/types';
@@ -9,10 +9,12 @@ export function useIssuesPage(t: (k: string) => string) {
   const modal = useModal();
   const [page, setPage] = useState(1);
   const [filters, setFilters] = useState({ status: 'all', issuedTo: '', bookId: '' });
+  const [editIssue, setEditIssue] = useState<BookIssue | null>(null);
 
   const issuesQuery = useBookIssuesList(page, filters);
   const booksQuery = useBooksListForSelect();
   const createIssue = useBookIssuesCreate();
+  const updateIssue = useBookIssuesUpdate();
   const returnIssue = useBookIssuesReturn();
   const deleteIssue = useBookIssuesDelete();
 
@@ -35,6 +37,14 @@ export function useIssuesPage(t: (k: string) => string) {
       showClose: true,
     });
   }, [modal, books, createIssue, t]);
+
+  const openEditModal = useCallback((issue: BookIssue) => setEditIssue(issue), []);
+  const closeEditModal = useCallback(() => setEditIssue(null), []);
+
+  const handleEditIssueSuccess = useCallback(async () => {
+    await issuesQuery.refetch();
+    closeEditModal();
+  }, [issuesQuery, closeEditModal]);
 
   const openViewModal = useCallback(
     (issue: BookIssue) => {
@@ -88,6 +98,11 @@ export function useIssuesPage(t: (k: string) => string) {
     loading: issuesQuery.isLoading,
     openIssueBookModal,
     openViewModal,
+    openEditModal,
+    closeEditModal,
+    editIssue,
+    updateIssue,
+    handleEditIssueSuccess,
     openDeleteConfirm,
     handleReturn,
     applyFilters,

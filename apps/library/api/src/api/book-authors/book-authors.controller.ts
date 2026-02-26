@@ -2,6 +2,7 @@ import {
   Controller,
   Get,
   Post,
+  Patch,
   Delete,
   Body,
   Param,
@@ -13,6 +14,7 @@ import { BookAuthorsService } from './book-authors.service';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { IsSuperAdminGuard } from '../auth/guards/is-super-admin.guard';
 import { CreateBookAuthorDto } from './dto/create-book-author.dto';
+import { UpdateBookAuthorDto } from './dto/update-book-author.dto';
 
 @Controller('api/book-authors')
 @UseGuards(JwtAuthGuard)
@@ -29,6 +31,13 @@ export class BookAuthorsController {
   @HttpCode(HttpStatus.CREATED)
   async create(@Body() dto: CreateBookAuthorDto) {
     return this.bookAuthorsService.create(dto);
+  }
+
+  @Patch(':id')
+  @UseGuards(IsSuperAdminGuard)
+  @HttpCode(HttpStatus.OK)
+  async update(@Param('id') id: string, @Body() dto: UpdateBookAuthorDto) {
+    return this.bookAuthorsService.update(id, dto);
   }
 
   @Delete(':id')

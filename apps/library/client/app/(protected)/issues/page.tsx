@@ -6,7 +6,7 @@ import { defaultTransition, fadeInUp, staggerContainer } from '@arabiaaislamia/a
 import { useLocale } from '@/lib/locale';
 import { useIssuesPage } from '@/hooks/use-issues-page';
 import { PageHeader, PageSkeleton, Pagination } from '@/components/common';
-import { IssuesFilter, IssuesTable } from '@/components/issues';
+import { IssuesFilter, IssuesTable, EditIssueModal } from '@/components/issues';
 import { Plus } from 'lucide-react';
 
 export default function IssuesPage() {
@@ -23,6 +23,11 @@ export default function IssuesPage() {
     loading,
     openIssueBookModal,
     openViewModal,
+    openEditModal,
+    closeEditModal,
+    editIssue,
+    updateIssue,
+    handleEditIssueSuccess,
     openDeleteConfirm,
     handleReturn,
     applyFilters,
@@ -55,11 +60,12 @@ export default function IssuesPage() {
       <motion.div variants={fadeInUp}>
         <Card className="overflow-hidden">
           <div className="rounded-lg border border-border overflow-hidden">
-            <IssuesTable issues={issues} onView={openViewModal} onReturn={handleReturn} onDelete={openDeleteConfirm} t={t} />
+            <IssuesTable issues={issues} onView={openViewModal} onEdit={openEditModal} onReturn={handleReturn} onDelete={openDeleteConfirm} t={t} />
           </div>
           <Pagination page={page} totalPages={totalPages} total={total} onPrev={() => setPage((p) => Math.max(1, p - 1))} onNext={() => setPage((p) => Math.min(totalPages, p + 1))} pageLabel={t('common.page')} ofLabel={t('common.of')} />
         </Card>
       </motion.div>
+      <EditIssueModal open={!!editIssue} issue={editIssue} books={books} onClose={closeEditModal} onUpdate={(id, d) => updateIssue.mutateAsync({ id, data: d })} onSuccess={handleEditIssueSuccess} t={t} />
     </motion.div>
   );
 }

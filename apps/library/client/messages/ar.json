@@ -71,7 +71,8 @@
     "issued": "معار",
     "returned": "مرجع",
     "deleteConfirm": "هل أنت متأكد من حذف سجل الإعارة هذا؟",
-    "viewDetails": "عرض التفاصيل"
+    "viewDetails": "عرض التفاصيل",
+    "editIssue": "تعديل سجل الإعارة"
   },
   "nav": {
     "dashboard": "لوحة التحكم",
@@ -95,6 +96,7 @@
     "search": "بحث",
     "filter": "تصفية",
     "view": "عرض",
+    "edit": "تعديل",
     "previous": "السابق",
     "next": "التالي",
     "page": "صفحة",

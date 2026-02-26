@@ -1,6 +1,6 @@
 import { useState, useCallback } from 'react';
 import { useModal } from '@arabiaaislamia/ui';
-import { useBooksList, useBooksCreate, useBooksDelete } from './use-books';
+import { useBooksList, useBooksCreate, useBooksUpdate, useBooksDelete } from './use-books';
 import { useBookAuthors, useBookAuthorsCreate } from './use-book-authors';
 import { useBookCategories, useBookCategoriesCreate } from './use-book-categories';
 import { useBookNashirs, useBookNashirsCreate } from './use-book-nashirs';
@@ -17,6 +17,7 @@ export function useBooksPage(t: (k: string) => string) {
   const [page, setPage] = useState(1);
   const [filters, setFilters] = useState<Record<string, string>>({});
   const [addBookOpen, setAddBookOpen] = useState(false);
+  const [editBook, setEditBook] = useState<Book | null>(null);
   const [viewBook, setViewBook] = useState<Book | null>(null);
   const [printModalOpen, setPrintModalOpen] = useState(false);
   const [printCategory, setPrintCategory] = useState<'shelf' | ''>('');
@@ -32,6 +33,7 @@ export function useBooksPage(t: (k: string) => string) {
   const categoriesQuery = useBookCategories();
   const nashirsQuery = useBookNashirs();
   const createBook = useBooksCreate();
+  const updateBook = useBooksUpdate();
   const deleteBook = useBooksDelete();
   const createAuthor = useBookAuthorsCreate();
   const createCategory = useBookCategoriesCreate();
@@ -43,6 +45,8 @@ export function useBooksPage(t: (k: string) => string) {
 
   const openAddBook = useCallback(() => setAddBookOpen(true), []);
   const closeAddBook = useCallback(() => setAddBookOpen(false), []);
+  const openEditBook = useCallback((book: Book) => setEditBook(book), []);
+  const closeEditBook = useCallback(() => setEditBook(null), []);
   const openViewBook = useCallback((book: Book) => setViewBook(book), []);
   const closeViewBook = useCallback(() => setViewBook(null), []);
 
@@ -93,6 +97,11 @@ export function useBooksPage(t: (k: string) => string) {
     closeAddBook();
   }, [booksQuery, closeAddBook]);
 
+  const handleEditBookSuccess = useCallback(async () => {
+    await booksQuery.refetch();
+    closeEditBook();
+  }, [booksQuery, closeEditBook]);
+
   return {
     page,
     setPage,
@@ -113,6 +122,9 @@ export function useBooksPage(t: (k: string) => string) {
     addBookOpen,
     openAddBook,
     closeAddBook,
+    editBook,
+    openEditBook,
+    closeEditBook,
     viewBook,
     openViewBook,
     closeViewBook,
@@ -128,5 +140,7 @@ export function useBooksPage(t: (k: string) => string) {
     handlePrintAll,
     applyFilters,
     handleAddBookSuccess,
+    updateBook,
+    handleEditBookSuccess,
   };
 }

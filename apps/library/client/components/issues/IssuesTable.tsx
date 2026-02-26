@@ -15,17 +15,18 @@ import {
   TableRow,
 } from '@arabiaaislamia/ui';
 import type { BookIssue } from '@/types';
-import { Eye, MoreVertical, RotateCcw, Trash2 } from 'lucide-react';
+import { Eye, MoreVertical, Pencil, RotateCcw, Trash2 } from 'lucide-react';
 
 type Props = {
   issues: BookIssue[];
   onView: (issue: BookIssue) => void;
+  onEdit: (issue: BookIssue) => void;
   onReturn: (id: string) => void;
   onDelete: (issue: BookIssue) => void;
   t: (k: string) => string;
 };
 
-export function IssuesTable({ issues, onView, onReturn, onDelete, t }: Props) {
+export function IssuesTable({ issues, onView, onEdit, onReturn, onDelete, t }: Props) {
   return (
     <Table className="min-w-[640px]">
       <TableHeader>
@@ -67,6 +68,12 @@ export function IssuesTable({ issues, onView, onReturn, onDelete, t }: Props) {
                       <Eye className="h-4 w-4" aria-hidden />
                       {t('issues.viewDetails')}
                     </DropdownMenuItem>
+                    {i.status === 'issued' && (
+                      <DropdownMenuItem onClick={() => onEdit(i)} className="gap-2">
+                        <Pencil className="h-4 w-4" aria-hidden />
+                        {t('books.edit')}
+                      </DropdownMenuItem>
+                    )}
                     {i.status === 'issued' && (
                       <DropdownMenuItem onClick={() => onReturn(i.id)} className="gap-2">
                         <RotateCcw className="h-4 w-4" aria-hidden />

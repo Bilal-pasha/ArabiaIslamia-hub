@@ -5,7 +5,7 @@ import { fadeInUp, staggerContainer, defaultTransition } from '@arabiaaislamia/a
 import { useLocale } from '@/lib/locale';
 import { useSettingsPage } from '@/hooks/use-settings-page';
 import { PageHeader, PageSkeleton } from '@/components/common';
-import { SettingsTabs, SettingsEntityTab, ViewItemDialog, BackupButton } from '@/components/settings';
+import { SettingsTabs, SettingsEntityTab, ViewItemDialog, EditEntityModal, BackupButton } from '@/components/settings';
 
 export default function SettingsPage() {
   const { t } = useLocale();
@@ -26,6 +26,10 @@ export default function SettingsPage() {
     nashirTotalPages,
     viewItem,
     setViewItem,
+    editItem,
+    openEditItem,
+    closeEditItem,
+    handleEditItemSave,
     createAuthor,
     createCategory,
     createNashir,
@@ -61,6 +65,7 @@ export default function SettingsPage() {
             createMutation={createAuthor}
             onDelete={deleteAuthorConfirm}
             onView={(a) => setViewItem({ type: 'author', name: a.name, id: a.id })}
+            onEdit={(a) => openEditItem({ type: 'author', name: a.name, id: a.id })}
             labelKey="settings.authorName"
             placeholderKey="settings.addAuthor"
             emptyKey="settings.emptyAuthors"
@@ -79,6 +84,7 @@ export default function SettingsPage() {
             createMutation={createCategory}
             onDelete={deleteCategoryConfirm}
             onView={(c) => setViewItem({ type: 'category', name: c.name, id: c.id })}
+            onEdit={(c) => openEditItem({ type: 'category', name: c.name, id: c.id })}
             labelKey="settings.categoryName"
             placeholderKey="settings.addCategory"
             emptyKey="settings.emptyCategories"
@@ -97,6 +103,7 @@ export default function SettingsPage() {
             createMutation={createNashir}
             onDelete={deleteNashirConfirm}
             onView={(n) => setViewItem({ type: 'nashir', name: n.name, id: n.id })}
+            onEdit={(n) => openEditItem({ type: 'nashir', name: n.name, id: n.id })}
             labelKey="settings.nashirName"
             placeholderKey="settings.addNashir"
             emptyKey="settings.emptyNashirs"
@@ -106,6 +113,14 @@ export default function SettingsPage() {
         </motion.div>
       )}
       <ViewItemDialog viewItem={viewItem} onClose={() => setViewItem(null)} t={t} />
+      <EditEntityModal
+        open={!!editItem}
+        item={editItem}
+        onClose={closeEditItem}
+        onSave={handleEditItemSave}
+        labelKey={editItem?.type === 'author' ? 'settings.authorName' : editItem?.type === 'category' ? 'settings.categoryName' : 'settings.nashirName'}
+        t={t}
+      />
     </motion.div>
   );
 }

@@ -18,6 +18,14 @@ export function useBookCategoriesCreate() {
   });
 }
 
+export function useBookCategoriesUpdate() {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: ({ id, name }: { id: string; name: string }) => bookCategoriesService.update(id, name),
+    onSuccess: () => qc.invalidateQueries({ queryKey: bookCategoriesKeys.all }),
+  });
+}
+
 export function useBookCategoriesDelete() {
   const qc = useQueryClient();
   return useMutation({

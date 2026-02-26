@@ -12,6 +12,10 @@ export class BookAuthorsService {
     await api.post(privateEndpoints.bookAuthors.list, { name });
   }
 
+  async update(id: string, name: string) {
+    await api.patch(privateEndpoints.bookAuthors.byId(id), { name });
+  }
+
   async delete(id: string) {
     await api.delete(privateEndpoints.bookAuthors.byId(id));
   }

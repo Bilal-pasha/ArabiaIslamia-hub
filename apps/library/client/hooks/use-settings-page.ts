@@ -1,9 +1,9 @@
 import { useState, useCallback, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { useModal } from '@arabiaaislamia/ui';
-import { useBookAuthors, useBookAuthorsCreate, useBookAuthorsDelete } from './use-book-authors';
-import { useBookCategories, useBookCategoriesCreate, useBookCategoriesDelete } from './use-book-categories';
-import { useBookNashirs, useBookNashirsCreate, useBookNashirsDelete } from './use-book-nashirs';
+import { useBookAuthors, useBookAuthorsCreate, useBookAuthorsUpdate, useBookAuthorsDelete } from './use-book-authors';
+import { useBookCategories, useBookCategoriesCreate, useBookCategoriesUpdate, useBookCategoriesDelete } from './use-book-categories';
+import { useBookNashirs, useBookNashirsCreate, useBookNashirsUpdate, useBookNashirsDelete } from './use-book-nashirs';
 import { useAuthMe } from './use-auth';
 import type { Author, Category, Nashir } from '@/types';
 
@@ -17,14 +17,18 @@ export function useSettingsPage(t: (k: string) => string) {
   const [categoryPage, setCategoryPage] = useState(1);
   const [nashirPage, setNashirPage] = useState(1);
   const [viewItem, setViewItem] = useState<{ type: 'author' | 'category' | 'nashir'; name: string; id: string } | null>(null);
+  const [editItem, setEditItem] = useState<{ type: 'author' | 'category' | 'nashir'; name: string; id: string } | null>(null);
 
   const meQuery = useAuthMe();
   const authorsQuery = useBookAuthors();
   const categoriesQuery = useBookCategories();
   const nashirsQuery = useBookNashirs();
   const createAuthor = useBookAuthorsCreate();
+  const updateAuthor = useBookAuthorsUpdate();
   const createCategory = useBookCategoriesCreate();
+  const updateCategory = useBookCategoriesUpdate();
   const createNashir = useBookNashirsCreate();
+  const updateNashir = useBookNashirsUpdate();
   const deleteAuthor = useBookAuthorsDelete();
   const deleteCategory = useBookCategoriesDelete();
   const deleteNashir = useBookNashirsDelete();
@@ -73,6 +77,20 @@ export function useSettingsPage(t: (k: string) => string) {
     [modal, deleteCategory, t]
   );
 
+  const openEditItem = useCallback((item: { type: 'author' | 'category' | 'nashir'; name: string; id: string }) => setEditItem(item), []);
+  const closeEditItem = useCallback(() => setEditItem(null), []);
+
+  const handleEditItemSave = useCallback(
+    async (id: string, name: string) => {
+      if (!editItem) return;
+      if (editItem.type === 'author') await updateAuthor.mutateAsync({ id, name });
+      else if (editItem.type === 'category') await updateCategory.mutateAsync({ id, name });
+      else await updateNashir.mutateAsync({ id, name });
+      closeEditItem();
+    },
+    [editItem, updateAuthor, updateCategory, updateNashir, closeEditItem]
+  );
+
   const deleteNashirConfirm = useCallback(
     (nashir: Nashir) => {
       modal.confirmation({
@@ -104,6 +122,10 @@ export function useSettingsPage(t: (k: string) => string) {
     nashirTotalPages,
     viewItem,
     setViewItem,
+    editItem,
+    openEditItem,
+    closeEditItem,
+    handleEditItemSave,
     createAuthor,
     createCategory,
     createNashir,

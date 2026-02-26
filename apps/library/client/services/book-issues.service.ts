@@ -21,6 +21,10 @@ export class BookIssuesService {
     await api.post(privateEndpoints.bookIssues.list, data);
   }
 
+  async update(id: string, data: { bookId?: string; issuedTo?: string; dueAt?: string }) {
+    await api.patch(privateEndpoints.bookIssues.byId(id), data);
+  }
+
   async returnBook(id: string) {
     await api.post(privateEndpoints.bookIssues.return(id));
   }

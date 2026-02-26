@@ -3,6 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { BookCategory } from '@arabiaaislamia/database';
 import { CreateBookCategoryDto } from './dto/create-book-category.dto';
+import { UpdateBookCategoryDto } from './dto/update-book-category.dto';
 
 @Injectable()
 export class BookCategoriesService {
@@ -19,6 +20,14 @@ export class BookCategoriesService {
     const category = this.categoryRepository.create({ name: dto.name.trim() });
     const saved = await this.categoryRepository.save(category);
     return { success: true, message: 'Category created', data: saved };
+  }
+
+  async update(id: string, dto: UpdateBookCategoryDto) {
+    const category = await this.categoryRepository.findOne({ where: { id } });
+    if (!category) throw new NotFoundException('Category not found');
+    category.name = dto.name.trim();
+    const saved = await this.categoryRepository.save(category);
+    return { success: true, message: 'Category updated', data: saved };
   }
 
   async remove(id: string) {

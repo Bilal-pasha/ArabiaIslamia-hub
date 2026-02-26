@@ -2,6 +2,7 @@ import {
   Controller,
   Get,
   Post,
+  Patch,
   Delete,
   Body,
   Param,
@@ -13,6 +14,7 @@ import { BookNashirsService } from './book-nashirs.service';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { IsSuperAdminGuard } from '../auth/guards/is-super-admin.guard';
 import { CreateBookNashirDto } from './dto/create-book-nashir.dto';
+import { UpdateBookNashirDto } from './dto/update-book-nashir.dto';
 
 @Controller('api/book-nashirs')
 @UseGuards(JwtAuthGuard)
@@ -29,6 +31,13 @@ export class BookNashirsController {
   @HttpCode(HttpStatus.CREATED)
   async create(@Body() dto: CreateBookNashirDto) {
     return this.bookNashirsService.create(dto);
+  }
+
+  @Patch(':id')
+  @UseGuards(IsSuperAdminGuard)
+  @HttpCode(HttpStatus.OK)
+  async update(@Param('id') id: string, @Body() dto: UpdateBookNashirDto) {
+    return this.bookNashirsService.update(id, dto);
   }
 
   @Delete(':id')

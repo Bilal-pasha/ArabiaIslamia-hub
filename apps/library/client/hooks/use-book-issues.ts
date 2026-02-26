@@ -22,6 +22,15 @@ export function useBookIssuesCreate() {
   });
 }
 
+export function useBookIssuesUpdate() {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: ({ id, data }: { id: string; data: { bookId?: string; issuedTo?: string; dueAt?: string } }) =>
+      bookIssuesService.update(id, data),
+    onSuccess: () => qc.invalidateQueries({ queryKey: bookIssuesKeys.all }),
+  });
+}
+
 export function useBookIssuesReturn() {
   const qc = useQueryClient();
   return useMutation({

@@ -18,6 +18,14 @@ export function useBookNashirsCreate() {
   });
 }
 
+export function useBookNashirsUpdate() {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: ({ id, name }: { id: string; name: string }) => bookNashirsService.update(id, name),
+    onSuccess: () => qc.invalidateQueries({ queryKey: bookNashirsKeys.all }),
+  });
+}
+
 export function useBookNashirsDelete() {
   const qc = useQueryClient();
   return useMutation({

@@ -12,6 +12,10 @@ export class BookCategoriesService {
     await api.post(privateEndpoints.bookCategories.list, { name });
   }
 
+  async update(id: string, name: string) {
+    await api.patch(privateEndpoints.bookCategories.byId(id), { name });
+  }
+
   async delete(id: string) {
     await api.delete(privateEndpoints.bookCategories.byId(id));
   }

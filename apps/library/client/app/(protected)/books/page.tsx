@@ -6,7 +6,7 @@ import { defaultTransition, fadeInUp, staggerContainer } from '@arabiaaislamia/a
 import { useLocale } from '@/lib/locale';
 import { useBooksPage } from '@/hooks/use-books-page';
 import { PageHeader, PageSkeleton, Pagination } from '@/components/common';
-import { BooksFilter, BooksTable, AddBookModal, BookDetailModal, PrintChitsModal } from '@/components/books';
+import { BooksFilter, BooksTable, AddBookModal, EditBookModal, BookDetailModal, PrintChitsModal } from '@/components/books';
 import { Plus } from 'lucide-react';
 
 export default function BooksPage() {
@@ -31,6 +31,9 @@ export default function BooksPage() {
     addBookOpen,
     openAddBook,
     closeAddBook,
+    editBook,
+    openEditBook,
+    closeEditBook,
     viewBook,
     openViewBook,
     closeViewBook,
@@ -46,6 +49,8 @@ export default function BooksPage() {
     handlePrintAll,
     applyFilters,
     handleAddBookSuccess,
+    updateBook,
+    handleEditBookSuccess,
   } = useBooksPage(t);
 
   if (loading && books.length === 0) {
@@ -66,11 +71,12 @@ export default function BooksPage() {
       </motion.div>
       <motion.div variants={fadeInUp}>
         <Card className="overflow-hidden">
-          <BooksTable books={books} onView={openViewBook} onDelete={openDeleteConfirm} t={t} />
+          <BooksTable books={books} onView={openViewBook} onEdit={openEditBook} onDelete={openDeleteConfirm} t={t} />
           <Pagination page={page} totalPages={totalPages} total={total} onPrev={() => setPage((p) => Math.max(1, p - 1))} onNext={() => setPage((p) => Math.min(totalPages, p + 1))} pageLabel={t('common.page')} ofLabel={t('common.of')} />
         </Card>
       </motion.div>
       <AddBookModal open={addBookOpen} onClose={closeAddBook} authors={authors} categories={categories} nashirs={nashirs} onCreateBook={(d) => createBook.mutateAsync(d as Parameters<typeof createBook.mutateAsync>[0])} onCreateAuthor={(n) => createAuthor.mutateAsync(n)} onCreateCategory={(n) => createCategory.mutateAsync(n)} onCreateNashir={(n) => createNashir.mutateAsync(n)} onSuccess={handleAddBookSuccess} t={t} />
+      <EditBookModal open={!!editBook} book={editBook} onClose={closeEditBook} authors={authors} categories={categories} nashirs={nashirs} onUpdate={(id, d) => updateBook.mutateAsync({ id, data: d })} onSuccess={handleEditBookSuccess} t={t} />
       <BookDetailModal book={viewBook} onClose={closeViewBook} t={t} />
       <PrintChitsModal open={printModalOpen} onClose={() => setPrintModalOpen(false)} category={printCategory} onCategoryChange={(v) => setPrintCategory(v as 'shelf' | '')} shelfNumber={printShelfNumber} onShelfNumberChange={setPrintShelfNumber} loading={printLoading} onPrint={handlePrintAll} t={t} />
     </motion.div>

@@ -40,6 +40,14 @@ export function useBooksCreate() {
   });
 }
 
+export function useBooksUpdate() {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: ({ id, data }: { id: string; data: Partial<Book> }) => booksService.update(id, data),
+    onSuccess: () => qc.invalidateQueries({ queryKey: booksKeys.all }),
+  });
+}
+
 export function useBooksDelete() {
   const qc = useQueryClient();
   return useMutation({
