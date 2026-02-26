@@ -2,6 +2,7 @@ import "./globals.css";
 import { LayoutSwitcher } from "@/components/templates";
 import { Toaster, ModalProvider } from "@arabiaaislamia/ui";
 import { SEO_DEFAULTS } from "@/constants/seo";
+import { SEO_KEYWORDS } from "@/constants/seo-keywords";
 import { Poppins } from "next/font/google";
 
 export const metadata = {
@@ -11,22 +12,7 @@ export const metadata = {
     template: `%s | ${SEO_DEFAULTS.siteName}`,
   },
   description: SEO_DEFAULTS.description,
-  keywords: [
-    "Jamia Arabia Islamia",
-    "Islamic education Karachi",
-    "Tahfeez ul Quran",
-    "Hifz Quran",
-    "Darse Nizami",
-    "Dars e Nizami seminary",
-    "Mahad ul Arabia",
-    "Arabic language institute Pakistan",
-    "Scout Colony Karachi",
-    "Islamic seminary Pakistan",
-    "Madrasa admissions",
-    "Islamic studies",
-    "جامعہ عربیہ اسلامیہ",
-    "اسکاؤٹ کالونی",
-  ],
+  keywords: SEO_KEYWORDS,
   authors: [{ name: SEO_DEFAULTS.siteName }],
   creator: SEO_DEFAULTS.siteName,
   openGraph: {
