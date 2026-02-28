@@ -8,7 +8,7 @@ export const SEO_DEFAULTS = {
   siteName: SITE_NAME,
   description: SITE_DESCRIPTION,
   url: SITE_URL,
-  ogImage: `${SITE_URL}/images/Logo.png`,
+  ogImage: `${SITE_URL}/images/og-image.jpg`,
   locale: 'en_PK',
   twitterHandle: '@jamiaarabiaislamia',
   logo: '/images/Logo.png',
