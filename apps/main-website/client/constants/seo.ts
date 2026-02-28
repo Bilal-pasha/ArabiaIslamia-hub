@@ -2,7 +2,7 @@ import { SITE_URL } from './env';
 
 export const SITE_NAME = 'Jamia Arabia Islamia';
 export const SITE_DESCRIPTION =
-  'Jamia Arabia Islamia – Where tradition meets innovation. Islamic education, Tahfeez ul Quran, Darse Nizami, Mahad ul Arabia, and Scouts Colony at Scout Colony, Karachi.';
+  'Jamia Arabia Islamia in Scout Colony, Karachi offers Islamic education including Tahfeez ul Quran, Darse Nizami, Mahad ul Arabia, and academic programs focused on traditional and modern learning.';
 
 export const SEO_DEFAULTS = {
   siteName: SITE_NAME,
@@ -11,4 +11,5 @@ export const SEO_DEFAULTS = {
   ogImage: `${SITE_URL}/images/Logo.png`,
   locale: 'en_PK',
   twitterHandle: '@jamiaarabiaislamia',
+  logo: '/images/Logo.png',
 } as const;
